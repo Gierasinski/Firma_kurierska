@@ -4,11 +4,10 @@ import java.util.Date;
 
 public class Employee {
     protected int pesel;
-    protected int pensja;
-    protected String imie;
-    protected String nazwisko;
-    protected Date dataZadtrudnienia;
-    protected int numerTelefonu;
+    private int pensja, numerTelefonu;
+    private String imie,nazwisko;
+    private Date dataZadtrudnienia;
+
 
 
     public void sprawdzTrase(){

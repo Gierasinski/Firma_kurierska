@@ -4,6 +4,8 @@ public class Address {
 
     private String voivodeship, city, street;
     private int buildingNumber;
+    //Pomysl do przemyslenia
+    private String description;
 
     public Address(String voivodeship, String city, String street, int buildingNumber) {
         this.voivodeship = voivodeship;

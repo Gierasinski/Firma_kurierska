@@ -1,5 +1,7 @@
 package org.example.PT;
 
+import org.example.PostgreSQL.ManageDataBase;
+
 import java.util.Date;
 
 public class Employee {
@@ -7,6 +9,8 @@ public class Employee {
     private int pensja, numerTelefonu;
     private String imie,nazwisko;
     private Date dataZadtrudnienia;
+
+    ManageDataBase base =  new  ManageDataBase();
 
     public Employee(int pesel, int pensja, int numerTelefonu, String imie, String nazwisko, Date dataZadtrudnienia){
         setPesel(pesel);
@@ -35,6 +39,13 @@ public class Employee {
 
 
     public void sprawdzTrase(){
+
+    }
+    /*Nie wiem czy to ma byc tutaj czy w ksiegowej czy w jakims adminie co to robi  */
+    public void dodajPracownika(int id, String imie, String nazwisko, String kontakt,
+                                String adres, String pesel, String stanowisko,int pensja, String data_zatrudnienia){
+        base.insertEmployee(id,imie,nazwisko, kontakt, adres, pesel, stanowisko, pensja,  data_zatrudnienia);
+
 
     }
 

@@ -16,17 +16,11 @@ public class Truck extends Delivery{
         setRokProdukcji(rokProdukcji);
 
     }
-
     public void setTyp(String typ) {this.typ = typ; }
     public void setMarka(String marka) {this.marka = marka; }
     public final void setNrBoczny(String nrBoczny) {this.nrBoczny = nrBoczny; }
     public final void setRokProdukcji(Date rokProdukcji) {this.rokProdukcji = rokProdukcji; }
 
-    
-
-    public void modyfikujPojazd(){
-
-    }
     public void dodajPojazd(){
 
     }

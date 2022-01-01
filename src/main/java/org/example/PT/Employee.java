@@ -43,8 +43,8 @@ public class Employee {
     }
     /*Nie wiem czy to ma byc tutaj czy w ksiegowej czy w jakims adminie co to robi  */
     public void dodajPracownika(int id, String imie, String nazwisko, String kontakt,
-                                String adres, String pesel, String stanowisko,int pensja, String data_zatrudnienia){
-        base.insertEmployee(id,imie,nazwisko, kontakt, adres, pesel, stanowisko, pensja,  data_zatrudnienia);
+                                String adres, String pesel, String stanowisko,int pensja, String data_zatrudnienia, int oddzial){
+        base.insertEmployee(id,imie,nazwisko, kontakt, adres, pesel, stanowisko, pensja,  data_zatrudnienia, oddzial);
 
 
     }

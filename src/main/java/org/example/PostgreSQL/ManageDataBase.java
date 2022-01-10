@@ -19,9 +19,9 @@ public class ManageDataBase {
      */
     public ManageDataBase(){
         try {
-            //connection = DriverManager.getConnection(jdbcUrl,username,password);
-            //createDatabase();
-            connection = DriverManager.getConnection(jdbcUrl+databaseName,username,password);
+            connection = DriverManager.getConnection(jdbcUrl,username,password);
+            createDatabase();
+            //connection = DriverManager.getConnection(jdbcUrl+databaseName,username,password);
         } catch (SQLException e) {
             System.out.println("Error connection");
             e.printStackTrace();
@@ -49,7 +49,7 @@ public class ManageDataBase {
     public void createTablePracownicy() {
         try {
             String sql = "CREATE TABLE pracownicy (id INTEGER,imie varchar(20), nazwisko varchar(20)," +
-                    "kontakt varchar(12), adres varchar(30), pesel varchar(11) UNIQUE, stanowisko varchar(20), " +
+                    "numertelefonu INTEGER, adres varchar(30), pesel varchar(11) UNIQUE, stanowisko varchar(20), " +
                     "pensja INTEGER , data_zatrudnienia varchar(15), oddzial INTEGER)";
             Statement statement = connection.createStatement();
 
@@ -69,6 +69,31 @@ public class ManageDataBase {
             System.out.println("Table pracownicy Delete");
         } catch (SQLException throwables) {
             System.out.println("Error pracownicy  delete");
+            throwables.printStackTrace();
+        }
+    }
+    public void createTableTruck() {
+        try {
+            String sql = "CREATE TABLE truck (id INTEGER,numerBoczny varchar(20), typ varchar(20)," +
+                    "marka varchar(20), rokProdukcji INTEGER)";
+            Statement statement = connection.createStatement();
+
+            statement.executeUpdate(sql);
+            System.out.println("Table Truck Created");
+        } catch (SQLException throwables) {
+            System.out.println("Error truck create");
+            throwables.printStackTrace();
+        }
+    }
+    public void deleteTableTruck() {
+        try {
+            String sql = "DROP TABLE Truck";
+            Statement statement = connection.createStatement();
+
+            statement.executeUpdate(sql);
+            System.out.println("Table Truck Delete");
+        } catch (SQLException throwables) {
+            System.out.println("Error Truck  delete");
             throwables.printStackTrace();
         }
     }
@@ -170,17 +195,17 @@ public class ManageDataBase {
     }
 
 
-    public void insertEmployee(int id, String imie, String nazwisko, String kontakt,
-                       String adres, String pesel, String stanowisko,int pensja, String data_zatrudnienia, int oddzial) {
+    public void insertEmployee(int id, String imie, String nazwisko, int numerTelefonu,
+                       String adres, int pesel, String stanowisko,int pensja, String data_zatrudnienia, int oddzial) {
         try {
-            String sql = "INSERT INTO pracownicy(id,imie,nazwisko,kontakt,adres,pesel,stanowisko,pensja,data_zatrudnienia,oddzial) values (?,?,?,?,?,?,?,?,?,?)";
+            String sql = "INSERT INTO pracownicy(id,imie,nazwisko,numerTelefonu,adres,pesel,stanowisko,pensja,data_zatrudnienia,oddzial) values (?,?,?,?,?,?,?,?,?,?)";
             PreparedStatement pst = connection.prepareStatement(sql);
             pst.setInt(1,id);
             pst.setString(2,imie);
             pst.setString(3,nazwisko);
-            pst.setString(4,kontakt);
+            pst.setInt(4,numerTelefonu);
             pst.setString(5,adres);
-            pst.setString(6,pesel);
+            pst.setInt(6,pesel);
             pst.setString(7,stanowisko);
             pst.setInt(8,pensja);
             pst.setString(9,data_zatrudnienia);
@@ -200,6 +225,70 @@ public class ManageDataBase {
         }
     }
 
+    public void insertTruck(int id, String numerBoczny, String typ, String marka, int rokProdukcji) {
+        try {
+            String sql = "INSERT INTO truck(id,numerboczny,typ,marka,rokprodukcji) values (?,?,?,?,?)";
+            PreparedStatement pst = connection.prepareStatement(sql);
+            pst.setInt(1,id);
+            pst.setString(2,numerBoczny);
+            pst.setString(3,typ);
+            pst.setString(4,marka);
+            pst.setInt(5,rokProdukcji);
+            pst.execute();
+
+        } catch (SQLException throwables) {
+            System.out.println("Error insert into database");
+            throwables.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Insert");
+            alert.setHeaderText("Podczas dodawania danych wystapil blad");
+            alert.setContentText(throwables.getMessage());
+            alert.showAndWait().ifPresent(rs -> {
+
+            });
+        }
+    }
+
+    public void deleteTruck(int id, String numerBoczny) {
+        try {
+            String sql = "DELETE * FROM Truck WHERE id = ? AND numerBoczny = ?";
+            PreparedStatement pst = connection.prepareStatement(sql);
+            pst.setInt(1, id);
+            pst.setString(2, numerBoczny);
+            pst.execute();
+
+        } catch (SQLException throwables) {
+            System.out.println("Error Delete into database");
+            throwables.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Insert");
+            alert.setHeaderText("Podczas usuwania danych wystapil blad");
+            alert.setContentText(throwables.getMessage());
+            alert.showAndWait().ifPresent(rs -> {
+
+            });
+        }
+    }
+    public void updatePensja(int pensja,int id) {
+        try {
+            String sql = "UPDATE Truck SET pensja = ? WHERE id = ?";
+            PreparedStatement pst = connection.prepareStatement(sql);
+            pst.setInt(1, pensja);
+            pst.setInt(2, id);
+            pst.execute();
+        } catch (SQLException throwables) {
+            System.out.println("Error Update into database");
+            throwables.printStackTrace();
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Insert");
+            alert.setHeaderText("Podczas aktualizacji danych wystapil blad");
+            alert.setContentText(throwables.getMessage());
+            alert.showAndWait().ifPresent(rs -> {
+
+            });
+        }
+    }
+
 
 
 
@@ -209,6 +298,8 @@ public class ManageDataBase {
         base.createTablePracownicy();
         base.deleteTableAdres();
         base.createTableAdres();
+        base.deleteTableTruck();
+        base.createTableTruck();
 
     }
 

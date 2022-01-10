@@ -18,6 +18,7 @@ public class Accountant extends Employee{
     public void pzyznajPremie(int id){
         int pensja = base.searchEmployee(id);
         pensja += 100;
+        base.updatePensja(pensja,id);
 
 
     }

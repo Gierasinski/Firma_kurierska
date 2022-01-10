@@ -1,14 +1,18 @@
 package org.example.PT;
 
+import org.example.PostgreSQL.ManageDataBase;
+
 import java.util.Date;
 
 public class Truck extends Delivery{
     protected String nrBoczny;
     private String typ, marka;
-    private Date rokProdukcji;
+    private int rokProdukcji;
+
+    ManageDataBase base =  new  ManageDataBase();
 
 
-    public Truck(int pesel, int pensja, int numerTelefonu, String imie, String nazwisko, Date dataZadtrudnienia, String typ, String marka, String nrBoczny, Date rokProdukcji ) {
+    public Truck(int pesel, int pensja, int numerTelefonu, String imie, String nazwisko, Date dataZadtrudnienia, String typ, String marka, String nrBoczny, int rokProdukcji ) {
         super(pesel, pensja, numerTelefonu, imie, nazwisko, dataZadtrudnienia);
         setTyp(typ);
         setMarka(marka);
@@ -19,14 +23,15 @@ public class Truck extends Delivery{
     public void setTyp(String typ) {this.typ = typ; }
     public void setMarka(String marka) {this.marka = marka; }
     public final void setNrBoczny(String nrBoczny) {this.nrBoczny = nrBoczny; }
-    public final void setRokProdukcji(Date rokProdukcji) {this.rokProdukcji = rokProdukcji; }
+    public final void setRokProdukcji(int rokProdukcji) {this.rokProdukcji = rokProdukcji; }
 
-    public void dodajPojazd(){
+    public void addTruck(int id){
+        base.insertTruck(id,nrBoczny,typ,marka,rokProdukcji);
 
     }
 
-    public void usunPojazd(){
-
+    public void deleteTruck(int id){
+        base.deleteTruck(id,nrBoczny);
     }
 
 }

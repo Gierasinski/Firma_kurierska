@@ -1,10 +1,7 @@
 package org.example.PostgreSQL;
 
 import javafx.scene.control.Alert;
-
 import java.sql.*;
-
-
 
 public class ManageDataBase {
     String jdbcUrl = ConnectionParameters.jdbcUrl;
@@ -17,7 +14,8 @@ public class ManageDataBase {
     /**
      * Konstruktor klasy nawiazuje polaczenie z baza postgreSQL
      */
-    public ManageDataBase(){
+    public ManageDataBase(){}
+    public void connectToDataBase(){
         try {
             //connection = DriverManager.getConnection(jdbcUrl,username,password);
             //createDatabase();
@@ -28,12 +26,62 @@ public class ManageDataBase {
         }
 
     }
-    protected void createDatabase(){
+    public void connectToDataBase(String databaseNameParam){
+        try {
+            connection = DriverManager.getConnection(jdbcUrl+databaseNameParam,username,password);
+        } catch (SQLException e) {
+            System.out.println("Error connection");
+            e.printStackTrace();
+        }
+    }
+    public void connectToPostgreSQL(){
+        try {
+            connection = DriverManager.getConnection(jdbcUrl,username,password);
+        } catch (SQLException e) {
+            System.out.println("Error connection");
+            e.printStackTrace();
+        }
+    }
+    public void createDataBase(){
         // To zapytanie powinno tworzyć bazę danych jeśli jeszcze nie istnieje, jednak występuje problem ze znakiem "/" przy gexec
         /*String sql = "SELECT 'CREATE DATABASE "+databaseName+"'\n" +
                 "WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '"+databaseName+"')\gexec";*/
         //Tymczasowe zapytanie po prostu tworzące bazę danych
         String sql = "CREATE DATABASE "+databaseName+"";
+        Statement statement = null;
+        try {
+            statement = connection.createStatement();
+            statement.executeUpdate(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void createDataBase(String databaseNameParam){
+        // To zapytanie powinno tworzyć bazę danych jeśli jeszcze nie istnieje, jednak występuje problem ze znakiem "/" przy gexec
+        /*String sql = "SELECT 'CREATE DATABASE "+databaseName+"'\n" +
+                "WHERE NOT EXISTS (SELECT FROM pg_database WHERE datname = '"+databaseName+"')\gexec";*/
+        //Tymczasowe zapytanie po prostu tworzące bazę danych
+        String sql = "CREATE DATABASE "+databaseNameParam+"";
+        Statement statement = null;
+        try {
+            statement = connection.createStatement();
+            statement.executeUpdate(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void dropDataBase(){
+        String sql = "DROP DATABASE "+databaseName+"";
+        Statement statement = null;
+        try {
+            statement = connection.createStatement();
+            statement.executeUpdate(sql);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    public void dropDataBase(String databaseNameParam){
+        String sql = "DROP DATABASE "+databaseNameParam+"";
         Statement statement = null;
         try {
             statement = connection.createStatement();
@@ -93,9 +141,9 @@ public class ManageDataBase {
 
             statement.executeUpdate(sql);
             System.out.println("Table klienci Delete");
-        } catch (SQLException throwables) {
+        } catch (SQLException e) {
             System.out.println("Error klienci delete");
-            throwables.printStackTrace();
+            e.printStackTrace();
         }
     }
     public void createTableParcels() {
@@ -195,7 +243,6 @@ public class ManageDataBase {
             alert.setHeaderText("Podczas dodawania danych wystapil blad");
             alert.setContentText(throwables.getMessage());
             alert.showAndWait().ifPresent(rs -> {
-
             });
         }
     }
@@ -205,6 +252,7 @@ public class ManageDataBase {
 
     public static void main(String[] args){
         ManageDataBase base = new ManageDataBase();
+        base.connectToDataBase();
         base.deleteTablePracownicy();
         base.createTablePracownicy();
         base.deleteTableAdres();

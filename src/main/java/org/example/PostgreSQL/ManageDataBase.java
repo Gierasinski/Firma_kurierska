@@ -17,9 +17,9 @@ public class ManageDataBase {
     public ManageDataBase(){}
     public void connectToDataBase(){
         try {
-            connection = DriverManager.getConnection(jdbcUrl,username,password);
-            createDatabase();
-            //connection = DriverManager.getConnection(jdbcUrl+databaseName,username,password);
+            //connection = DriverManager.getConnection(jdbcUrl,username,password);
+           // createDatabase();
+            connection = DriverManager.getConnection(jdbcUrl+databaseName,username,password);
         } catch (SQLException e) {
             System.out.println("Error connection");
             e.printStackTrace();

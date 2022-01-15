@@ -31,6 +31,6 @@ public class ManageDataBaseTest{
     public void dropDataBase_test (){
         testBase.connectToPostgreSQL();
         testBase.dropDataBase(databaseName);
-        //Assertions.assertThrows(PSQLException.class, () -> testBase.createDataBase(databaseName));
+        Assertions.assertThrows(PSQLException.class, () -> testBase.createDataBase(databaseName));
     }
 }

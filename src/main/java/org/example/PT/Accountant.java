@@ -2,6 +2,7 @@ package org.example.PT;
 
 import org.example.PostgreSQL.ManageDataBase;
 
+import java.sql.SQLException;
 import java.util.Date;
 
 public class Accountant extends Employee{
@@ -16,15 +17,28 @@ public class Accountant extends Employee{
     }
 
     public void pzyznajPremie(int id){
-        int pensja = base.searchEmployee(id);
+        int pensja = 0;
+        try {
+            pensja = base.searchEmployee(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         pensja += 100;
-        base.updatePensja(pensja,id);
+        try {
+            base.updatePensja(pensja,id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
 
     }
 
     public void wyplacPensje(int id){
-        int pensja = base.searchEmployee(id);
+        try {
+            int pensja = base.searchEmployee(id);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
 
     }

@@ -2,6 +2,7 @@ package org.example.PT;
 
 import org.example.PostgreSQL.ManageDataBase;
 
+import java.sql.SQLException;
 import java.util.Date;
 
 public class Employee {
@@ -43,6 +44,10 @@ public class Employee {
     }
 
     public void dodajPracownika(int id,  String adres,  String stanowisko, String data_zatrudnienia, int oddzial){
-        base.insertEmployee(id,imie,nazwisko, numerTelefonu, adres, pesel, stanowisko, pensja,  data_zatrudnienia, oddzial);
+        try {
+            base.insertEmployee(id,imie,nazwisko, numerTelefonu, adres, pesel, stanowisko, pensja,  data_zatrudnienia, oddzial);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }

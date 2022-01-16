@@ -2,6 +2,7 @@ package org.example.PT;
 
 import org.example.PostgreSQL.ManageDataBase;
 
+import java.sql.SQLException;
 import java.util.Date;
 
 public class Truck extends Delivery{
@@ -26,12 +27,20 @@ public class Truck extends Delivery{
     public final void setRokProdukcji(int rokProdukcji) {this.rokProdukcji = rokProdukcji; }
 
     public void addTruck(int id){
-        base.insertTruck(id,nrBoczny,typ,marka,rokProdukcji);
+        try {
+            base.insertTruck(id,nrBoczny,typ,marka,rokProdukcji);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 
     public void deleteTruck(int id){
-        base.deleteTruck(id,nrBoczny);
+        try {
+            base.deleteTruck(id,nrBoczny);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

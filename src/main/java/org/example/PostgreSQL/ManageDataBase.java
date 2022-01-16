@@ -117,11 +117,49 @@ public class ManageDataBase {
     public void createTableParcels() throws SQLException {
             String sql = "CREATE TABLE przesylki (id INTEGER UNIQUE,list_przewozowy INTEGER , waga INTEGER," +
                     "wysokosc INTEGER, szerokosc INTEGER, dlugosc INTEGER, platnosc INTEGER UNIQUE, " +
-                    "adres_dostawy INTEGER, status varchar(30)), lokalizacja varchar(30))";
+                    "adres_dostawy INTEGER, adres_nadania INTEGER, status varchar(30)), lokalizacja varchar(30)), INTEGER kod_nadania, INTEGER kod_odbioru";
             Statement statement = connection.createStatement();
 
             statement.executeUpdate(sql);
             System.out.println("Table przesylki Created");
+    }
+    public void insertParcel(int id, int list_przewozowy, float waga, int wysokosc,
+                               int szerokosc, int dlugosc, int platnosc,int adres_dostawy, int adres_nadania, String status, String lokalizacja, int kod_nadania, int kod_odbioru) throws SQLException {
+        String sql = "INSERT INTO pracownicy(id, list_przewozowy, waga, wysokosc, szerokosc, dlugosc, platnosc, adres_dostawy, adres_nadania, status, lokalizacjal, kod_odbioru, kod_nadania) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setInt(1,id);
+        pst.setInt(2,list_przewozowy);
+        pst.setFloat(3,waga);
+        pst.setInt(4,wysokosc);
+        pst.setInt(5,szerokosc);
+        pst.setInt(6,dlugosc);
+        pst.setInt(7,platnosc);
+        pst.setInt(8,adres_dostawy);
+        pst.setInt(9,adres_nadania);
+        pst.setString(10,status);
+        pst.setString(11,lokalizacja);
+        pst.setInt(12,kod_odbioru);
+        pst.setInt(13,kod_nadania);
+        pst.execute();
+
+    }
+    public void insertParcel(int id, int list_przewozowy, float waga, int wysokosc,
+                             int szerokosc, int dlugosc, int platnosc,int adres_dostawy, int adres_nadania, String status, String lokalizacja) throws SQLException {
+        String sql = "INSERT INTO pracownicy(id, list_przewozowy, waga, wysokosc, szerokosc, dlugosc, platnosc, adres_dostawy, adres_nadania, status, lokalizacjal) values (?,?,?,?,?,?,?,?,?,?,?)";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setInt(1,id);
+        pst.setInt(2,list_przewozowy);
+        pst.setFloat(3,waga);
+        pst.setInt(4,wysokosc);
+        pst.setInt(5,szerokosc);
+        pst.setInt(6,dlugosc);
+        pst.setInt(7,platnosc);
+        pst.setInt(8,adres_dostawy);
+        pst.setInt(9,adres_nadania);
+        pst.setString(10,status);
+        pst.setString(11,lokalizacja);
+        pst.execute();
+
     }
     public void createTableAdres() throws SQLException {
             String sql = "CREATE TABLE adres (id INTEGER,wojewodztwo varchar(20), miasto varchar(20)," +

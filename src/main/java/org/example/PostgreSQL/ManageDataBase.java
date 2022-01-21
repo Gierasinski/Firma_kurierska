@@ -145,7 +145,7 @@ public class ManageDataBase {
             System.out.println("Table klienci Delete");
     }
     public void createTableParcels() throws SQLException {
-            String sql = "CREATE TABLE przesylki (id INTEGER UNIQUE,list_przewozowy INTEGER , waga INTEGER," +
+            String sql = "CREATE TABLE przesylki (id INTEGER UNIQUE,list_przewozowy INTEGER UNIQUE, waga INTEGER," +
                     "wysokosc INTEGER, szerokosc INTEGER, dlugosc INTEGER, platnosc INTEGER UNIQUE, " +
                     "adres_dostawy INTEGER, adres_nadania INTEGER, status varchar(30), lokalizacja varchar(30)," +
                     " kod_nadania INTEGER , kod_odbioru INTEGER, id_klienta INTEGER )";
@@ -196,14 +196,25 @@ public class ManageDataBase {
 
     }
     public void createTableAdres() throws SQLException {
-            String sql = "CREATE TABLE adres (id INTEGER,wojewodztwo varchar(20), miasto varchar(20)," +
-                    "ulica varchar(20), nrBloku varchar(10), opis varchar(30) )";
+            String sql = "CREATE TABLE adres (id SERIAL, miasto varchar(20),ulica varchar(20), kod_pocztowy varchar(7))";
             Statement statement = connection.createStatement();
 
             statement.executeUpdate(sql);
             System.out.println("Table adres Created");
     }
-
+    public int insertAdres(String miasto, String ulica, String kod_poczotwy) throws SQLException {
+        int id = -1;
+        String sql = "INSERT INTO adres(miasto, ulica, kod_pocztowy) values (?,?,?) RETURNING id";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setString(1,miasto);
+        pst.setString(2,ulica);
+        pst.setString(3,kod_poczotwy);
+        resultSet = pst.executeQuery();
+        while(resultSet.next()) {
+            id = resultSet.getInt("id");
+        }
+        return id;
+    }
     public void deleteTableAdres() throws SQLException {
             String sql = "DROP TABLE adres";
             Statement statement = connection.createStatement();
@@ -241,7 +252,6 @@ public class ManageDataBase {
             pst.setString(9,data_zatrudnienia);
             pst.setInt(10,oddzial);
             pst.execute();
-
     }
 
     public void insertTruck(int id, String numerBoczny, String typ, String marka, int rokProdukcji) throws SQLException {

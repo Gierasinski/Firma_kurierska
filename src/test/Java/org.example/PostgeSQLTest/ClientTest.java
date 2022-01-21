@@ -51,7 +51,30 @@ public class ClientTest {
                     123,"admin","admin");
             client.login("admin","admin");
             testBase.createTableParcels();
-            client.shipParcel(10,10,10,10,1,1,1,testBase);
+            client.shipParcel(10,10,10,10,1,testBase);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            testBase.connectToDataBase();
+            testBase.dropDataBase(databaseName);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    @Test()
+    public void createAddresses_test (){
+        Client client = new Client();
+        try {
+            testBase.connectToPostgreSQL();
+            testBase.createDataBase(databaseName);
+            testBase.connectToDataBase(databaseName);
+            testBase.createTableAdres();
+            client.setOriginAddress("Kielce", "Nowowiejska 11/115","25-532",testBase);
+            System.out.println("Client Origin address added, origin:"+client.getOriginAddress());
+            client.setDestinationAddress("Krakow", "Długa 34/1","31-146",testBase);
+            System.out.println("Client Origin address added, origin:"+client.getDestinationAddress());
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -9,8 +9,5 @@ public class Waybill {
         this.waybillNumber = waybillNumber;
         this.shippingAddress = shippingAddress;
         this.pickupAddress = pickupAddress;
-
-        planRoute();
     }
-    private void planRoute(){}
 }

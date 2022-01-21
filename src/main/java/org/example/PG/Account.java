@@ -16,10 +16,10 @@ public class Account {
         this.surname = surname;
         this.isNull = false;
     }
-    public Account() {this.isNull = true;};
+    public Account() {this.isNull = true;}
 
     public void addAddress(String voivodeship, String city, String street, int buildingNumber){
-        address = new Address(voivodeship, city, street, buildingNumber);
+        //address = new Address(voivodeship, city, street, buildingNumber);
     }
     public boolean getIsNull(){return isNull;}
 

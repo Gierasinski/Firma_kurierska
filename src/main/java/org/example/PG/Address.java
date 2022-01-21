@@ -2,24 +2,13 @@ package org.example.PG;
 
 public class Address {
 
-    private String voivodeship, city, street;
-    private int buildingNumber;
-    //Pomysl do przemyslenia
-    private String description;
+    private String  city, street;
+    private String postcode;
 
-    public Address(String voivodeship, String city, String street, int buildingNumber) {
-        this.voivodeship = voivodeship;
+    public Address(String city, String street, String postcode) {
         this.city = city;
         this.street = street;
-        this.buildingNumber = buildingNumber;
-    }
-
-    public String getVoivodeship() {
-        return voivodeship;
-    }
-
-    public void setVoivodeship(String voivodeship) {
-        this.voivodeship = voivodeship;
+        this.postcode = postcode;
     }
 
     public String getCity() {
@@ -36,11 +25,11 @@ public class Address {
         this.street= street;
     }
 
-    public int getBuildingNumber() {
-        return buildingNumber;
+    public String getPostcode() {
+        return postcode;
     }
 
-    public void setBuildingNumber(int buildingNumber) {
-        this.buildingNumber = buildingNumber;
+    public void setPostcode(String postcode) {
+        this.postcode = postcode;
     }
 }

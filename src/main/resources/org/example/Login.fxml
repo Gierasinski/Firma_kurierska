@@ -6,9 +6,9 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane prefHeight="393.0" prefWidth="577.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Login">
+<AnchorPane prefHeight="550.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Login">
    <children>
-      <Button fx:id="btnWorker" layoutX="498.0" layoutY="65.0" mnemonicParsing="false" onAction="#btnWorkerClicked" text="Worker" />
+      <Button fx:id="btnWorker" layoutX="498.0" layoutY="65.0" mnemonicParsing="false" onAction="#SwitchToWorkerPanel" text="Worker" />
       <Button fx:id="btnUser" layoutX="500.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnUserClicked" prefHeight="26.0" prefWidth="52.0" text="User" />
       <Button fx:id="btnCreateanaccount" layoutX="342.0" layoutY="267.0" mnemonicParsing="false" onAction="#btnCreateanaccountClicked" prefHeight="26.0" prefWidth="123.0" text="Create an account" />
       <Button fx:id="btnLogin" layoutX="96.0" layoutY="267.0" mnemonicParsing="false" onAction="#switchToUserPanel" prefHeight="26.0" prefWidth="123.0" text="Login" />

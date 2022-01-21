@@ -47,5 +47,9 @@ public class Login {
     void switchToUserPanel(ActionEvent event) throws IOException {
         App.setRoot("UserPanel");
     }
+    @FXML
+    void SwitchToWorkerPanel(ActionEvent event) throws IOException {
+        App.setRoot("WorkerPanel");
+    }
 
 }

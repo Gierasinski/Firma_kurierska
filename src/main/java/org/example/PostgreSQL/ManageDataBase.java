@@ -1,6 +1,5 @@
 package org.example.PostgreSQL;
 
-import javafx.scene.control.Alert;
 import org.example.PG.Account;
 
 import java.sql.*;
@@ -69,30 +68,33 @@ public class ManageDataBase {
      * Metoda odpowiedzialna za utworzenie tabeli pracownicy
      * @throws  SQLException
      */
-    public void createTablePracownicy() throws SQLException {
-            String sql = "CREATE TABLE pracownicy (id INTEGER,imie varchar(20), nazwisko varchar(20)," +
-                    "numertelefonu INTEGER, adres varchar(30), pesel varchar(11) UNIQUE, stanowisko varchar(20), " +
-                    "pensja INTEGER , data_zatrudnienia varchar(15), oddzial INTEGER)";
+    public void createTableEmployee() throws SQLException {
+            String sql = "CREATE TABLE employee (id INTEGER,name varchar(20), surname varchar(20)," +
+                    "phoneNumber INTEGER, idAddress INTEGER, pesel INTEGER UNIQUE, position varchar(20), " +
+                    "salary INTEGER , dateOfEmployment Date, idBranch INTEGER)";
             Statement statement = connection.createStatement();
 
             statement.executeUpdate(sql);
-            System.out.println("Table pracownicy Created");
+            System.out.println("Table employee Created");
     }
-    public void deleteTablePracownicy() throws SQLException {
-            String sql = "DROP TABLE pracownicy";
+    /**usuniecie tabeli pracownicy */
+    public void deleteTableEmployee() throws SQLException {
+            String sql = "DROP TABLE employee";
             Statement statement = connection.createStatement();
 
             statement.executeUpdate(sql);
-            System.out.println("Table pracownicy Delete");
+            System.out.println("Table employee Delete");
     }
+    /**stworzenie tabeli samochod */
     public void createTableTruck() throws SQLException {
-            String sql = "CREATE TABLE truck (id INTEGER,numerBoczny varchar(20), typ varchar(20)," +
-                    "marka varchar(20), rokProdukcji INTEGER)";
+            String sql = "CREATE TABLE truck (id INTEGER,sideNumber varchar(20), type varchar(20)," +
+                    "mark varchar(20), yearOfProduction INTEGER)";
             Statement statement = connection.createStatement();
 
             statement.executeUpdate(sql);
             System.out.println("Table Truck Created");
     }
+    /**usuniecie tabeli samochod */
     public void deleteTableTruck() throws SQLException {
             String sql = "DROP TABLE Truck";
             Statement statement = connection.createStatement();
@@ -215,6 +217,7 @@ public class ManageDataBase {
         }
         return id;
     }
+
     public void deleteTableAdres() throws SQLException {
             String sql = "DROP TABLE adres";
             Statement statement = connection.createStatement();
@@ -222,61 +225,61 @@ public class ManageDataBase {
             statement.executeUpdate(sql);
             System.out.println("Table adres Delete");
     }
-
+    /**wyszukanie pracownika o podany id */
     public int searchEmployee(int id) throws SQLException {
-        int pensja = 0;
-        String query = "select pensja from pracownicy where id="+id+";";
+        int salary = 0;
+        String query = "select salary from employee where id="+id+";";
             preparedStatement = connection.prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             int i = 0;
             while(resultSet.next()) {
-               pensja = resultSet.getInt("pensja");
+               salary = resultSet.getInt("salary");
                 i++;
             }
-        return pensja;
+        return salary;
     }
 
-
-    public void insertEmployee(int id, String imie, String nazwisko, int numerTelefonu,
-                       String adres, int pesel, String stanowisko,int pensja, String data_zatrudnienia, int oddzial) throws SQLException {
-            String sql = "INSERT INTO pracownicy(id,imie,nazwisko,numerTelefonu,adres,pesel,stanowisko,pensja,data_zatrudnienia,oddzial) values (?,?,?,?,?,?,?,?,?,?)";
+/**dodanie pracownika */
+    public void insertEmployee(int id, String name, String surname, int phoneNumber,
+                       int idAddress, int pesel, String position,int salary, Date dateOfEmployment, int idBranch) throws SQLException {
+            String sql = "INSERT INTO pracownicy(id,name,surname,phoneNumber,idAddress,pesel,position,salary,dateOfEmployment,idBranch) values (?,?,?,?,?,?,?,?,?,?)";
             PreparedStatement pst = connection.prepareStatement(sql);
             pst.setInt(1,id);
-            pst.setString(2,imie);
-            pst.setString(3,nazwisko);
-            pst.setInt(4,numerTelefonu);
-            pst.setString(5,adres);
+            pst.setString(2,name);
+            pst.setString(3,surname);
+            pst.setInt(4,phoneNumber);
+            pst.setInt(5,idAddress);
             pst.setInt(6,pesel);
-            pst.setString(7,stanowisko);
-            pst.setInt(8,pensja);
-            pst.setString(9,data_zatrudnienia);
-            pst.setInt(10,oddzial);
+            pst.setString(7,position);
+            pst.setInt(8,salary);
+            pst.setDate(9, dateOfEmployment);
+            pst.setInt(10,idBranch);
             pst.execute();
     }
-
-    public void insertTruck(int id, String numerBoczny, String typ, String marka, int rokProdukcji) throws SQLException {
-            String sql = "INSERT INTO truck(id,numerboczny,typ,marka,rokprodukcji) values (?,?,?,?,?)";
+    /**dodanie samochodu */
+    public void insertTruck(int id, String sideNumber, String type, String mark, int yearOfProduction) throws SQLException {
+            String sql = "INSERT INTO truck(id,sideNumber,type,mark,yearOfProduction) values (?,?,?,?,?)";
             PreparedStatement pst = connection.prepareStatement(sql);
             pst.setInt(1,id);
-            pst.setString(2,numerBoczny);
-            pst.setString(3,typ);
-            pst.setString(4,marka);
-            pst.setInt(5,rokProdukcji);
+            pst.setString(2,sideNumber);
+            pst.setString(3,type);
+            pst.setString(4,mark);
+            pst.setInt(5,yearOfProduction);
             pst.execute();
     }
-
-    public void deleteTruck(int id, String numerBoczny) throws SQLException {
-            String sql = "DELETE * FROM Truck WHERE id = ? AND numerBoczny = ?";
+    /**usuniecie samochodu */
+    public void deleteTruck(int id) throws SQLException {
+            String sql = "DELETE * FROM Truck WHERE id = ? ";
             PreparedStatement pst = connection.prepareStatement(sql);
             pst.setInt(1, id);
-            pst.setString(2, numerBoczny);
             pst.execute();
 
     }
-    public void updatePensja(int pensja,int id) throws SQLException {
-            String sql = "UPDATE Truck SET pensja = ? WHERE id = ?";
+    /**aktualizacja pensji pracownika*/
+    public void updatePensja(int salary,int id) throws SQLException {
+            String sql = "UPDATE employee SET salary = ? WHERE id = ?";
             PreparedStatement pst = connection.prepareStatement(sql);
-            pst.setInt(1, pensja);
+            pst.setInt(1, salary);
             pst.setInt(2, id);
             pst.execute();
     }

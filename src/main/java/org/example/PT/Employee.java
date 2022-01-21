@@ -1,51 +1,50 @@
 package org.example.PT;
 
+import org.example.AS.Branch;
+import org.example.PG.Address;
 import org.example.PostgreSQL.ManageDataBase;
 
 import java.sql.SQLException;
 import java.util.Date;
 
 public class Employee {
-    protected int pesel;
-    private int pensja, numerTelefonu;
-    private String imie,nazwisko;
-    private Date dataZadtrudnienia;
+    private int id,pesel,salary,phoneNumber;
+    private String name,surname, position;
+    private Branch branch;
+    private Address address;
+    private Date dateOfEmployment;
 
     ManageDataBase base =  new  ManageDataBase();
 
-    public Employee(int pesel, int pensja, int numerTelefonu, String imie, String nazwisko, Date dataZadtrudnienia){
-        setPesel(pesel);
-        setPensja(pensja);
-        setNumerTelefonu(numerTelefonu);
-        setImie(imie);
-        setNazwisko(nazwisko);
-        setDataZatrudnienia(dataZadtrudnienia);
+    public Employee(int id, int pesel, int salary, int phoneNumber, String name, String surname,String position, Date dateOfEmployment){
+        this.id = id;
+        this.pesel = pesel;
+        this.salary = salary;
+        this.phoneNumber = phoneNumber;
+        this.name = name;
+        this.surname = surname;
+        this.position = position;
+        this.dateOfEmployment = dateOfEmployment;
     }
+    public int getId() {return id;}
+    public int getPesel() {return pesel;}
+    public int getPhoneNumber() {return phoneNumber;}
+    public String getName() {return name;}
+    public int getSalary() {return salary;}
+    public String getSurname() {return surname;}
+    public String getPosition() {return position;}
+    public Date getDateOfEmployment() {return dateOfEmployment;}
 
-    public final void setPesel(int pesel) {this.pesel = pesel; }
-
-    public void setPensja(int pensja) {this.pensja = pensja; }
-
-    public void setNumerTelefonu(int numerTelefonu) {this.numerTelefonu = numerTelefonu;}
-
-    public void setImie(String imie) {this.imie = imie;}
-
-    public void setNazwisko(String nazwisko) {this.nazwisko = nazwisko;}
-
-    public final void setDataZatrudnienia(Date dataZadtrudnienia) {this.dataZadtrudnienia = dataZadtrudnienia;}
-
-
-    public final int getPesel() {return pesel; }
-    public final Date getDataZadtrudnienia() {return dataZadtrudnienia; }
-
-
-    public void sprawdzTrase(){
+    public void checkTheRoute(){
 
     }
 
-    public void dodajPracownika(int id,  String adres,  String stanowisko, String data_zatrudnienia, int oddzial){
+
+    public void addEmployee(){
+        int idBranch = branch.getId();
+        int idAddress = address.getId();
         try {
-            base.insertEmployee(id,imie,nazwisko, numerTelefonu, adres, pesel, stanowisko, pensja,  data_zatrudnienia, oddzial);
+            base.insertEmployee(id,name,surname, phoneNumber, idAddress, pesel, position, salary, (java.sql.Date) dateOfEmployment, idBranch);
         } catch (SQLException e) {
             e.printStackTrace();
         }

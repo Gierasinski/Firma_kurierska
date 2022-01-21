@@ -8,24 +8,25 @@ import java.util.Date;
 public class Accountant extends Employee{
     ManageDataBase base =  new  ManageDataBase();
 
-    public Accountant(int pesel, int pensja, int numerTelefonu, String imie, String nazwisko, Date dataZadtrudnienia) {
-        super(pesel, pensja, numerTelefonu, imie, nazwisko, dataZadtrudnienia);
+    public Accountant(int id, int pesel, int salary, int phoneNumber, String name, String surname, String position, Date dateOfEmployment) {
+        super(id, pesel, salary, phoneNumber, name, surname, position, dateOfEmployment);
     }
 
-    public void wystawFakture(){
+
+    public void getFacture(){
 
     }
 
-    public void pzyznajPremie(int id){
-        int pensja = 0;
+    public void givePremium(int id, int premium){
+        int salaryFromDB = 0;
         try {
-            pensja = base.searchEmployee(id);
+            salaryFromDB = base.searchEmployee(id);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        pensja += 100;
+        salaryFromDB += premium;
         try {
-            base.updatePensja(pensja,id);
+            base.updatePensja(salaryFromDB,id);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -33,9 +34,9 @@ public class Accountant extends Employee{
 
     }
 
-    public void wyplacPensje(int id){
+    public void payWages(int id){
         try {
-            int pensja = base.searchEmployee(id);
+            int salary = base.searchEmployee(id);
         } catch (SQLException e) {
             e.printStackTrace();
         }

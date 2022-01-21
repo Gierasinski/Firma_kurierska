@@ -1,15 +1,18 @@
 package org.example.PG;
 
 public class Address {
-
+    private int id;
     private String  city, street;
     private String postcode;
 
-    public Address(String city, String street, String postcode) {
+    public Address(int id, String city, String street, String postcode) {
+        this.id = id;
         this.city = city;
         this.street = street;
         this.postcode = postcode;
     }
+
+    public int getId() {return id;}
 
     public String getCity() {
         return city;

@@ -3,41 +3,35 @@ package org.example.PT;
 import org.example.PostgreSQL.ManageDataBase;
 
 import java.sql.SQLException;
-import java.util.Date;
 
-public class Truck extends Delivery{
-    protected String nrBoczny;
-    private String typ, marka;
-    private int rokProdukcji;
+public class Truck {
+    private int id, yearOfProduction;
+    private String type, mark, sideNumber;
 
     ManageDataBase base =  new  ManageDataBase();
 
-
-    public Truck(int pesel, int pensja, int numerTelefonu, String imie, String nazwisko, Date dataZadtrudnienia, String typ, String marka, String nrBoczny, int rokProdukcji ) {
-        super(pesel, pensja, numerTelefonu, imie, nazwisko, dataZadtrudnienia);
-        setTyp(typ);
-        setMarka(marka);
-        setNrBoczny(nrBoczny);
-        setRokProdukcji(rokProdukcji);
+    public Truck(int id, String sideNumber, String type, String mark, int yearOfProduction ) {
+        this.id = id;
+        this.sideNumber = sideNumber;
+        this.type = type;
+        this.mark = mark;
+        this.yearOfProduction = yearOfProduction;
 
     }
-    public void setTyp(String typ) {this.typ = typ; }
-    public void setMarka(String marka) {this.marka = marka; }
-    public final void setNrBoczny(String nrBoczny) {this.nrBoczny = nrBoczny; }
-    public final void setRokProdukcji(int rokProdukcji) {this.rokProdukcji = rokProdukcji; }
 
-    public void addTruck(int id){
+
+    public void addTruck(){
         try {
-            base.insertTruck(id,nrBoczny,typ,marka,rokProdukcji);
+            base.insertTruck(id,sideNumber,type,mark,yearOfProduction);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
     }
 
-    public void deleteTruck(int id){
+    public void deleteTruck(){
         try {
-            base.deleteTruck(id,nrBoczny);
+            base.deleteTruck(id);
         } catch (SQLException e) {
             e.printStackTrace();
         }

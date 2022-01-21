@@ -1,12 +1,13 @@
 package org.example;
 
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 
+
 public class UserPanel {
+
 
     @FXML
     private Tab TabProfile;
@@ -18,10 +19,19 @@ public class UserPanel {
     private Tab TabTrackingyourpackage;
 
     @FXML
+    private Button btnOK;
+
+    @FXML
     private Button btnSaveChanges;
 
     @FXML
     private Button btnSavePassword;
+
+    @FXML
+    private Button btnSend;
+
+    @FXML
+    private Button btnlogout;
 
     @FXML
     private TextField tfAdress;
@@ -51,16 +61,42 @@ public class UserPanel {
     private TextField tfSurname;
 
     @FXML
+    private TextField tfadressfrom;
+
+    @FXML
+    private TextField tfadressto;
+
+    @FXML
+    private TextField tfcityfrom;
+
+    @FXML
+    private TextField tfcityto;
+
+    @FXML
+    private TextField tfemailadfrom;
+
+    @FXML
+    private TextField tfemailadto;
+
+    @FXML
+    private TextField tfnameandsurfrom;
+
+    @FXML
+    private TextField tfnameandsurto;
+
+    @FXML
     private TextField tfpackagecode;
 
     @FXML
-    void btnSaveChangesClicked(ActionEvent event) {
-
-    }
+    private TextField tfphonefrom;
 
     @FXML
-    void btnSavePasswordClicked(ActionEvent event) {
+    private TextField tfphoneto;
 
-    }
+    @FXML
+    private TextField tfpostcodefrom;
+
+    @FXML
+    private TextField tfpostcodeto;
 
 }

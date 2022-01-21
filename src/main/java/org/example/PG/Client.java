@@ -1,15 +1,93 @@
 package org.example.PG;
 
+import org.example.PostgreSQL.ManageDataBase;
+
+import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 public class Client {
+    private ManageDataBase manageDataBase = new ManageDataBase();
     private Account account;
     private List<Parcel> parcels;
 
     public void addParcel(Parcel parcel){
         this.parcels.add(parcel);
     }
-    public void createAccount(String login, String password, String email, String phoneNumber, String name, String surname){
-        account = new Account(login, password, email, phoneNumber, name, surname);
+    public void shipParcel(float weight, int height, int width, int length, int payment,
+                           int delivery_address, int shipment_address) throws SQLException {
+        ShipmentFactory shipmentFactory = new ShipmentFactory();
+        Parcel parcel = shipmentFactory.createParcel( generateParcelNumber(), generateParcelNumber(),weight, height, width, length, payment,
+        delivery_address, shipment_address, "Shipped", "Shipper");
+
+        manageDataBase.connectToDataBase();
+        manageDataBase.insertParcel(parcel.getParcelNumber(),parcel.getWaybillNumber(), parcel.getWeight(), parcel.getHeight()
+        ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
+        , parcel.getStatus(), parcel.getLocalization(), 0,0, account.getId());
     }
+    public void shipParcel(float weight, int height, int width, int length, int payment,
+                           int delivery_address, int shipment_address, ManageDataBase manage) throws SQLException {
+        ShipmentFactory shipmentFactory = new ShipmentFactory();
+        Parcel parcel = shipmentFactory.createParcel( generateParcelNumber(), generateParcelNumber(),weight, height, width, length, payment,
+                delivery_address, shipment_address, "Shipped", "Shipper");
+
+        manage.insertParcel(parcel.getParcelNumber(),parcel.getWaybillNumber(), parcel.getWeight(), parcel.getHeight()
+                ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
+                , parcel.getStatus(), parcel.getLocalization(), 0,0, account.getId());
+    }
+    public void shipParcelToLocker(float weight, int height, int width, int length, int payment,
+                           int delivery_address, int shipment_address, int recive_code) throws SQLException {
+        ShipmentToLockerFactory shipmentFactory = new ShipmentToLockerFactory();
+        ParcelToLocker parcel = shipmentFactory.createParcel( generateParcelNumber(), generateParcelNumber(),weight, height, width, length, payment,
+                delivery_address, shipment_address, "Shipped", "Shipper");
+
+        manageDataBase.connectToDataBase();
+        manageDataBase.insertParcel(parcel.getParcelNumber(),parcel.getWaybillNumber(), parcel.getWeight(), parcel.getHeight()
+                ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
+                , parcel.getStatus(), parcel.getLocalization(), 0,recive_code, account.getId());
+    }
+    public void shipParcelFromLocker(float weight, int height, int width, int length, int payment,
+                                   int delivery_address, int shipment_address, int ship_code) throws SQLException {
+        ShipmentFromLockerFactory shipmentFactory = new ShipmentFromLockerFactory();
+        ParcelFromLocker parcel = shipmentFactory.createParcel( generateParcelNumber(), generateParcelNumber(),weight, height, width, length, payment,
+                delivery_address, shipment_address, "Shipped", "Shipper");
+
+        manageDataBase.connectToDataBase();
+        manageDataBase.insertParcel(parcel.getParcelNumber(),parcel.getWaybillNumber(), parcel.getWeight(), parcel.getHeight()
+                ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
+                , parcel.getStatus(), parcel.getLocalization(), ship_code,0, account.getId());
+    }
+    public void shipParcelFromToLocker(float weight, int height, int width, int length, int payment,
+                                     int delivery_address, int shipment_address, int ship_code, int recive_code) throws SQLException {
+        ShipmentFromToLockerFactory shipmentFactory = new ShipmentFromToLockerFactory();
+        ParcelFromToLocker parcel = shipmentFactory.createParcel( generateParcelNumber(), generateParcelNumber(),weight, height, width, length, payment,
+                delivery_address, shipment_address, "Shipped", "Shipper");
+
+        manageDataBase.connectToDataBase();
+        manageDataBase.insertParcel(parcel.getParcelNumber(),parcel.getWaybillNumber(), parcel.getWeight(), parcel.getHeight()
+                ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
+                , parcel.getStatus(), parcel.getLocalization(), ship_code,recive_code, account.getId());
+    }
+    public void createAccount(String login, String password, String email, String phoneNumber, String name, String surname){
+        //account = new Account(login, password, email, phoneNumber, name, surname);
+    }
+
+    public boolean login(String login, String password) throws SQLException {
+        manageDataBase.connectToDataBase();
+        account = manageDataBase.loginClients(login,password);
+
+       if(account.getIsNull()){
+           return false;
+       }else{
+           return true;
+       }
+   }
+   public int generateParcelNumber(){
+       Calendar calendar= Calendar.getInstance();
+       int month = calendar.get(Calendar.MONTH) + 1;
+       int day = calendar.get(Calendar.DAY_OF_MONTH);
+       Random rand = new Random();
+       return day+month*100+account.getId()*10000+rand.nextInt(10)*10000000;
+   }
 }

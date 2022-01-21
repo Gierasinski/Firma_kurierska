@@ -26,4 +26,48 @@ public class Parcel {
         this.status = status;
         this.localization = localization;
     }
+
+    public int getParcelNumber() {
+        return parcelNumber;
+    }
+
+    public int getWaybillNumber() {
+        return waybillNumber;
+    }
+
+    public float getWeight() {
+        return weight;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public int getLength() {
+        return length;
+    }
+
+    public int getPayment() {
+        return payment;
+    }
+
+    public int getDelivery_address() {
+        return delivery_address;
+    }
+
+    public int getShipment_address() {
+        return shipment_address;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getLocalization() {
+        return localization;
+    }
 }

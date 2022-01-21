@@ -1,6 +1,8 @@
 package org.example.PostgreSQL;
 
 import javafx.scene.control.Alert;
+import org.example.PG.Account;
+
 import java.sql.*;
 
 public class ManageDataBase {
@@ -52,13 +54,13 @@ public class ManageDataBase {
             statement.executeUpdate(sql);
     }
     public void dropDataBase() throws SQLException {
-        String sql = "DROP DATABASE "+databaseName+"";
+        String sql = "DROP DATABASE "+databaseName+" WITH (FORCE)";
         Statement statement = null;
             statement = connection.createStatement();
             statement.executeUpdate(sql);
     }
     public void dropDataBase(String databaseNameParam) throws SQLException {
-        String sql = "DROP DATABASE "+databaseNameParam+"";
+        String sql = "DROP DATABASE "+databaseNameParam+" WITH (FORCE)";
         Statement statement = null;
             statement = connection.createStatement();
             statement.executeUpdate(sql);
@@ -99,13 +101,41 @@ public class ManageDataBase {
             System.out.println("Table Truck Delete");
     }
     public void createTableClients() throws SQLException {
-            String sql = "CREATE TABLE klienci (id INTEGER,imie varchar(20), nazwisko varchar(20)," +
-                    "kontakt varchar(12), adres varchar(30), pesel varchar(11) UNIQUE, email varchar(40) UNIQUE, " +
+            String sql = "CREATE TABLE klienci (id SERIAL,imie varchar(20), nazwisko varchar(20)," +
+                    "kontakt varchar(18), adres INTEGER, pesel varchar(11) UNIQUE, email varchar(40) UNIQUE, " +
                     "NIP INTEGER , login varchar(30) UNIQUE, haslo varchar(30))";
             Statement statement = connection.createStatement();
 
             statement.executeUpdate(sql);
             System.out.println("Table klienci Created");
+    }
+    public void insertClient(String imie, String nazwisko, String kontakt,
+                             int adres, long pesel, String email,int NIP, String login, String haslo) throws SQLException {
+        String sql = "INSERT INTO klienci(imie, nazwisko, kontakt, adres, pesel, email, NIP, login, haslo) values (?,?,?,?,?,?,?,?,?)";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setString(1,imie);
+        pst.setString(2,nazwisko);
+        pst.setString(3,kontakt);
+        pst.setInt(4,adres);
+        pst.setLong(5,pesel);
+        pst.setString(6,email);
+        pst.setInt(7,NIP);
+        pst.setString(8,login);
+        pst.setString(9,haslo);
+        pst.execute();
+
+    }
+    public Account loginClients(String login, String haslo) throws SQLException {
+        Account myAccount = new Account();
+        String query = "select * from klienci where login like '"+login+"' AND haslo like '"+haslo+"';";
+        preparedStatement = connection.prepareStatement(query);
+        resultSet = preparedStatement.executeQuery();
+        int i = 0;
+        while(resultSet.next()) {
+            myAccount = new Account(resultSet.getInt("id"), login,haslo,resultSet.getString("email"), resultSet.getString("kontakt"),
+                    resultSet.getString("imie"), resultSet.getString("nazwisko"));
+        }
+        return myAccount;
     }
     public void deleteTableClients() throws SQLException {
             String sql = "DROP TABLE klienci";
@@ -117,15 +147,17 @@ public class ManageDataBase {
     public void createTableParcels() throws SQLException {
             String sql = "CREATE TABLE przesylki (id INTEGER UNIQUE,list_przewozowy INTEGER , waga INTEGER," +
                     "wysokosc INTEGER, szerokosc INTEGER, dlugosc INTEGER, platnosc INTEGER UNIQUE, " +
-                    "adres_dostawy INTEGER, adres_nadania INTEGER, status varchar(30)), lokalizacja varchar(30)), INTEGER kod_nadania, INTEGER kod_odbioru";
+                    "adres_dostawy INTEGER, adres_nadania INTEGER, status varchar(30), lokalizacja varchar(30)," +
+                    " kod_nadania INTEGER , kod_odbioru INTEGER, id_klienta INTEGER )";
             Statement statement = connection.createStatement();
 
             statement.executeUpdate(sql);
             System.out.println("Table przesylki Created");
     }
     public void insertParcel(int id, int list_przewozowy, float waga, int wysokosc,
-                               int szerokosc, int dlugosc, int platnosc,int adres_dostawy, int adres_nadania, String status, String lokalizacja, int kod_nadania, int kod_odbioru) throws SQLException {
-        String sql = "INSERT INTO pracownicy(id, list_przewozowy, waga, wysokosc, szerokosc, dlugosc, platnosc, adres_dostawy, adres_nadania, status, lokalizacjal, kod_odbioru, kod_nadania) values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
+                               int szerokosc, int dlugosc, int platnosc,int adres_dostawy,
+                             int adres_nadania, String status, String lokalizacja, int kod_nadania, int kod_odbioru, int id_klienta) throws SQLException {
+        String sql = "INSERT INTO przesylki(id, list_przewozowy, waga, wysokosc, szerokosc, dlugosc, platnosc, adres_dostawy, adres_nadania, status, lokalizacja, kod_odbioru, kod_nadania, id_klienta) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement pst = connection.prepareStatement(sql);
         pst.setInt(1,id);
         pst.setInt(2,list_przewozowy);
@@ -140,12 +172,13 @@ public class ManageDataBase {
         pst.setString(11,lokalizacja);
         pst.setInt(12,kod_odbioru);
         pst.setInt(13,kod_nadania);
+        pst.setInt(14,id_klienta);
         pst.execute();
 
     }
     public void insertParcel(int id, int list_przewozowy, float waga, int wysokosc,
-                             int szerokosc, int dlugosc, int platnosc,int adres_dostawy, int adres_nadania, String status, String lokalizacja) throws SQLException {
-        String sql = "INSERT INTO pracownicy(id, list_przewozowy, waga, wysokosc, szerokosc, dlugosc, platnosc, adres_dostawy, adres_nadania, status, lokalizacjal) values (?,?,?,?,?,?,?,?,?,?,?)";
+                             int szerokosc, int dlugosc, int platnosc,int adres_dostawy, int adres_nadania, String status, String lokalizacja, int id_klienta) throws SQLException {
+        String sql = "INSERT INTO przesylki(id, list_przewozowy, waga, wysokosc, szerokosc, dlugosc, platnosc, adres_dostawy, adres_nadania, status, lokalizacjal, id_klienta) values (?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement pst = connection.prepareStatement(sql);
         pst.setInt(1,id);
         pst.setInt(2,list_przewozowy);
@@ -158,6 +191,7 @@ public class ManageDataBase {
         pst.setInt(9,adres_nadania);
         pst.setString(10,status);
         pst.setString(11,lokalizacja);
+        pst.setInt(12,id_klienta);
         pst.execute();
 
     }

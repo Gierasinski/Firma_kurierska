@@ -26,7 +26,6 @@ public class Parcel {
         this.status = status;
         this.localization = localization;
     }
-
     public int getParcelNumber() {
         return parcelNumber;
     }
@@ -70,4 +69,5 @@ public class Parcel {
     public String getLocalization() {
         return localization;
     }
+
 }

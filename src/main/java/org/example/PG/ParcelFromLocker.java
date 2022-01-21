@@ -10,4 +10,6 @@ public class ParcelFromLocker extends Parcel {
                 shipment_address, status, localization);
         this.shipmentCode = shipmentCode;
     }
+
 }
+

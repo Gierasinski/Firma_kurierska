@@ -69,7 +69,7 @@ public class ManageDataBase {
      * @throws  SQLException
      */
     public void createTableEmployee() throws SQLException {
-            String sql = "CREATE TABLE employee (id INTEGER,name varchar(20), surname varchar(20)," +
+            String sql = "CREATE TABLE employee (id SERIAL,name varchar(20), surname varchar(20)," +
                     "phoneNumber INTEGER, idAddress INTEGER, pesel INTEGER UNIQUE, position varchar(20), " +
                     "salary INTEGER , dateOfEmployment Date, idBranch INTEGER)";
             Statement statement = connection.createStatement();
@@ -87,13 +87,15 @@ public class ManageDataBase {
     }
     /**stworzenie tabeli samochod */
     public void createTableTruck() throws SQLException {
-            String sql = "CREATE TABLE truck (id INTEGER,sideNumber varchar(20), type varchar(20)," +
+            String sql = "CREATE TABLE truck (id SERIAL,sideNumber varchar(20), type varchar(20)," +
                     "mark varchar(20), yearOfProduction INTEGER)";
             Statement statement = connection.createStatement();
 
             statement.executeUpdate(sql);
             System.out.println("Table Truck Created");
     }
+
+
     /**usuniecie tabeli samochod */
     public void deleteTableTruck() throws SQLException {
             String sql = "DROP TABLE Truck";
@@ -102,6 +104,23 @@ public class ManageDataBase {
             statement.executeUpdate(sql);
             System.out.println("Table Truck Delete");
     }
+    /**stworzenie tabeli oddzial */
+    public void createTableBranch() throws SQLException {
+        String sql = "CREATE TABLE Branch (id SERIAL,name varchar(20), code INTEGER)";
+        Statement statement = connection.createStatement();
+
+        statement.executeUpdate(sql);
+        System.out.println("Table Branch Created");
+    }
+    /**usuniecie tabeli oddzial */
+    public void deleteTableBranch() throws SQLException {
+        String sql = "DROP TABLE Branch";
+        Statement statement = connection.createStatement();
+
+        statement.executeUpdate(sql);
+        System.out.println("Table Branch Delete");
+    }
+
     public void createTableClients() throws SQLException {
             String sql = "CREATE TABLE klienci (id SERIAL,imie varchar(20), nazwisko varchar(20)," +
                     "kontakt varchar(18), adres INTEGER, pesel varchar(11) UNIQUE, email varchar(40) UNIQUE, " +
@@ -225,6 +244,8 @@ public class ManageDataBase {
             statement.executeUpdate(sql);
             System.out.println("Table adres Delete");
     }
+
+
     /**wyszukanie pracownika o podany id */
     public int searchEmployee(int id) throws SQLException {
         int salary = 0;
@@ -240,31 +261,45 @@ public class ManageDataBase {
     }
 
 /**dodanie pracownika */
-    public void insertEmployee(int id, String name, String surname, int phoneNumber,
+    public void insertEmployee(String name, String surname, int phoneNumber,
                        int idAddress, int pesel, String position,int salary, Date dateOfEmployment, int idBranch) throws SQLException {
-            String sql = "INSERT INTO pracownicy(id,name,surname,phoneNumber,idAddress,pesel,position,salary,dateOfEmployment,idBranch) values (?,?,?,?,?,?,?,?,?,?)";
+            String sql = "INSERT INTO employee(name,surname,phoneNumber,idAddress,pesel,position,salary,dateOfEmployment,idBranch) values (?,?,?,?,?,?,?,?,?)";
             PreparedStatement pst = connection.prepareStatement(sql);
-            pst.setInt(1,id);
-            pst.setString(2,name);
-            pst.setString(3,surname);
-            pst.setInt(4,phoneNumber);
-            pst.setInt(5,idAddress);
-            pst.setInt(6,pesel);
-            pst.setString(7,position);
-            pst.setInt(8,salary);
-            pst.setDate(9, dateOfEmployment);
-            pst.setInt(10,idBranch);
+            pst.setString(1,name);
+            pst.setString(2,surname);
+            pst.setInt(3,phoneNumber);
+            pst.setInt(4,idAddress);
+            pst.setInt(5,pesel);
+            pst.setString(6,position);
+            pst.setInt(7,salary);
+            pst.setDate(8, dateOfEmployment);
+            pst.setInt(9,idBranch);
             pst.execute();
     }
+    /**dodanie oddzialu */
+    public void insertBranch(String name, int code) throws SQLException {
+        String sql = "INSERT INTO Branch(name,code) values (?,?)";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setString(1,name);
+        pst.setInt(2,code);
+        pst.execute();
+    }
+    /**usuniecie oddzialu */
+    public void deleteBranch(int id) throws SQLException {
+        String sql = "DELETE * FROM Branch WHERE id = ? ";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setInt(1, id);
+        pst.execute();
+
+    }
     /**dodanie samochodu */
-    public void insertTruck(int id, String sideNumber, String type, String mark, int yearOfProduction) throws SQLException {
-            String sql = "INSERT INTO truck(id,sideNumber,type,mark,yearOfProduction) values (?,?,?,?,?)";
+    public void insertTruck(String sideNumber, String type, String mark, int yearOfProduction) throws SQLException {
+            String sql = "INSERT INTO truck(sideNumber,type,mark,yearOfProduction) values (?,?,?,?)";
             PreparedStatement pst = connection.prepareStatement(sql);
-            pst.setInt(1,id);
-            pst.setString(2,sideNumber);
-            pst.setString(3,type);
-            pst.setString(4,mark);
-            pst.setInt(5,yearOfProduction);
+            pst.setString(1,sideNumber);
+            pst.setString(2,type);
+            pst.setString(3,mark);
+            pst.setInt(4,yearOfProduction);
             pst.execute();
     }
     /**usuniecie samochodu */
@@ -276,12 +311,21 @@ public class ManageDataBase {
 
     }
     /**aktualizacja pensji pracownika*/
-    public void updatePensja(int salary,int id) throws SQLException {
+    public void updateSalary(int salary,int id) throws SQLException {
             String sql = "UPDATE employee SET salary = ? WHERE id = ?";
             PreparedStatement pst = connection.prepareStatement(sql);
             pst.setInt(1, salary);
             pst.setInt(2, id);
             pst.execute();
+    }
+
+    /**aktualizacja statusu przesylki*/
+    public void updateParcelStatus(String status, int numberParcel) throws SQLException {
+        String sql = "UPDATE parcel SET status = ? WHERE numberParcel = ?";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setString(1, status);
+        pst.setInt(2, numberParcel);
+        pst.execute();
     }
 
 }

@@ -1,10 +1,14 @@
 package org.example.PT;
 
+import org.example.PostgreSQL.ManageDataBase;
+
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 public class Storekeeper extends Employee {
+    ManageDataBase base =  new  ManageDataBase();
     Status status;
 
     public Storekeeper(int id, int pesel, int salary, int phoneNumber, String name, String surname, String position, Date dateOfEmployment) {
@@ -20,8 +24,12 @@ public class Storekeeper extends Employee {
 
 
     }
-    public void acceptParcel(){
-        status.getSa5();
+    public void acceptParcel(int parcelNumber){
+        try {
+            base.updateParcelStatus(status.getSa5(),parcelNumber);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public void transportPackage() {

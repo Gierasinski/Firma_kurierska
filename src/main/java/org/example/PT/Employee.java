@@ -44,7 +44,7 @@ public class Employee {
         int idBranch = branch.getId();
         int idAddress = address.getId();
         try {
-            base.insertEmployee(id,name,surname, phoneNumber, idAddress, pesel, position, salary, (java.sql.Date) dateOfEmployment, idBranch);
+            base.insertEmployee(name,surname, phoneNumber, idAddress, pesel, position, salary, (java.sql.Date) dateOfEmployment, idBranch);
         } catch (SQLException e) {
             e.printStackTrace();
         }

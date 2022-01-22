@@ -9,5 +9,9 @@ public class Payment {
         this.price = price;
         this.method = method;
     }
+
+    public float getPrice() {return price;}
+    public String getMethod() {return method;}
+
     public void pay(){}
 }

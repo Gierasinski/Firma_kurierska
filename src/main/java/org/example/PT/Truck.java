@@ -5,13 +5,12 @@ import org.example.PostgreSQL.ManageDataBase;
 import java.sql.SQLException;
 
 public class Truck {
-    private int id, yearOfProduction;
+    private int  yearOfProduction;
     private String type, mark, sideNumber;
 
     ManageDataBase base =  new  ManageDataBase();
 
-    public Truck(int id, String sideNumber, String type, String mark, int yearOfProduction ) {
-        this.id = id;
+    public Truck(String sideNumber, String type, String mark, int yearOfProduction ) {
         this.sideNumber = sideNumber;
         this.type = type;
         this.mark = mark;
@@ -22,14 +21,14 @@ public class Truck {
 
     public void addTruck(){
         try {
-            base.insertTruck(id,sideNumber,type,mark,yearOfProduction);
+            base.insertTruck(sideNumber,type,mark,yearOfProduction);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
     }
 
-    public void deleteTruck(){
+    public void deleteTruck(int id){
         try {
             base.deleteTruck(id);
         } catch (SQLException e) {

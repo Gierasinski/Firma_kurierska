@@ -4,6 +4,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
+import java.io.IOException;
+
 public class WorkerPanel {
 
     @FXML
@@ -16,18 +18,26 @@ public class WorkerPanel {
     private Button btnaccountant;
 
     @FXML
-    void SwitchToAccountant(ActionEvent event) {
+    private Button btnexit;
 
+    @FXML
+    void SwitchToAccountant(ActionEvent event) throws IOException {
+        App.setRoot("Accountant");
     }
 
     @FXML
-    void SwitchToDelivery(ActionEvent event) {
-
+    void SwitchToDelivery(ActionEvent event) throws IOException  {
+        App.setRoot("Delivery");
     }
 
     @FXML
-    void SwitchtoStorekeeper(ActionEvent event) {
+    void SwitchToLogin(ActionEvent event) throws IOException  {
+        App.setRoot("Login");
+    }
 
+    @FXML
+    void SwitchtoStorekeeper(ActionEvent event) throws IOException  {
+        App.setRoot("Storekeeper");
     }
 
 }

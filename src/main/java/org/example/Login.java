@@ -29,17 +29,12 @@ public class Login {
     private TextField tfUsername;
 
     @FXML
-    void btnCreateanaccountClicked(ActionEvent event) {
-
+    void btnCreateanaccountClicked(ActionEvent event)throws IOException {
+        App.setRoot("Register");
     }
 
     @FXML
     void btnUserClicked(ActionEvent event) {
-
-    }
-
-    @FXML
-    void btnWorkerClicked(ActionEvent event) {
 
     }
 

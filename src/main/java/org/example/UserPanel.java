@@ -1,9 +1,13 @@
 package org.example;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
+
+import java.io.IOException;
 
 public class UserPanel {
 
@@ -30,6 +34,18 @@ public class UserPanel {
 
     @FXML
     private Button btnlogout;
+
+    @FXML
+    private CheckBox chbhousetohouse;
+
+    @FXML
+    private CheckBox chbhousetopl;
+
+    @FXML
+    private CheckBox chbpltohouse;
+
+    @FXML
+    private CheckBox chbpltopl;
 
     @FXML
     private TextField tfAdress;
@@ -96,5 +112,10 @@ public class UserPanel {
 
     @FXML
     private TextField tfpostcodeto;
+
+    @FXML
+    void logout(ActionEvent event)throws IOException {
+        App.setRoot("Login");
+    }
 
 }

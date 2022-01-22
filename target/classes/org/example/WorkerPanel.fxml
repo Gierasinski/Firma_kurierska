@@ -5,7 +5,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="550.0" prefWidth="600.0" style="-fx-background-color: grey;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.WorkerPanel">
    <children>
       <Button fx:id="btnaccountant" layoutX="88.0" layoutY="147.0" mnemonicParsing="false" onAction="#SwitchToAccountant" prefHeight="62.0" prefWidth="111.0" text="Accountant" />
@@ -16,5 +15,6 @@
             <Font size="18.0" />
          </font>
       </Label>
+      <Button fx:id="btnexit" layoutX="244.0" layoutY="275.0" mnemonicParsing="false" onAction="#SwitchToLogin" prefHeight="62.0" prefWidth="111.0" text="Exit" />
    </children>
 </AnchorPane>

@@ -14,6 +14,6 @@
       <Label layoutX="483.0" layoutY="47.0" />
       <ListView fx:id="lvlistapracownikow" layoutX="36.0" layoutY="48.0" prefHeight="250.0" prefWidth="200.0" />
       <TextField fx:id="tfamount" layoutX="267.0" layoutY="206.0" />
-      <Button layoutX="491.0" layoutY="32.0" mnemonicParsing="false" prefHeight="46.0" prefWidth="58.0" text="Exit" />
+      <Button fx:id="btnexit" layoutX="491.0" layoutY="32.0" mnemonicParsing="false" onAction="#SwitchToWorkerPanel" prefHeight="46.0" prefWidth="58.0" text="Exit" />
    </children>
 </AnchorPane>

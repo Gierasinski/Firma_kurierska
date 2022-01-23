@@ -3,41 +3,24 @@ package org.example;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
 
 import java.io.IOException;
 
 public class WorkerPanel {
 
     @FXML
-    private Button btnDelivery;
-
-    @FXML
-    private Button btnStorekeeper;
-
-    @FXML
-    private Button btnaccountant;
-
-    @FXML
     private Button btnexit;
 
     @FXML
-    void SwitchToAccountant(ActionEvent event) throws IOException {
-        App.setRoot("Accountant");
-    }
+    private Button btnlogin;
 
     @FXML
-    void SwitchToDelivery(ActionEvent event) throws IOException  {
-        App.setRoot("Delivery");
-    }
+    private TextField tfworkercode;
 
     @FXML
-    void SwitchToLogin(ActionEvent event) throws IOException  {
-        App.setRoot("Login");
-    }
-
-    @FXML
-    void SwitchtoStorekeeper(ActionEvent event) throws IOException  {
-        App.setRoot("Storekeeper");
+    void SwitchToLogin(ActionEvent event)throws IOException {
+    App.setRoot("Login");
     }
 
 }

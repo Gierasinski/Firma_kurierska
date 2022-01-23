@@ -52,6 +52,24 @@ public class ManageDataBase {
             statement = connection.createStatement();
             statement.executeUpdate(sql);
     }
+    public void reInitDataBase(){
+        connectToPostgreSQL();
+        try {
+            dropDataBase();
+            createDataBase();
+            connectToDataBase();
+
+            createTableEmployee();
+            createTableAdres();
+            createTableParcels();
+            createTableClients();
+            createTableTruck();
+            createTableBranch();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+    }
     public void dropDataBase() throws SQLException {
         String sql = "DROP DATABASE "+databaseName+" WITH (FORCE)";
         Statement statement = null;
@@ -122,28 +140,44 @@ public class ManageDataBase {
     }
 
     public void createTableClients() throws SQLException {
-            String sql = "CREATE TABLE klienci (id SERIAL,imie varchar(20), nazwisko varchar(20)," +
-                    "kontakt varchar(18), adres INTEGER, pesel varchar(11) UNIQUE, email varchar(40) UNIQUE, " +
+            String sql = "CREATE TABLE klienci (id SERIAL ,imie varchar(20), nazwisko varchar(20)," +
+                    "kontakt varchar(18), adres INTEGER,  email varchar(40) UNIQUE, " +
                     "NIP INTEGER , login varchar(30) UNIQUE, haslo varchar(30))";
             Statement statement = connection.createStatement();
 
             statement.executeUpdate(sql);
             System.out.println("Table klienci Created");
     }
-    public void insertClient(String imie, String nazwisko, String kontakt,
-                             int adres, long pesel, String email,int NIP, String login, String haslo) throws SQLException {
-        String sql = "INSERT INTO klienci(imie, nazwisko, kontakt, adres, pesel, email, NIP, login, haslo) values (?,?,?,?,?,?,?,?,?)";
+    public int insertClient(String imie, String nazwisko, String kontakt,
+                            String email, String login, String haslo) throws SQLException {
+        int id = -1;
+        String query = "select * from klienci where login like '"+login+"';";
+        preparedStatement = connection.prepareStatement(query);
+        resultSet = preparedStatement.executeQuery();
+        while(resultSet.next()) {
+            return -2;
+        }
+
+        query = "select * from klienci where email like '"+email+"';";
+        preparedStatement = connection.prepareStatement(query);
+        resultSet = preparedStatement.executeQuery();
+        while(resultSet.next()) {
+            return -3;
+        }
+
+        String sql = "INSERT INTO klienci(imie, nazwisko, kontakt, email,login, haslo) values (?,?,?,?,?,?) RETURNING id";
         PreparedStatement pst = connection.prepareStatement(sql);
         pst.setString(1,imie);
         pst.setString(2,nazwisko);
         pst.setString(3,kontakt);
-        pst.setInt(4,adres);
-        pst.setLong(5,pesel);
-        pst.setString(6,email);
-        pst.setInt(7,NIP);
-        pst.setString(8,login);
-        pst.setString(9,haslo);
-        pst.execute();
+        pst.setString(4,email);
+        pst.setString(5,login);
+        pst.setString(6,haslo);
+        resultSet = pst.executeQuery();
+        while(resultSet.next()) {
+            id = resultSet.getInt("id");
+        }
+        return id;
 
     }
     public Account loginClients(String login, String haslo) throws SQLException {

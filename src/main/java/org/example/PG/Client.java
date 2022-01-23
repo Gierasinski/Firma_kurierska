@@ -71,9 +71,6 @@ public class Client {
                 ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
                 , parcel.getStatus(), parcel.getLocalization(), ship_code,recive_code, account.getId());
     }
-    public void createAccount(String login, String password, String email, String phoneNumber, String name, String surname){
-        //account = new Account(login, password, email, phoneNumber, name, surname);
-    }
 
     public boolean login(String login, String password) throws SQLException {
         manageDataBase.connectToDataBase();
@@ -85,6 +82,16 @@ public class Client {
            return true;
        }
    }
+    public boolean register(String name, String surname, String phoneNumber, String email, String login, String password) throws SQLException {
+        manageDataBase.connectToDataBase();
+        int id = manageDataBase.insertClient(name, surname, phoneNumber, email, login, password);
+
+        if(id < 0){
+            return false;
+        }else{
+            return true;
+        }
+    }
    public int generateParcelNumber(){
        Calendar calendar= Calendar.getInstance();
        int month = calendar.get(Calendar.MONTH) + 1;

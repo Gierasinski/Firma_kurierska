@@ -18,8 +18,8 @@ public class ClientTest {
             testBase.createDataBase(databaseName);
             testBase.connectToDataBase(databaseName);
             testBase.createTableClients();
-            testBase.insertClient("Adam","Nowak", "+48 110 110 110", 0,776857986, "myEmail@gmail.com",
-                    123,"admin","admin");
+            testBase.insertClient("Adam","Nowak", "+48 110 110 110", "myEmail@gmail.com",
+                    "admin","admin");
             client.login("admin","admin");
         } catch (SQLException e) {
             e.printStackTrace();
@@ -47,8 +47,8 @@ public class ClientTest {
             testBase.createDataBase(databaseName);
             testBase.connectToDataBase(databaseName);
             testBase.createTableClients();
-            testBase.insertClient("Adam","Nowak", "+48 110 110 110", 0,776857986, "myEmail@gmail.com",
-                    123,"admin","admin");
+            testBase.insertClient("Adam","Nowak", "+48 110 110 110", "myEmail@gmail.com",
+                    "admin","admin");
             client.login("admin","admin");
             testBase.createTableParcels();
             client.shipParcel(10,10,10,10,1,testBase);

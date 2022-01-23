@@ -4,8 +4,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import org.example.PT.Employee;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class WorkerPanel {
 
@@ -20,7 +22,24 @@ public class WorkerPanel {
 
     @FXML
     void SwitchToLogin(ActionEvent event)throws IOException {
-    App.setRoot("Login");
+        Employee employee = null;
+
+        String code = tfworkercode.getText();
+        try {
+            if(employee.loginEmployee(code) == 1){
+                App.setRoot("Delivery");
+            }else if(employee.loginEmployee(code) == 2){
+                App.setRoot("Storekeeper");
+            }else if(employee.loginEmployee(code) == 3){
+                App.setRoot("Accountant");
+            }else{
+               tfworkercode.setText("Nie ma takiego pracownika");
+                App.setRoot("Login");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
 }

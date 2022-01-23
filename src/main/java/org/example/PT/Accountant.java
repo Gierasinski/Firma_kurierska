@@ -12,8 +12,8 @@ public class Accountant extends Employee{
     ManageDataBase base =  new  ManageDataBase();
     Payment payment;
 
-    public Accountant(int id, int pesel, int salary, int phoneNumber, String name, String surname, String position, Date dateOfEmployment) {
-        super(id, pesel, salary, phoneNumber, name, surname, position, dateOfEmployment);
+    public Accountant(int id, int pesel, int salary, int phoneNumber,String workerCode, String name, String surname, String position, Date dateOfEmployment) {
+        super(id, pesel, salary, phoneNumber,workerCode, name, surname, position, dateOfEmployment);
     }
 
 

@@ -87,7 +87,7 @@ public class ManageDataBase {
      * @throws  SQLException
      */
     public void createTableEmployee() throws SQLException {
-            String sql = "CREATE TABLE employee (id SERIAL,name varchar(20), surname varchar(20)," +
+            String sql = "CREATE TABLE employee (id SERIAL,workerCode varchar(20) UNIQUE, name varchar(20), surname varchar(20)," +
                     "phoneNumber INTEGER, idAddress INTEGER, pesel INTEGER UNIQUE, position varchar(20), " +
                     "salary INTEGER , dateOfEmployment Date, idBranch INTEGER)";
             Statement statement = connection.createStatement();
@@ -295,21 +295,45 @@ public class ManageDataBase {
     }
 
 /**dodanie pracownika */
-    public void insertEmployee(String name, String surname, int phoneNumber,
+    public void insertEmployee(String workerCode, String name, String surname, int phoneNumber,
                        int idAddress, int pesel, String position,int salary, Date dateOfEmployment, int idBranch) throws SQLException {
-            String sql = "INSERT INTO employee(name,surname,phoneNumber,idAddress,pesel,position,salary,dateOfEmployment,idBranch) values (?,?,?,?,?,?,?,?,?)";
+            String sql = "INSERT INTO employee(workerCode, name,surname,phoneNumber,idAddress,pesel,position,salary,dateOfEmployment,idBranch) values (?,?,?,?,?,?,?,?,?,?)";
             PreparedStatement pst = connection.prepareStatement(sql);
-            pst.setString(1,name);
-            pst.setString(2,surname);
-            pst.setInt(3,phoneNumber);
-            pst.setInt(4,idAddress);
-            pst.setInt(5,pesel);
-            pst.setString(6,position);
-            pst.setInt(7,salary);
-            pst.setDate(8, dateOfEmployment);
-            pst.setInt(9,idBranch);
+            pst.setString(1,workerCode);
+            pst.setString(2,name);
+            pst.setString(3,surname);
+            pst.setInt(4,phoneNumber);
+            pst.setInt(5,idAddress);
+            pst.setInt(6,pesel);
+            pst.setString(7,position);
+            pst.setInt(8,salary);
+            pst.setDate(9, dateOfEmployment);
+            pst.setInt(10,idBranch);
             pst.execute();
     }
+
+    /**wyszukanie pracownika o podany numerze pracownika */
+    public String searchEmployeeWorkerCode(String workerCode) throws SQLException {
+        String code = null;
+       // Employee myEmployee = new Employee();
+        String query = "select salary from employee where workerCode="+workerCode+";";
+        preparedStatement = connection.prepareStatement(query);
+        resultSet = preparedStatement.executeQuery();
+
+        int i = 0;
+        while(resultSet.next()) {
+            /*
+            myEmployee = new Employee(resultSet.getInt("id"),resultSet.getInt("pesel"),resultSet.getInt("salary"),
+                    resultSet.getInt("phoneNumber"),workerCode, resultSet.getString("name"), resultSet.getString("surname"),
+                    resultSet.getString("position"), resultSet.getDate("dateOfEmployment"));
+
+             */
+            code = resultSet.getString("workerCode");
+            i++;
+        }
+        return code;
+    }
+
     /**dodanie oddzialu */
     public void insertBranch(String name, int code) throws SQLException {
         String sql = "INSERT INTO Branch(name,code) values (?,?)";

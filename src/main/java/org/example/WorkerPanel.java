@@ -23,7 +23,7 @@ public class WorkerPanel {
     @FXML
     void SwitchToLogin(ActionEvent event)throws IOException {
         Employee employee = null;
-
+        App.setRoot("Delivery");
         String code = tfworkercode.getText();
         try {
             if(employee.loginEmployee(code) == 1){
@@ -40,6 +40,10 @@ public class WorkerPanel {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    @FXML
+    void workerlogin(ActionEvent event)throws IOException {
+        App.setRoot("Login");
     }
 
 }

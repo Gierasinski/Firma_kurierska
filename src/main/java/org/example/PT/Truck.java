@@ -19,7 +19,8 @@ public class Truck {
     }
 
 
-    public void addTruck(){
+    public void addTruck() throws SQLException {
+        base.connectToDataBase();
         try {
             base.insertTruck(sideNumber,type,mark,yearOfProduction);
         } catch (SQLException e) {
@@ -28,7 +29,8 @@ public class Truck {
 
     }
 
-    public void deleteTruck(int id){
+    public void deleteTruck(int id) throws SQLException {
+        base.connectToDataBase();
         try {
             base.deleteTruck(id);
         } catch (SQLException e) {

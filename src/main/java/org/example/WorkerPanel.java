@@ -5,11 +5,13 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import org.example.PT.Employee;
+import org.example.PT.EmployeeHolder;
 
 import java.io.IOException;
 import java.sql.SQLException;
 
 public class WorkerPanel {
+    private static EmployeeHolder employeeHolder = EmployeeHolder.getInstance();
 
     @FXML
     private Button btnexit;
@@ -22,28 +24,36 @@ public class WorkerPanel {
 
     @FXML
     void SwitchToLogin(ActionEvent event)throws IOException {
-        Employee employee = null;
-        App.setRoot("Delivery");
-        String code = tfworkercode.getText();
-        try {
-            if(employee.loginEmployee(code) == 1){
-                App.setRoot("Delivery");
-            }else if(employee.loginEmployee(code) == 2){
-                App.setRoot("Storekeeper");
-            }else if(employee.loginEmployee(code) == 3){
-                App.setRoot("Accountant");
-            }else{
-               tfworkercode.setText("Nie ma takiego pracownika");
-                App.setRoot("Login");
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        App.setRoot("Login");
     }
     @FXML
     void workerlogin(ActionEvent event)throws IOException {
-        App.setRoot("Login");
+        employeeHolder.setEmployee(new Employee());
+        //Employee employee = new Employee();
+        //App.setRoot("Delivery");
+
+        String code = tfworkercode.getText();
+        if(!tfworkercode.getText().isEmpty()) {
+            try {
+                if (employeeHolder.getEmployee().loginEmployee(code) == 1) {
+                    App.setRoot("Delivery");
+                } else if (employeeHolder.getEmployee().loginEmployee(code) == 2) {
+                    App.setRoot("Storekeeper");
+                } else if (employeeHolder.getEmployee().loginEmployee(code) == 3) {
+                    App.setRoot("Accountant");
+                } else {
+                    tfworkercode.setText("Nie ma takiego pracownika");
+                    //App.setRoot("Login");
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }else{
+            tfworkercode.setText("Nie ma takiego pracownika");
+        }
+
+
     }
 
 }

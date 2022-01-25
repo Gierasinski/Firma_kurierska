@@ -11,13 +11,13 @@ public final class EmployeeHolder {
     public static EmployeeHolder getInstance() {
         return INSTANCE;
     }
-    /*
+
     public void setEmployee (Employee c){
-        this.Employee = c;
+        this.employee = c;
     }
     public Employee getEmployee() {
-        return this.Employee;
+        return this.employee;
     }
-    */
+
 
 }

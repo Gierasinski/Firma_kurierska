@@ -1,0 +1,4 @@
+Faktura
+data wystawienia faktury: 2022-01-25 01:28:23
+Metoda platnosc: karta
+Kwota: 100.0

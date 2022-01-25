@@ -1,6 +1,7 @@
 package org.example.PostgreSQL;
 
 import org.example.PG.Account;
+import org.example.PT.Employee;
 
 import java.sql.*;
 
@@ -63,11 +64,35 @@ public class ManageDataBase {
             createTableAdres();
             createTableParcels();
             createTableClients();
+            createTableRoute();
             createTableTruck();
             createTableBranch();
+            insertToTable();
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
+    }
+    public void insertToTable() throws SQLException {
+        String sql = "INSERT INTO employee(pesel,salary,phoneNumber,workerCode,name,surname,position,dateofemployment)\n" +
+                "VALUES ('543534', '4344', '43432423', '1111','ppp','gdfgd','delivery','10-12-2021');\n" +
+                "INSERT INTO klienci(imie, nazwisko, kontakt, email,login, haslo)\n" +
+                "VALUES ('kuba','stawka','543534','kubafsdfsd','kuba','1234');\n";
+
+        Statement statement = connection.createStatement();
+
+        statement.executeUpdate(sql);
+        System.out.println("Table inserted");
+        insertAdres("Kiece","biala","23-300");
+        insertAdres("Kiece","czarna","23-300");
+        insertAdres("Radom","zielona","23-300");
+        insertAdres("Kiece","wysoka","23-300");
+        insertAdres("Kiece","mala","23-300");
+
+        insertRoute(111,1,2,3,4,5);
+        insertRoute(222,3,4,1,2,5);
+        System.out.println(selectAdresToRoute(111));
+        System.out.println(selectAdresToRoute(222));
 
     }
     public void dropDataBase() throws SQLException {
@@ -88,7 +113,7 @@ public class ManageDataBase {
      */
     public void createTableEmployee() throws SQLException {
             String sql = "CREATE TABLE employee (id SERIAL,workerCode varchar(20) UNIQUE, name varchar(20), surname varchar(20)," +
-                    "phoneNumber INTEGER, idAddress INTEGER, pesel INTEGER UNIQUE, position varchar(20), " +
+                    "phoneNumber INTEGER, idAddress INTEGER, pesel INTEGER, position varchar(20), " +
                     "salary INTEGER , dateOfEmployment Date, idBranch INTEGER)";
             Statement statement = connection.createStatement();
 
@@ -113,7 +138,6 @@ public class ManageDataBase {
             System.out.println("Table Truck Created");
     }
 
-
     /**usuniecie tabeli samochod */
     public void deleteTableTruck() throws SQLException {
             String sql = "DROP TABLE Truck";
@@ -122,6 +146,16 @@ public class ManageDataBase {
             statement.executeUpdate(sql);
             System.out.println("Table Truck Delete");
     }
+    /**stworzenie tabeli trasa */
+    public void createTableRoute() throws SQLException {
+        String sql = "CREATE TABLE Route (id SERIAL,parcelNumber INTEGER,idAdresKlientN INTEGER,idAdresPaczkomatN INTEGER, idAdresOddzial INTEGER," +
+                "idAdresKlientO INTEGER,idAdresPaczkomatO INTEGER)";
+        Statement statement = connection.createStatement();
+
+        statement.executeUpdate(sql);
+        System.out.println("Table Route Created");
+    }
+
     /**stworzenie tabeli oddzial */
     public void createTableBranch() throws SQLException {
         String sql = "CREATE TABLE Branch (id SERIAL,name varchar(20), code INTEGER)";
@@ -257,13 +291,13 @@ public class ManageDataBase {
             statement.executeUpdate(sql);
             System.out.println("Table adres Created");
     }
-    public int insertAdres(String miasto, String ulica, String kod_poczotwy) throws SQLException {
+    public int insertAdres(String miasto, String ulica, String kod_pocztowy) throws SQLException {
         int id = -1;
         String sql = "INSERT INTO adres(miasto, ulica, kod_pocztowy) values (?,?,?) RETURNING id";
         PreparedStatement pst = connection.prepareStatement(sql);
         pst.setString(1,miasto);
         pst.setString(2,ulica);
-        pst.setString(3,kod_poczotwy);
+        pst.setString(3,kod_pocztowy);
         resultSet = pst.executeQuery();
         while(resultSet.next()) {
             id = resultSet.getInt("id");
@@ -313,25 +347,47 @@ public class ManageDataBase {
     }
 
     /**wyszukanie pracownika o podany numerze pracownika */
-    public String searchEmployeeWorkerCode(String workerCode) throws SQLException {
-        String code = null;
-       // Employee myEmployee = new Employee();
-        String query = "select salary from employee where workerCode="+workerCode+";";
+    public Employee searchEmployeeWorkerCode(String workerCode) throws SQLException {
+        Employee myEmployee = new Employee();
+        String query = "select * from employee where workerCode like '"+workerCode+"';";
         preparedStatement = connection.prepareStatement(query);
         resultSet = preparedStatement.executeQuery();
-
         int i = 0;
         while(resultSet.next()) {
-            /*
             myEmployee = new Employee(resultSet.getInt("id"),resultSet.getInt("pesel"),resultSet.getInt("salary"),
                     resultSet.getInt("phoneNumber"),workerCode, resultSet.getString("name"), resultSet.getString("surname"),
                     resultSet.getString("position"), resultSet.getDate("dateOfEmployment"));
 
-             */
-            code = resultSet.getString("workerCode");
             i++;
         }
-        return code;
+        return myEmployee;
+    }
+
+    /**dodanie Trasy */
+    public void insertRoute(int parcelNumber,int idKN,int idPN,int idO, int idKO, int idPO) throws SQLException {
+        String sql = "INSERT INTO Route(parcelNumber,idAdresKlientN,idAdresPaczkomatN, idAdresOddzial,idAdresKlientO,idAdresPaczkomatO) values (?,?,?,?,?,?)";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setInt(1,parcelNumber);
+        pst.setInt(2,idKN);
+        pst.setInt(3,idPN);
+        pst.setInt(4,idO);
+        pst.setInt(5,idKO);
+        pst.setInt(6,idPO);
+        pst.execute();
+    }
+
+    /**wyszukanie trasy o podany numerze paczki */
+    public int searchRoute(int numberParcel) throws SQLException {
+        int salary = 0;
+        String query = "select * from Route where numberParcel="+numberParcel+";";
+        preparedStatement = connection.prepareStatement(query);
+        resultSet = preparedStatement.executeQuery();
+        int i = 0;
+        while(resultSet.next()) {
+            //salary = resultSet.getInt("id");
+            i++;
+        }
+        return salary;
     }
 
     /**dodanie oddzialu */
@@ -359,13 +415,15 @@ public class ManageDataBase {
             pst.setString(3,mark);
             pst.setInt(4,yearOfProduction);
             pst.execute();
+        System.out.println("Truck Add");
     }
     /**usuniecie samochodu */
     public void deleteTruck(int id) throws SQLException {
-            String sql = "DELETE * FROM Truck WHERE id = ? ";
+            String sql = "DELETE FROM Truck WHERE id = ? ";
             PreparedStatement pst = connection.prepareStatement(sql);
             pst.setInt(1, id);
             pst.execute();
+            System.out.println("Truck Delete");
 
     }
     /**aktualizacja pensji pracownika*/
@@ -375,6 +433,7 @@ public class ManageDataBase {
             pst.setInt(1, salary);
             pst.setInt(2, id);
             pst.execute();
+            System.out.println("Salary update");
     }
 
     /**aktualizacja statusu przesylki*/
@@ -385,5 +444,22 @@ public class ManageDataBase {
         pst.setInt(2, numberParcel);
         pst.execute();
     }
+
+    /**zapytanie dajace miasto nadawcy*/
+    public String selectAdresToRoute(int numberParcel) throws SQLException {
+        String city = null;
+        String street = null;
+        String query = "select miasto,ulica from adres where id=(select idAdresKlientN from Route where parcelNumber = "+numberParcel+");";
+        preparedStatement = connection.prepareStatement(query);
+        resultSet = preparedStatement.executeQuery();
+        int i = 0;
+        while(resultSet.next()) {
+            city = resultSet.getString("miasto");
+            street = resultSet.getString("ulica");
+            i++;
+        }
+        return city+", "+street;
+    }
+
 
 }

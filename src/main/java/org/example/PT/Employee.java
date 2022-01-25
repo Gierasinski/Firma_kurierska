@@ -6,7 +6,6 @@ import org.example.PostgreSQL.ManageDataBase;
 
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.Random;
 
 public class Employee {
     private int id,pesel,salary,phoneNumber;
@@ -28,6 +27,7 @@ public class Employee {
         this.position = position;
         this.dateOfEmployment = dateOfEmployment;
     }
+    public Employee(){}
 
     public int getId() {return id;}
     public int getPesel() {return pesel;}
@@ -39,48 +39,35 @@ public class Employee {
     public String getPosition() {return position;}
     public Date getDateOfEmployment() {return dateOfEmployment;}
 
-    public void checkTheRoute(){
+    public void checkTheRoute() throws SQLException {
+        base.connectToDataBase();
+        base.searchRoute(12);
 
     }
 
     public int loginEmployee(String workerCode) throws SQLException {
         base.connectToDataBase();
-        String code  = base.searchEmployeeWorkerCode(workerCode);
-
-        if(code.startsWith("del")){
-            return 1;
-        }else  if(code.startsWith("sto")){
-            return 2;
-        }else if(code.startsWith("acc")){
-            return 3;
+        Employee employeeWorker = new Employee();
+        employeeWorker = base.searchEmployeeWorkerCode(workerCode);
+        if(employeeWorker.id > 0){
+            if(employeeWorker.position.startsWith("del")){
+                return 1;
+            }else  if(employeeWorker.position.startsWith("sto")){
+                return 2;
+            }else if(employeeWorker.position.startsWith("acc")){
+                return 3;
+            }
         }
+
         return -1;
     }
 
 
 
 
-    public void addEmployee(){
-        int idBranch = branch.getId();
-        int idAddress = address.getId();
-        if(position=="Delivery"){
-            workerCode = "del"+generateWorkerCodeNumber();
-        }else if(position=="Accountant"){
-            workerCode = "acc"+generateWorkerCodeNumber();
-        }else if(position=="Storekeeper"){
-            workerCode = "sto"+generateWorkerCodeNumber();
-        }
-        try {
-            base.insertEmployee(workerCode, name,surname, phoneNumber, idAddress, pesel, position, salary, (java.sql.Date) dateOfEmployment, idBranch);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-    }
 
 
 
-    public int generateWorkerCodeNumber(){
-        Random rand = new Random();
-        return rand.nextInt(10)+rand.nextInt(10)*10+rand.nextInt(10)*100+rand.nextInt(10)*1000;
-    }
+
+
 }

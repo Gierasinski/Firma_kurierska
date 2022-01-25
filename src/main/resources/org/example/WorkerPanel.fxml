@@ -2,19 +2,19 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="550.0" prefWidth="600.0" style="-fx-background-color: grey;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.WorkerPanel">
    <children>
-      <Button fx:id="btnaccountant" layoutX="88.0" layoutY="147.0" mnemonicParsing="false" onAction="#SwitchToAccountant" prefHeight="62.0" prefWidth="111.0" text="Accountant" />
-      <Button fx:id="btnDelivery" layoutX="245.0" layoutY="147.0" mnemonicParsing="false" onAction="#SwitchToDelivery" prefHeight="62.0" prefWidth="111.0" text="Delivery" />
-      <Button fx:id="btnStorekeeper" layoutX="402.0" layoutY="147.0" mnemonicParsing="false" onAction="#SwitchtoStorekeeper" prefHeight="62.0" prefWidth="111.0" text="Storekeeper" />
-      <Label layoutX="205.0" layoutY="47.0" prefHeight="74.0" prefWidth="190.0" text="select employee panel" textFill="WHITE">
+      <Label layoutX="195.0" layoutY="47.0" prefHeight="74.0" prefWidth="210.0" text="Enter Your Worker Code" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
       <Button fx:id="btnexit" layoutX="244.0" layoutY="275.0" mnemonicParsing="false" onAction="#SwitchToLogin" prefHeight="62.0" prefWidth="111.0" text="Exit" />
+      <TextField fx:id="tfworkercode" layoutX="151.0" layoutY="144.0" prefHeight="26.0" prefWidth="280.0" />
+      <Button fx:id="btnlogin" layoutX="244.0" layoutY="191.0" mnemonicParsing="false" onAction="#workerlogin" prefHeight="62.0" prefWidth="111.0" text="Login" />
    </children>
 </AnchorPane>

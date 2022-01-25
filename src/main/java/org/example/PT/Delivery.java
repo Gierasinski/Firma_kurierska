@@ -9,8 +9,8 @@ public class Delivery extends Employee{
     ManageDataBase base =  new  ManageDataBase();
     Status status;
 
-    public Delivery(int id, int pesel, int salary, int phoneNumber, String name, String surname, String position, Date dateOfEmployment) {
-        super(id, pesel, salary, phoneNumber, name, surname, position, dateOfEmployment);
+    public Delivery(int id, int pesel, int salary, int phoneNumber,String workerCode, String name, String surname, String position, Date dateOfEmployment) {
+        super(id, pesel, salary, phoneNumber,workerCode, name, surname, position, dateOfEmployment);
     }
 
     public void pickUpTheParcel(int parcelNumber){

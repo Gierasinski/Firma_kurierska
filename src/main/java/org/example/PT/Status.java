@@ -23,6 +23,8 @@ public class Status {
 
     }
 
+    public Status() {}
+
     public String getSa1() {return sa1;}
     public String getSa2() {return sa2;}
     public String getSa3() {return sa3;}

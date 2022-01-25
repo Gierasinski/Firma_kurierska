@@ -19,7 +19,8 @@ public class Branch {
 
     public int getId() {return id;}
 
-    public void addBranch(){
+    public void addBranch() throws SQLException {
+        base.connectToDataBase();
         try {
             base.insertBranch(name,code);
         } catch (SQLException e) {
@@ -27,7 +28,8 @@ public class Branch {
         }
     }
 
-    public void deleteBranch(int id){
+    public void deleteBranch(int id) throws SQLException {
+        base.connectToDataBase();
         try {
             base.deleteBranch(id);
         } catch (SQLException e) {

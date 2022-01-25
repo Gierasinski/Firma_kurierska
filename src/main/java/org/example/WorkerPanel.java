@@ -3,41 +3,57 @@ package org.example;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import org.example.PT.Employee;
+import org.example.PT.EmployeeHolder;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class WorkerPanel {
-
-    @FXML
-    private Button btnDelivery;
-
-    @FXML
-    private Button btnStorekeeper;
-
-    @FXML
-    private Button btnaccountant;
+    private static EmployeeHolder employeeHolder = EmployeeHolder.getInstance();
 
     @FXML
     private Button btnexit;
 
     @FXML
-    void SwitchToAccountant(ActionEvent event) throws IOException {
-        App.setRoot("Accountant");
-    }
+    private Button btnlogin;
 
     @FXML
-    void SwitchToDelivery(ActionEvent event) throws IOException  {
-        App.setRoot("Delivery");
-    }
+    private TextField tfworkercode;
 
     @FXML
-    void SwitchToLogin(ActionEvent event) throws IOException  {
+    void SwitchToLogin(ActionEvent event)throws IOException {
         App.setRoot("Login");
     }
-
     @FXML
-    void SwitchtoStorekeeper(ActionEvent event) throws IOException  {
-        App.setRoot("Storekeeper");
+    void workerlogin(ActionEvent event)throws IOException {
+        employeeHolder.setEmployee(new Employee());
+        //Employee employee = new Employee();
+        //App.setRoot("Delivery");
+
+        String code = tfworkercode.getText();
+        if(!tfworkercode.getText().isEmpty()) {
+            try {
+                if (employeeHolder.getEmployee().loginEmployee(code) == 1) {
+                    App.setRoot("Delivery");
+                } else if (employeeHolder.getEmployee().loginEmployee(code) == 2) {
+                    App.setRoot("Storekeeper");
+                } else if (employeeHolder.getEmployee().loginEmployee(code) == 3) {
+                    App.setRoot("Accountant");
+                } else {
+                    tfworkercode.setText("Nie ma takiego pracownika");
+                    //App.setRoot("Login");
+                }
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+        }else{
+            tfworkercode.setText("Nie ma takiego pracownika");
+        }
+
+
     }
 
 }

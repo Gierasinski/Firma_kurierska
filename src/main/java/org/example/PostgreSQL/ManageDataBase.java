@@ -3,6 +3,7 @@ package org.example.PostgreSQL;
 import org.example.PG.Account;
 import org.example.PG.Address;
 import org.example.PG.Parcel;
+import org.example.PG.Payment;
 import org.example.PT.Employee;
 
 import java.sql.*;
@@ -64,6 +65,7 @@ public class ManageDataBase {
 
             createTableEmployee();
             createTableAdres();
+            createTablePayment();
             createTableParcels();
             createTableClients();
             createTableRoute();
@@ -348,6 +350,45 @@ public class ManageDataBase {
 
             statement.executeUpdate(sql);
             System.out.println("Table adres Created");
+    }
+    public void createTablePayment() throws SQLException {
+        String sql = "CREATE TABLE platnosc (id SERIAL, koszt INTEGER,status varchar(20))";
+        Statement statement = connection.createStatement();
+
+        statement.executeUpdate(sql);
+        System.out.println("Table platnosc Created");
+    }
+    public int insertPayment(double price, String status) throws SQLException {
+        int id = -1;
+        String sql = "INSERT INTO platnosc(koszt, status) values (?,?) RETURNING id";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setDouble(1,price);
+        pst.setString(2,status);
+        resultSet = pst.executeQuery();
+        while(resultSet.next()) {
+            id = resultSet.getInt("id");
+        }
+        return id;
+    }
+    public void updatePayment(int ID, String status) throws SQLException {
+        String sql = "UPDATE platnosc SET status = ? WHERE id = ?";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setString(1,status);
+        pst.setInt(2,ID);
+        pst.executeQuery();
+    }
+    public Payment getPaymentInfo(int paymentID) throws SQLException {
+        Payment payment = new Payment();
+        String query = "select * from platnosc where id = ?;";
+        preparedStatement = connection.prepareStatement(query);
+        preparedStatement .setInt(1,paymentID);
+        resultSet = preparedStatement.executeQuery();
+
+        while(resultSet.next()) {
+            payment= new Payment(resultSet.getInt("id"),resultSet.getDouble("koszt"),
+                    resultSet.getString("status"));
+        }
+        return payment;
     }
     public int insertAdres(String miasto, String ulica, String kod_pocztowy) throws SQLException {
         int id = -1;

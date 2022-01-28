@@ -185,6 +185,8 @@ public class UserPanel implements Initializable {
             int width = 38;
             int length = 64;
             int height = 64;
+            int payment = -1;
+            long parcel_number = -1;
             if(sSmall.isSelected()){
                 height = 8;
             }else if(sMedium.isSelected()) {
@@ -193,28 +195,23 @@ public class UserPanel implements Initializable {
             if(fFlat.isSelected() && tFlat.isSelected()){
 
                 try {
+                    payment = clientHolder.getClient().createPayment(16);
                     clientHolder.getClient().setOriginAddress(tfcityfrom.getText(), tfadressfrom.getText(), tfpostcodefrom.getText());
                     clientHolder.getClient().setDestinationAddress(tfcityto.getText(), tfadressto.getText(), tfpostcodeto.getText());
 
-                    clientHolder.getClient().shipParcel(weight, height, width, length, 1);
+                    parcel_number = clientHolder.getClient().shipParcel(weight, height, width, length, payment);
                     resetText();
-                    alert.setTitle("Shipped");
-                    alert.setHeaderText("Parcel has been shipped");
-                    alert.setContentText("Parcel has been shipped");
-                    alert.showAndWait().ifPresent(rs -> {
-                        if (rs == ButtonType.OK) {
-                            System.out.println("Pressed OK.");
-                        }
-                    });
+                    shippedWarning(parcel_number, 16);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }else  if(fLocker.isSelected() && tFlat.isSelected()){
                 try {
+                    payment = clientHolder.getClient().createPayment(14.50);
                     clientHolder.getClient().setOriginAddress(tfcityfrom.getText(), tfadressfrom.getText(), tfpostcodefrom.getText());
                     clientHolder.getClient().setDestinationAddress(tfcityto.getText(), tfadressto.getText(), tfpostcodeto.getText());
 
-                    clientHolder.getClient().shipParcelFromLocker(weight, height, width, length, 1);
+                    parcel_number = clientHolder.getClient().shipParcelFromLocker(weight, height, width, length, payment);
                     resetText();
                     alert.setTitle("Shipped");
                     alert.setHeaderText("Parcel has been shipped");
@@ -229,10 +226,11 @@ public class UserPanel implements Initializable {
                 }
             }else  if(fFlat.isSelected() && tLocker.isSelected()){
                 try {
+                    payment = clientHolder.getClient().createPayment(13);
                     clientHolder.getClient().setOriginAddress(tfcityfrom.getText(), tfadressfrom.getText(), tfpostcodefrom.getText());
                     clientHolder.getClient().setDestinationAddress(tfcityto.getText(), tfadressto.getText(), tfpostcodeto.getText());
 
-                    clientHolder.getClient().shipParcelToLocker(weight, height, width, length, 1);
+                    parcel_number =  clientHolder.getClient().shipParcelToLocker(weight, height, width, length, payment);
                     resetText();
                     alert.setTitle("Shipped");
                     alert.setHeaderText("Parcel has been shipped");
@@ -247,10 +245,11 @@ public class UserPanel implements Initializable {
                 }
             }else  if(fLocker.isSelected() && tLocker.isSelected()){
                 try {
+                    payment = clientHolder.getClient().createPayment(11.5);
                     clientHolder.getClient().setOriginAddress(tfcityfrom.getText(), tfadressfrom.getText(), tfpostcodefrom.getText());
                     clientHolder.getClient().setDestinationAddress(tfcityto.getText(), tfadressto.getText(), tfpostcodeto.getText());
 
-                    clientHolder.getClient().shipParcelFromToLocker(weight, height, width, length, 1);
+                    parcel_number = clientHolder.getClient().shipParcelFromToLocker(weight, height, width, length, payment);
                     resetText();
                     alert.setTitle("Shipped");
                     alert.setHeaderText("Parcel has been shipped");
@@ -264,7 +263,6 @@ public class UserPanel implements Initializable {
                     e.printStackTrace();
                 }
             }
-            //if(clientHolder.getClient().shipParcel();){}
 
         } else {
             alert.setTitle("Sending error");
@@ -277,6 +275,21 @@ public class UserPanel implements Initializable {
             });
         }
     }
+    public void shippedWarning(long parcel_number, double price){
+        alert.setTitle("Shipped");
+        alert.setHeaderText("Parcel has been shipped\n Be sure to transfer payment ont the account below");
+        alert.setContentText("Price: "+price+"\n Bank account for transfer 000100101101 \n Your parcel number:" +parcel_number);
+        alert.showAndWait().ifPresent(rs -> {
+            if (rs == ButtonType.OK) {
+                System.out.println("Pressed OK.");
+            }
+        });
+        try {
+            choiceBoxParcel.getItems().addAll(clientHolder.getClient().getParcelsID());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
     @FXML
     public void pushShowChoose(ActionEvent event) {
         try {
@@ -284,7 +297,7 @@ public class UserPanel implements Initializable {
             lLocalization.setText(parcel.getLocalization());
             lStatus.setText(parcel.getStatus());
             lPackageID.setText(String.valueOf(parcel.getParcelNumber()));
-            lPayment.setText(String.valueOf(parcel.getPayment()));
+            lPayment.setText(clientHolder.getClient().getPaymentInfo(parcel.getPayment()).getStatus());
 
             Address address = clientHolder.getClient().getAddressInfo(parcel.getDelivery_address());
             lAddress.setText(String.valueOf(address.getStreet()));

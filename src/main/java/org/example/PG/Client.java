@@ -10,14 +10,10 @@ import java.util.Random;
 public class Client {
     private ManageDataBase manageDataBase = new ManageDataBase();
     private Account account;
-    private List<Parcel> parcels;
     private int originAddress = -1;
     private int destinationAddress = -1;
 
-    public void addParcel(Parcel parcel){
-        this.parcels.add(parcel);
-    }
-    public void shipParcel(float weight, int height, int width, int length, int payment) throws SQLException {
+    public long shipParcel(float weight, int height, int width, int length, int payment) throws SQLException {
         ShipmentFactory shipmentFactory = new ShipmentFactory();
         Parcel parcel = shipmentFactory.createParcel( generateParcelNumber(), generateParcelNumber(),weight, height, width, length, payment,
                 destinationAddress, originAddress, "Shipped", "Shipper");
@@ -26,8 +22,9 @@ public class Client {
         manageDataBase.insertParcel(parcel.getParcelNumber(),parcel.getWaybillNumber(), parcel.getWeight(), parcel.getHeight()
         ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
         , parcel.getStatus(), parcel.getLocalization(), 0,0, account.getId());
+        return parcel.getParcelNumber();
     }
-    public void shipParcel(float weight, int height, int width, int length, int payment,
+    public long shipParcel(float weight, int height, int width, int length, int payment,
                            ManageDataBase manage) throws SQLException {
         ShipmentFactory shipmentFactory = new ShipmentFactory();
         Parcel parcel = shipmentFactory.createParcel( generateParcelNumber(), generateParcelNumber(),weight, height, width, length, payment,
@@ -36,8 +33,9 @@ public class Client {
         manage.insertParcel(parcel.getParcelNumber(),parcel.getWaybillNumber(), parcel.getWeight(), parcel.getHeight()
                 ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
                 , parcel.getStatus(), parcel.getLocalization(), 0,0, account.getId());
+        return parcel.getParcelNumber();
     }
-    public void shipParcelToLocker(float weight, int height, int width, int length, int payment) throws SQLException {
+    public long shipParcelToLocker(float weight, int height, int width, int length, int payment) throws SQLException {
         ShipmentToLockerFactory shipmentFactory = new ShipmentToLockerFactory();
         ParcelToLocker parcel = shipmentFactory.createParcel( generateParcelNumber(), generateParcelNumber(),weight, height, width, length, payment,
                 destinationAddress, originAddress, "Shipped", "Shipper");
@@ -46,8 +44,9 @@ public class Client {
         manageDataBase.insertParcel(parcel.getParcelNumber(),parcel.getWaybillNumber(), parcel.getWeight(), parcel.getHeight()
                 ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
                 , parcel.getStatus(), parcel.getLocalization(), 0,parcel.getPickupCode(), account.getId());
+        return parcel.getParcelNumber();
     }
-    public void shipParcelFromLocker(float weight, int height, int width, int length, int payment) throws SQLException {
+    public long shipParcelFromLocker(float weight, int height, int width, int length, int payment) throws SQLException {
         ShipmentFromLockerFactory shipmentFactory = new ShipmentFromLockerFactory();
         ParcelFromLocker parcel = shipmentFactory.createParcel( generateParcelNumber(), generateParcelNumber(),weight, height, width, length, payment,
                 destinationAddress, originAddress, "Shipped", "Shipper");
@@ -56,8 +55,9 @@ public class Client {
         manageDataBase.insertParcel(parcel.getParcelNumber(),parcel.getWaybillNumber(), parcel.getWeight(), parcel.getHeight()
                 ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
                 , parcel.getStatus(), parcel.getLocalization(), parcel.getShipmentCode(),0, account.getId());
+        return parcel.getParcelNumber();
     }
-    public void shipParcelFromToLocker(float weight, int height, int width, int length, int payment) throws SQLException {
+    public long shipParcelFromToLocker(float weight, int height, int width, int length, int payment) throws SQLException {
         ShipmentFromToLockerFactory shipmentFactory = new ShipmentFromToLockerFactory();
         ParcelFromToLocker parcel = shipmentFactory.createParcel( generateParcelNumber(), generateParcelNumber(),weight, height, width, length, payment,
                 destinationAddress, originAddress, "Shipped", "Shipper");
@@ -66,6 +66,7 @@ public class Client {
         manageDataBase.insertParcel(parcel.getParcelNumber(),parcel.getWaybillNumber(), parcel.getWeight(), parcel.getHeight()
                 ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
                 , parcel.getStatus(), parcel.getLocalization(), parcel.getShipmentCode(),parcel.getPickupCode(), account.getId());
+        return parcel.getParcelNumber();
     }
 
     public boolean login(String login, String password) throws SQLException {
@@ -100,6 +101,11 @@ public class Client {
         manageDataBase.connectToDataBase();
         Parcel parcel = manageDataBase.getParcelInfo(ID);
         return parcel;
+    }
+    public Payment getPaymentInfo(int ID) throws SQLException {
+        manageDataBase.connectToDataBase();
+        Payment payment = manageDataBase.getPaymentInfo(ID);
+        return payment;
     }
     public Address getAddressInfo(int ID) throws SQLException {
         manageDataBase.connectToDataBase();
@@ -154,6 +160,17 @@ public class Client {
         if(destinationAddress == -1){
             System.out.println("Something went wrong with setting up Destination Address");
         }
+    }
+
+    public int createPayment(double price) throws SQLException {
+        Payment payment = new Payment(price);
+
+        manageDataBase.connectToDataBase();
+        int id = manageDataBase.insertPayment(payment.getPrice(), payment.getStatus());
+        if(id == -1){
+            System.out.println("Something went wrong with setting up Payment");
+        }
+        return id;
     }
 
     public int getOriginAddress() {

@@ -1,17 +1,30 @@
 package org.example.PG;
 
 public class Payment {
-    private float price;
-    private String method;
+    private double price;
+    private int id = -1;
+    private String method = "Bank transfer";
+    private String status = "Not Paid";
     private boolean paid = false;
 
-    public Payment(float price, String method) {
+    public Payment() {}
+    public Payment(double price) {
         this.price = price;
-        this.method = method;
+    }
+    public Payment(int id, double price, String status) {
+        this.id = id;
+        this.price = price;
+        this.status = status;
     }
 
-    public float getPrice() {return price;}
+    public double getPrice() {return price;}
     public String getMethod() {return method;}
 
-    public void pay(){}
+    public boolean isPaid() {
+        return paid;
+    }
+
+    public String getStatus() {
+        return status;
+    }
 }

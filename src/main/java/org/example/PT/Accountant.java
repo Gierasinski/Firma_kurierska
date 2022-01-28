@@ -13,7 +13,7 @@ import java.util.Random;
 
 public class Accountant extends Employee{
     ManageDataBase base =  new  ManageDataBase();
-    Payment payment = new Payment(100,"karta");
+    Payment payment = new Payment(10);
 
     public Accountant(int id, int pesel, int salary, int phoneNumber,String workerCode, String name, String surname, String position, Date dateOfEmployment) {
         super(id, pesel, salary, phoneNumber,workerCode, name, surname, position, dateOfEmployment);

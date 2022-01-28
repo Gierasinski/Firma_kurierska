@@ -117,5 +117,14 @@ public class UserPanel {
     void logout(ActionEvent event)throws IOException {
         App.setRoot("Login");
     }
+    @FXML
+    void savechanges(ActionEvent event) {
+
+    }
+
+    @FXML
+    void savepassword(ActionEvent event) {
+
+    }
 
 }

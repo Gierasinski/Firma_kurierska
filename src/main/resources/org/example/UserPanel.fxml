@@ -86,7 +86,7 @@
                <children>
                   <Pane layoutY="-1.0" prefHeight="521.0" prefWidth="186.0" style="-fx-background-color: ffcc66;">
                      <children>
-                        <Button fx:id="btnSavePassword" layoutX="45.0" layoutY="220.0" mnemonicParsing="false" style="-fx-background-color: orange;" text="Save Password" />
+                        <Button fx:id="btnSavePassword" layoutX="45.0" layoutY="220.0" mnemonicParsing="false" onAction="#savepassword" style="-fx-background-color: orange;" text="Save Password" />
                         <TextField fx:id="tfNewPassword" layoutX="18.0" layoutY="120.0" />
                         <TextField fx:id="tfNewpassword" layoutX="18.0" layoutY="170.0" />
                         <Label layoutX="46.0" layoutY="46.0" text="Current password" />
@@ -117,7 +117,7 @@
                   <TextField fx:id="tfDateofBirth" layoutX="285.0" layoutY="143.0" prefHeight="26.0" prefWidth="160.0" />
                   <Label layoutX="207.0" layoutY="185.0" text="Adress" />
                   <TextField fx:id="tfAdress" layoutX="285.0" layoutY="180.0" prefHeight="26.0" prefWidth="160.0" />
-                  <Button fx:id="btnSaveChanges" layoutX="479.0" layoutY="316.0" mnemonicParsing="false" style="-fx-background-color: darkblue;" text="Save Changes" textFill="WHITE" />
+                  <Button fx:id="btnSaveChanges" layoutX="479.0" layoutY="316.0" mnemonicParsing="false" onAction="#savechanges" style="-fx-background-color: darkblue;" text="Save Changes" textFill="WHITE" />
                   <Button fx:id="btnlogout" layoutX="498.0" layoutY="15.0" mnemonicParsing="false" onAction="#logout" style="-fx-background-color: darkblue;" text="Log Out" textFill="WHITE" />
                </children>
             </AnchorPane>

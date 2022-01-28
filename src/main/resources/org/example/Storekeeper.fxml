@@ -6,7 +6,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
 <AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: grey;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.Storekeeper">
    <children>
       <Label layoutX="252.0" layoutY="34.0" text="Storekeeper" textFill="WHITE">
@@ -20,7 +19,8 @@
          </font>
       </Label>
       <TextField fx:id="tfpackagenumberS" layoutX="140.0" layoutY="125.0" prefHeight="26.0" prefWidth="242.0" />
-      <Button fx:id="btnreportdamage" layoutX="114.0" layoutY="200.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="123.0" text="Report damage" />
-      <Button fx:id="btnpackageaccepted" layoutX="334.0" layoutY="203.0" mnemonicParsing="false" prefHeight="62.0" prefWidth="123.0" text="Package accepted" />
+      <Button fx:id="btnreportdamage" layoutX="114.0" layoutY="200.0" mnemonicParsing="false" onAction="#reportdamage" prefHeight="62.0" prefWidth="123.0" text="Report damage" />
+      <Button fx:id="btnpackageaccepted" layoutX="334.0" layoutY="203.0" mnemonicParsing="false" onAction="#packageaccepted" prefHeight="62.0" prefWidth="123.0" text="Package accepted" />
+      <Button fx:id="btnexit" layoutX="508.0" layoutY="27.0" mnemonicParsing="false" onAction="#switchtoWorkerpanel" prefHeight="41.0" prefWidth="68.0" text="Button" />
    </children>
 </AnchorPane>

@@ -10,6 +10,14 @@ public class Parcel {
     private String status;
     private String localization;
 
+    public Parcel(){}
+    public Parcel(long parcelNumber, int payment, int delivery_address, String status, String localization) {
+        this.parcelNumber = parcelNumber;
+        this.payment = payment;
+        this.delivery_address = delivery_address;
+        this.status = status;
+        this.localization = localization;
+    }
     public Parcel(long parcelNumber, long waybillNumber, float weight, int height, int width, int length, int payment,
                   int delivery_address, int shipment_address, String status, String localization) {
         this.parcelNumber = parcelNumber;

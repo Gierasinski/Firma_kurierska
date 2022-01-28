@@ -4,7 +4,7 @@ public class Address {
     private int id;
     private String  city, street;
     private String postcode;
-
+    public Address() {}
     public Address(int id, String city, String street, String postcode) {
         this.id = id;
         this.city = city;

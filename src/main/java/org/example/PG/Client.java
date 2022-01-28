@@ -17,11 +17,10 @@ public class Client {
     public void addParcel(Parcel parcel){
         this.parcels.add(parcel);
     }
-    public void shipParcel(float weight, int height, int width, int length, int payment,
-                           int delivery_address, int shipment_address) throws SQLException {
+    public void shipParcel(float weight, int height, int width, int length, int payment) throws SQLException {
         ShipmentFactory shipmentFactory = new ShipmentFactory();
         Parcel parcel = shipmentFactory.createParcel( generateParcelNumber(), generateParcelNumber(),weight, height, width, length, payment,
-        delivery_address, originAddress, "Shipped", "Shipper");
+                destinationAddress, originAddress, "Shipped", "Shipper");
 
         manageDataBase.connectToDataBase();
         manageDataBase.insertParcel(parcel.getParcelNumber(),parcel.getWaybillNumber(), parcel.getWeight(), parcel.getHeight()
@@ -38,8 +37,7 @@ public class Client {
                 ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
                 , parcel.getStatus(), parcel.getLocalization(), 0,0, account.getId());
     }
-    public void shipParcelToLocker(float weight, int height, int width, int length, int payment,
-                           int recive_code) throws SQLException {
+    public void shipParcelToLocker(float weight, int height, int width, int length, int payment) throws SQLException {
         ShipmentToLockerFactory shipmentFactory = new ShipmentToLockerFactory();
         ParcelToLocker parcel = shipmentFactory.createParcel( generateParcelNumber(), generateParcelNumber(),weight, height, width, length, payment,
                 destinationAddress, originAddress, "Shipped", "Shipper");
@@ -47,10 +45,9 @@ public class Client {
         manageDataBase.connectToDataBase();
         manageDataBase.insertParcel(parcel.getParcelNumber(),parcel.getWaybillNumber(), parcel.getWeight(), parcel.getHeight()
                 ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
-                , parcel.getStatus(), parcel.getLocalization(), 0,recive_code, account.getId());
+                , parcel.getStatus(), parcel.getLocalization(), 0,parcel.getPickupCode(), account.getId());
     }
-    public void shipParcelFromLocker(float weight, int height, int width, int length, int payment,
-                                    int ship_code) throws SQLException {
+    public void shipParcelFromLocker(float weight, int height, int width, int length, int payment) throws SQLException {
         ShipmentFromLockerFactory shipmentFactory = new ShipmentFromLockerFactory();
         ParcelFromLocker parcel = shipmentFactory.createParcel( generateParcelNumber(), generateParcelNumber(),weight, height, width, length, payment,
                 destinationAddress, originAddress, "Shipped", "Shipper");
@@ -58,10 +55,9 @@ public class Client {
         manageDataBase.connectToDataBase();
         manageDataBase.insertParcel(parcel.getParcelNumber(),parcel.getWaybillNumber(), parcel.getWeight(), parcel.getHeight()
                 ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
-                , parcel.getStatus(), parcel.getLocalization(), ship_code,0, account.getId());
+                , parcel.getStatus(), parcel.getLocalization(), parcel.getShipmentCode(),0, account.getId());
     }
-    public void shipParcelFromToLocker(float weight, int height, int width, int length, int payment,
-                                     int ship_code, int recive_code) throws SQLException {
+    public void shipParcelFromToLocker(float weight, int height, int width, int length, int payment) throws SQLException {
         ShipmentFromToLockerFactory shipmentFactory = new ShipmentFromToLockerFactory();
         ParcelFromToLocker parcel = shipmentFactory.createParcel( generateParcelNumber(), generateParcelNumber(),weight, height, width, length, payment,
                 destinationAddress, originAddress, "Shipped", "Shipper");
@@ -69,7 +65,7 @@ public class Client {
         manageDataBase.connectToDataBase();
         manageDataBase.insertParcel(parcel.getParcelNumber(),parcel.getWaybillNumber(), parcel.getWeight(), parcel.getHeight()
                 ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
-                , parcel.getStatus(), parcel.getLocalization(), ship_code,recive_code, account.getId());
+                , parcel.getStatus(), parcel.getLocalization(), parcel.getShipmentCode(),parcel.getPickupCode(), account.getId());
     }
 
     public boolean login(String login, String password) throws SQLException {
@@ -94,6 +90,21 @@ public class Client {
             System.out.println("Login success");
             return true;
         }
+    }
+    public Long[] getParcelsID() throws SQLException {
+        manageDataBase.connectToDataBase();
+        Long[] array = manageDataBase.getParcels(account.getId());
+        return array;
+    }
+    public Parcel getParcelInfo(long ID) throws SQLException {
+        manageDataBase.connectToDataBase();
+        Parcel parcel = manageDataBase.getParcelInfo(ID);
+        return parcel;
+    }
+    public Address getAddressInfo(int ID) throws SQLException {
+        manageDataBase.connectToDataBase();
+        Address address = manageDataBase.getAddressInfo(ID);
+        return address;
     }
     public boolean register(String name, String surname, String phoneNumber, String email, String login, String password) throws SQLException {
         manageDataBase.connectToDataBase();

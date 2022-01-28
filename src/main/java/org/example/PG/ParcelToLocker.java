@@ -10,4 +10,8 @@ public class ParcelToLocker extends Parcel {
                 status, localization);
         this.pickupCode = pickupCode;
     }
+
+    public int getPickupCode() {
+        return pickupCode;
+    }
 }

@@ -12,4 +12,12 @@ public class ParcelFromToLocker extends Parcel {
         this.shipmentCode = shipmentCode;
         this.pickupCode = pickupCode;
     }
+
+    public int getShipmentCode() {
+        return shipmentCode;
+    }
+
+    public int getPickupCode() {
+        return pickupCode;
+    }
 }

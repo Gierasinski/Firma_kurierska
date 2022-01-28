@@ -1,6 +1,8 @@
 package org.example.PostgreSQL;
 
 import org.example.PG.Account;
+import org.example.PG.Address;
+import org.example.PG.Parcel;
 import org.example.PT.Employee;
 
 import java.sql.*;
@@ -249,6 +251,55 @@ public class ManageDataBase {
 
             statement.executeUpdate(sql);
             System.out.println("Table przesylki Created");
+    }
+    public Long[] getParcels(long clientID) throws SQLException {
+        Account myAccount = new Account();
+        String query = "SELECT count(*) as total from przesylki where id_klienta = ?;";
+        preparedStatement = connection.prepareStatement(query);
+        preparedStatement .setLong(1,clientID);
+        resultSet = preparedStatement.executeQuery();
+        resultSet.next();
+        Long array[] = new Long[resultSet.getInt("total")];
+
+        query = "select * from przesylki where id_klienta = ?;";
+        preparedStatement = connection.prepareStatement(query);
+        preparedStatement .setLong(1,clientID);
+        resultSet = preparedStatement.executeQuery();
+
+        int i=0;
+        while(resultSet.next()) {
+           array[i] = resultSet.getLong("id");
+           i+=1;
+        }
+        return array;
+    }
+    public Parcel getParcelInfo(long parcelID) throws SQLException {
+        Parcel parcel = new Parcel();
+        String query = "select * from przesylki where id = ?;";
+        preparedStatement = connection.prepareStatement(query);
+        preparedStatement .setLong(1,parcelID);
+
+        resultSet = preparedStatement.executeQuery();
+
+        while(resultSet.next()) {
+            parcel = new Parcel(resultSet.getLong("id"),resultSet.getInt("platnosc"),
+                    resultSet.getInt("adres_dostawy"),resultSet.getString("status"),
+                    resultSet.getString("lokalizacja"));
+        }
+        return parcel;
+    }
+    public Address getAddressInfo(int addressID) throws SQLException {
+        Address address = new Address();
+        String query = "select * from adres where id = ?;";
+        preparedStatement = connection.prepareStatement(query);
+        preparedStatement .setInt(1,addressID);
+        resultSet = preparedStatement.executeQuery();
+
+        while(resultSet.next()) {
+            address= new Address(resultSet.getInt("id"),resultSet.getString("miasto"),
+                    resultSet.getString("ulica"),resultSet.getString("kod_pocztowy"));
+        }
+        return address;
     }
     public void insertParcel(long  id, long  list_przewozowy, float waga, int wysokosc,
                                int szerokosc, int dlugosc, int platnosc,int adres_dostawy,

@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.ToggleGroup?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.text.Font?>
@@ -16,8 +18,8 @@
       <content>
         <AnchorPane maxHeight="537.0" maxWidth="602.0" minHeight="0.0" minWidth="0.0" prefHeight="520.0" prefWidth="602.0" style="-fx-background-color: lightblue;">
                <children>
-                  <Label layoutX="86.0" layoutY="148.0" text=" Name and Surname" />
-                  <Label layoutX="12.0" layoutY="200.0" text="Name of the street and number of the house / flat" />
+                  <Label layoutX="90.0" layoutY="155.0" text=" Name and Surname" />
+                  <Label fx:id="fAddressDescription" layoutX="110.0" layoutY="200.0" text="Locker name" />
                   <TextField fx:id="tfnameandsurfrom" layoutX="70.0" layoutY="174.0" />
                   <TextField fx:id="tfadressfrom" layoutX="70.0" layoutY="218.0" />
                   <TextField fx:id="tfpostcodefrom" layoutX="70.0" layoutY="280.0" />
@@ -28,8 +30,8 @@
                   <TextField fx:id="tfemailadfrom" layoutX="10.0" layoutY="426.0" prefHeight="26.0" prefWidth="126.0" />
                   <TextField fx:id="tfcityfrom" layoutX="70.0" layoutY="347.0" />
                   <TextField fx:id="tfphonefrom" layoutX="148.0" layoutY="426.0" prefHeight="26.0" prefWidth="126.0" />
-                  <Label layoutX="370.0" layoutY="148.0" text=" Name and Surname" />
-                  <Label layoutX="292.0" layoutY="200.0" text="Name of the street and number of the house / flat" />
+                  <Label layoutX="369.0" layoutY="155.0" text=" Name and Surname" />
+                  <Label fx:id="tAddressDescription" layoutX="391.0" layoutY="200.0" text="Locker name" />
                   <Label layoutX="399.0" layoutY="252.0" text="Postcode" />
                   <Label layoutX="409.0" layoutY="323.0" text="City" />
                   <Label layoutX="329.0" layoutY="390.0" text="E-mail adress" />
@@ -40,19 +42,77 @@
                   <TextField fx:id="tfcityto" layoutX="345.0" layoutY="347.0" />
                   <TextField fx:id="tfemailadto" layoutX="304.0" layoutY="426.0" prefHeight="26.0" prefWidth="126.0" />
                   <TextField fx:id="tfphoneto" layoutX="452.0" layoutY="426.0" prefHeight="26.0" prefWidth="126.0" />
-                  <Button fx:id="btnSend" layoutX="268.0" layoutY="468.0" mnemonicParsing="false" text="Send" />
-                  <CheckBox fx:id="chbpltopl" layoutX="40.0" layoutY="25.0" mnemonicParsing="false" text="From a parcel locker to a parcel locker" />
-                  <CheckBox fx:id="chbpltohouse" layoutX="40.0" layoutY="50.0" mnemonicParsing="false" text="from a parcel locker to the house" />
-                  <CheckBox fx:id="chbhousetopl" layoutX="40.0" layoutY="75.0" mnemonicParsing="false" text="From a house to a parcel locker" />
-                  <CheckBox fx:id="chbhousetohouse" layoutX="40.0" layoutY="100.0" mnemonicParsing="false" text="From a house to the house" />
-                  <Label layoutX="315.0" layoutY="25.0" text="Max. 25kg and 41x38x64 cm" />
-                  <Label layoutX="315.0" layoutY="50.0" text="Max. 25kg and 41x38x64 cm" />
-                  <Label layoutX="315.0" layoutY="75.0" text="Max. 25kg and 41x38x64 cm" />
-                  <Label layoutX="315.0" layoutY="100.0" text="Max. 25kg and 50x50x80 cm" />
-                  <Label layoutX="501.0" layoutY="25.0" text="from 1 btc" />
-                  <Label layoutX="501.0" layoutY="50.0" text="from 1 btc" />
-                  <Label layoutX="501.0" layoutY="75.0" text="from 1 btc" />
-                  <Label layoutX="500.0" layoutY="100.0" text="from 1 btc" />
+                  <Button fx:id="btnSend" layoutX="268.0" layoutY="468.0" mnemonicParsing="false" onAction="#pushSendButton" text="Send" />
+                  <Label layoutX="37.0" layoutY="35.0" prefHeight="35.0" prefWidth="47.0" text="From">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <RadioButton fx:id="fLocker" layoutX="96.0" layoutY="25.0" mnemonicParsing="false" onAction="#changeFromFunction" selected="true" text="Locker">
+                     <toggleGroup>
+                        <ToggleGroup fx:id="From" />
+                     </toggleGroup>
+                     <font>
+                        <Font size="14.0" />
+                     </font></RadioButton>
+                  <RadioButton fx:id="fFlat" layoutX="96.0" layoutY="60.0" mnemonicParsing="false" onAction="#changeFromFunction" text="Flat" toggleGroup="$From">
+                     <font>
+                        <Font size="14.0" />
+                     </font></RadioButton>
+                  <Label layoutX="171.0" layoutY="35.0" prefHeight="35.0" prefWidth="47.0" text="To">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <RadioButton fx:id="tLocker" layoutX="217.0" layoutY="25.0" mnemonicParsing="false" onAction="#changeToFunction" selected="true" text="Locker">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <toggleGroup>
+                        <ToggleGroup fx:id="To" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <RadioButton fx:id="tFlat" layoutX="218.0" layoutY="62.0" mnemonicParsing="false" onAction="#changeToFunction" text="Flat" toggleGroup="$To">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </RadioButton>
+                  <RadioButton fx:id="sSmall" layoutX="345.0" layoutY="15.0" mnemonicParsing="false" selected="true" text="Small">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <toggleGroup>
+                        <ToggleGroup fx:id="Size" />
+                     </toggleGroup>
+                  </RadioButton>
+                  <Label layoutX="292.0" layoutY="35.0" prefHeight="35.0" prefWidth="47.0" text="Size">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <RadioButton fx:id="sMedium" layoutX="345.0" layoutY="42.0" mnemonicParsing="false" text="Medium" toggleGroup="$Size">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </RadioButton>
+                  <RadioButton fx:id="sBig" layoutX="345.0" layoutY="70.0" mnemonicParsing="false" text="Big" toggleGroup="$Size">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                  </RadioButton>
+                  <Label layoutX="430.0" layoutY="17.0" text="Max. 25kg and 8x38x64 cm" />
+                  <Label layoutX="430.0" layoutY="44.0" text="Max. 25kg and 19x38x64 cm" />
+                  <Label layoutX="430.0" layoutY="72.0" text="Max. 25kg and 41x38x64 cm" />
+                  <Label layoutX="90.0" layoutY="107.0" prefHeight="35.0" prefWidth="109.0" text="Shipper data">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="360.0" layoutY="107.0" prefHeight="35.0" prefWidth="140.0" text="Recipient data">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
                </children></AnchorPane>
       </content>
     </Tab>
@@ -66,15 +126,81 @@
                      </font>
                   </Label>
                   <TextField layoutX="162.0" layoutY="152.0" prefHeight="26.0" prefWidth="276.0" />
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="521.0" prefWidth="600.0" style="-fx-background-color: lightblue;">
+                  <AnchorPane layoutY="-7.0" minHeight="0.0" minWidth="0.0" prefHeight="521.0" prefWidth="600.0" style="-fx-background-color: lightblue;">
                      <children>
-                        <Label layoutX="181.0" layoutY="98.0" text="enter your package code here">
+                        <Label layoutX="47.0" layoutY="35.0" text="Choose your package">
                            <font>
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="tfpackagecode" layoutX="162.0" layoutY="145.0" prefHeight="26.0" prefWidth="276.0" />
-                        <Button fx:id="btnOK" layoutX="274.0" layoutY="186.0" mnemonicParsing="false" text="OK" />
+                        <TextField fx:id="tfpackagecode" layoutX="365.0" layoutY="86.0" prefHeight="26.0" prefWidth="203.0" />
+                        <ChoiceBox fx:id="choiceBoxParcel" layoutX="58.0" layoutY="86.0" prefWidth="150.0" />
+                        <Label layoutX="283.0" layoutY="35.0" text="or">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="388.0" layoutY="35.0" text="Enter package code">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Button fx:id="bShowEnter" layoutX="444.0" layoutY="137.0" mnemonicParsing="false" onAction="#pushShowEnter" text="Show" />
+                        <Label layoutX="239.0" layoutY="182.0" text="Package data">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="34.0" layoutY="225.0" text="Current localization">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="442.0" layoutY="225.0" text="Status">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="406.0" layoutY="312.0" text="Payment status">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="238.0" layoutY="411.0" text="Destination">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="67.0" layoutY="312.0" text="Package ID">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lLocalization" layoutX="42.0" layoutY="269.0" prefHeight="27.0" prefWidth="138.0" textAlignment="CENTER" textFill="#e83a00">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lStatus" layoutX="403.0" layoutY="269.0" prefHeight="27.0" prefWidth="149.0" textAlignment="CENTER" textFill="#e83a00">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lPackageID" layoutX="13.0" layoutY="367.0" prefHeight="27.0" prefWidth="203.0" textAlignment="CENTER" textFill="#e83a00">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lPayment" layoutX="400.0" layoutY="367.0" prefHeight="27.0" prefWidth="150.0" textAlignment="CENTER" textFill="#e83a00">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="lAddress" layoutX="179.0" layoutY="460.0" prefHeight="27.0" prefWidth="198.0" textAlignment="JUSTIFY" textFill="#e83a00">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </Label>
                      </children>
                   </AnchorPane>
                </children></AnchorPane>

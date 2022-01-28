@@ -14,8 +14,9 @@ public class Storekeeper extends Employee {
     public Storekeeper(int id, int pesel, int salary, int phoneNumber,String workerCode, String name, String surname, String position, Date dateOfEmployment) {
         super(id, pesel, salary, phoneNumber,workerCode, name, surname, position, dateOfEmployment);
     }
+    public Storekeeper() {}
 
-    public void reportTheDamage() {
+    public void reportTheDamage(int numberParcel) {
         Calendar calendar = Calendar.getInstance();
         Date date = calendar.getTime();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
@@ -24,16 +25,14 @@ public class Storekeeper extends Employee {
 
 
     }
-    public void acceptParcel(int parcelNumber) throws SQLException {
-        base.connectToDataBase();
+    public void acceptParcel(int parcelNumber)  {
         try {
+            base.connectToDataBase();
             base.updateParcelStatus(status.getSa5(),parcelNumber);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    public void transportPackage() {
 
-    }
 }

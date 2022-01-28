@@ -97,7 +97,7 @@ public class Accountant {
 
     @FXML
     void SwitchToWorkerPanel(ActionEvent event)throws IOException {
-App.setRoot("WorkerPanel");
+        App.setRoot("WorkerPanel");
     }
 
     @FXML

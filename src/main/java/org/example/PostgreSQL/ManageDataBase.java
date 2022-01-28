@@ -87,11 +87,14 @@ public class ManageDataBase {
 
         statement.executeUpdate(sql);
         System.out.println("Table inserted");
-        insertAdres("Kiece","biala","23-300");
-        insertAdres("Kiece","czarna","23-300");
-        insertAdres("Radom","zielona","23-300");
-        insertAdres("Kiece","wysoka","23-300");
-        insertAdres("Kiece","mala","23-300");
+        insertEmployee("2222","kuba","jalek",6666,3,939393,"accountant",3600, null,2);
+        insertEmployee("3333","maciek","gutek",33332,1,435435435,"storekeeper",4300, null,2);
+        insertAdres("Kiece","biala 23","23-300");
+        insertAdres("Kiece","czarna 32","23-300");
+        insertAdres("Radom","zielona 42","23-300");
+        insertAdres("Kiece","wysoka 1","23-300");
+        insertAdres("Kiece","mala 43","23-300");
+        insertParcel(1111,1,23,2,32,21,2,1,2,"oplacona","radom",2,1,1);
 
         insertRoute(111,1,2,3,4,5);
         insertRoute(222,3,4,1,2,5);
@@ -537,7 +540,7 @@ public class ManageDataBase {
 
     /**aktualizacja statusu przesylki*/
     public void updateParcelStatus(String status, int numberParcel) throws SQLException {
-        String sql = "UPDATE parcel SET status = ? WHERE numberParcel = ?";
+        String sql = "UPDATE przesylki SET status = ? WHERE id = ?";
         PreparedStatement pst = connection.prepareStatement(sql);
         pst.setString(1, status);
         pst.setInt(2, numberParcel);
@@ -560,5 +563,21 @@ public class ManageDataBase {
         return city+", "+street;
     }
 
+    public Parcel getParcelInfoNumberCode(int numberCode) throws SQLException {
+        Parcel parcel = new Parcel();
+        String query = "select * from przesylki where id = ?;";
+        preparedStatement = connection.prepareStatement(query);
+        preparedStatement .setLong(1,numberCode);
+
+        resultSet = preparedStatement.executeQuery();
+
+        while(resultSet.next()) {
+            parcel = new Parcel(resultSet.getLong("id"),resultSet.getLong("list_przewozowy"),resultSet.getFloat("waga"),resultSet.getInt("wysokosc"),
+                    resultSet.getInt("szerokosc"),resultSet.getInt("dlugosc"),resultSet.getInt("platnosc"),
+                    resultSet.getInt("adres_dostawy"),resultSet.getInt("adres_nadania"),
+                    resultSet.getString("status"), resultSet.getString("lokalizacja"));
+        }
+        return parcel;
+    }
 
 }

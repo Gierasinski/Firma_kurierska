@@ -6,9 +6,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.input.InputMethodEvent;
+import org.example.PT.Delivery;
 
-public class Delivery {
 
+public class DeliveryFX {
+    Delivery delivery = new Delivery();
     @FXML
     private Button btn6;
 
@@ -35,16 +37,26 @@ public class Delivery {
 
     @FXML
     void bt6(ActionEvent event) {
-
+            if(!tfpackagenumberD.getText().isEmpty()){
+                int code = Integer.parseInt(tfpackagenumberD.getText());
+                taDelivery.setText(delivery.getInfoParcel(code));
+            }
     }
 
     @FXML
     void deliveredtoaparcellocker(ActionEvent event) {
-
+        if(!tfpackagenumberD.getText().isEmpty()) {
+            int code = Integer.parseInt(tfpackagenumberD.getText());
+            delivery.deliveredToParcelLocker(code);
+        }
     }
 
     @FXML
     void deliveredtotherecipient(ActionEvent event) {
+        if(!tfpackagenumberD.getText().isEmpty()) {
+            int code = Integer.parseInt(tfpackagenumberD.getText());
+            delivery.deliveredToTheRecipient(code);
+        }
 
     }
 
@@ -55,7 +67,10 @@ public class Delivery {
 
     @FXML
     void pickupthepackage0(ActionEvent event) {
-
+        if(!tfpackagenumberD.getText().isEmpty()) {
+            int code = Integer.parseInt(tfpackagenumberD.getText());
+            delivery.pickUpTheParcel(code);
+        }
     }
 
     @FXML
@@ -65,6 +80,7 @@ public class Delivery {
 
     @FXML
     void taDeliverymethod(InputMethodEvent event) {
+
 
     }
 

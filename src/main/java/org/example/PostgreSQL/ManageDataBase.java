@@ -547,6 +547,8 @@ public class ManageDataBase {
         pst.execute();
     }
 
+
+
     /**zapytanie dajace miasto nadawcy*/
     public String selectAdresToRoute(long numberParcel) throws SQLException {
         String city = null;

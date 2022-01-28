@@ -21,14 +21,21 @@ public class Accountant extends Employee{
     public Accountant() {}
 
 
-    public void getFacture() throws FileNotFoundException {
+    public void getFacture(String name, String surname, String city, String road, int numberHause) throws FileNotFoundException {
         Calendar calendar = Calendar.getInstance();
         Date date = calendar.getTime();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
 
         PrintWriter write = new PrintWriter("facture.txt");
         write.println("Faktura");
+        write.println("Nazwa firmy: Firma Kurierska PSP Spolka Zoo");
         write.println("data wystawienia faktury: "+simpleDateFormat.format(date));
+        write.println("Dane odbiorcy: ");
+        write.println("Imie: "+ name);
+        write.println("Nazwisko: "+ surname);
+        write.println("Miasto: "+ city);
+        write.println("Ulica: "+ road);
+        write.println("Numer Domu: "+ numberHause);
         write.println("Metoda platnosc: "+payment.getMethod());
         write.println("Kwota: "+payment.getPrice());
 
@@ -61,13 +68,14 @@ public class Accountant extends Employee{
     }
 
 
-    public void addEmployee(String name,String surname,int idAddress, int phoneNumber,int pesel, String position,int salary, Date dateOfEmployment,int idBranch) throws SQLException{
-       // int idBranch = branch.getId();
-        //int idAddress = address.getId();
-        base.connectToDataBase();
+    public void addEmployee(String name,String surname,String city,String road, String numberHause, int phoneNumber,int pesel, String position,int salary, Date dateOfEmployment) {
           String workerCode = ""+generateWorkerCodeNumber();
         try {
-            base.insertEmployee(workerCode, name,surname, phoneNumber, idAddress, pesel, position, salary, (java.sql.Date) dateOfEmployment, idBranch);
+            int idAddress;
+            base.connectToDataBase();
+            idAddress = base.insertAdres(city, road+numberHause, "23-650");
+
+            base.insertEmployee(workerCode, name,surname, phoneNumber, idAddress, pesel, position, salary, (java.sql.Date) dateOfEmployment, 2);
         } catch (SQLException e) {
             e.printStackTrace();
         }

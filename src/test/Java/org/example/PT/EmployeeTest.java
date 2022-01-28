@@ -49,7 +49,7 @@ class EmployeeTest {
             SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
             Date date = new Date(format.parse("01-01-1999").getTime());
             java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-            accountant.addEmployee("piotr","tkaczyk",1,1123111,155555,"storekeeper",2600,(java.sql.Date)sqlDate,2);
+            accountant.addEmployee("piotr","tkaczyk","warszawa","wiejska","21",432423423,53453453,"storekeeper",2600,(java.sql.Date)sqlDate);
 
         } catch (SQLException | ParseException e) {
             e.printStackTrace();

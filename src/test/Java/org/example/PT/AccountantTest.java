@@ -9,8 +9,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class AccountantTest {
     ManageDataBase testBase = new ManageDataBase();
     public static String databaseName = "firma_kurierska_test";
@@ -26,7 +24,7 @@ class AccountantTest {
             SimpleDateFormat format = new SimpleDateFormat("dd-MM-yyyy");
             Date date = new Date(format.parse("01-01-1999").getTime());
             java.sql.Date sqlDate = new java.sql.Date(date.getTime());
-            accountant.addEmployee("piotr","tkaczyk",1,1123111,1231231,"storekeeper",2600,(java.sql.Date)sqlDate,2);
+            accountant.addEmployee("piotr","tkaczyk","Krakow","biala","43",34324,4234,"storekeeper",2600,(java.sql.Date)sqlDate);
             accountant.givePremium(1,100);
 
         } catch (SQLException | ParseException e) {
@@ -45,7 +43,7 @@ class AccountantTest {
     @Test()
     public void getFactureTest() {
         try {
-            accountant.getFacture();
+            accountant.getFacture("Moja", "faktura", "z miasta", "i z luciy", 21);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -53,4 +51,6 @@ class AccountantTest {
 
 
     }
+
+
 }

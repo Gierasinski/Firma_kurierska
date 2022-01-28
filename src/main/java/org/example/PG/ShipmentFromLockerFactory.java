@@ -5,7 +5,7 @@ import java.util.Random;
 public class ShipmentFromLockerFactory extends ShipmentFactory{
     private ParcelFromLocker myParcel;
     @Override
-    public ParcelFromLocker createParcel(int parcelNumber, int waybillNumber, float weight, int height, int width, int length,
+    public ParcelFromLocker createParcel(long parcelNumber, long waybillNumber, float weight, int height, int width, int length,
                                          int payment, int delivery_address, int shipment_address, String status, String localization) {
 
         return myParcel = new ParcelFromLocker(parcelNumber, waybillNumber, weight, height, width, length,

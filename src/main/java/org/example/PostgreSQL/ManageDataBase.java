@@ -76,8 +76,8 @@ public class ManageDataBase {
     public void insertToTable() throws SQLException {
         String sql = "INSERT INTO employee(pesel,salary,phoneNumber,workerCode,name,surname,position,dateofemployment)\n" +
                 "VALUES ('543534', '4344', '43432423', '1111','ppp','gdfgd','delivery','10-12-2021');\n" +
-                "INSERT INTO klienci(imie, nazwisko, kontakt, email,login, haslo)\n" +
-                "VALUES ('kuba','stawka','543534','kubafsdfsd','kuba','1234');\n";
+                "INSERT INTO klienci(imie, nazwisko, kontakt, email,login, haslo, id)\n" +
+                "VALUES ('kuba','stawka','543534','kubafsdfsd','kuba','1234', nextval('klient_id'));\n";
 
         Statement statement = connection.createStatement();
 
@@ -181,10 +181,15 @@ public class ManageDataBase {
 
             statement.executeUpdate(sql);
             System.out.println("Table klienci Created");
+
+            sql = "CREATE SEQUENCE klient_id START 100000000 INCREMENT 1 OWNED BY klienci.id";
+            statement = connection.createStatement();
+            statement.executeUpdate(sql);
+            System.out.println("Klienci SEQUENCE created");
     }
-    public int insertClient(String imie, String nazwisko, String kontakt,
+    public long insertClient(String imie, String nazwisko, String kontakt,
                             String email, String login, String haslo) throws SQLException {
-        int id = -1;
+        long id = -1;
         String query = "select * from klienci where login like '"+login+"';";
         preparedStatement = connection.prepareStatement(query);
         resultSet = preparedStatement.executeQuery();
@@ -199,7 +204,7 @@ public class ManageDataBase {
             return -3;
         }
 
-        String sql = "INSERT INTO klienci(imie, nazwisko, kontakt, email,login, haslo) values (?,?,?,?,?,?) RETURNING id";
+        String sql = "INSERT INTO klienci(imie, nazwisko, kontakt, email,login, haslo, id) values (?,?,?,?,?,?,nextval('klient_id')) RETURNING id";
         PreparedStatement pst = connection.prepareStatement(sql);
         pst.setString(1,imie);
         pst.setString(2,nazwisko);
@@ -216,12 +221,14 @@ public class ManageDataBase {
     }
     public Account loginClients(String login, String haslo) throws SQLException {
         Account myAccount = new Account();
-        String query = "select * from klienci where login like '"+login+"' AND haslo like '"+haslo+"';";
+        String query = "select * from klienci where login = ? AND haslo = ?;";
         preparedStatement = connection.prepareStatement(query);
+        preparedStatement .setString(1,login);
+        preparedStatement .setString(2,haslo);
         resultSet = preparedStatement.executeQuery();
-        int i = 0;
+
         while(resultSet.next()) {
-            myAccount = new Account(resultSet.getInt("id"), login,haslo,resultSet.getString("email"), resultSet.getString("kontakt"),
+            myAccount = new Account(resultSet.getLong("id"), login,haslo,resultSet.getString("email"), resultSet.getString("kontakt"),
                     resultSet.getString("imie"), resultSet.getString("nazwisko"));
         }
         return myAccount;
@@ -234,7 +241,7 @@ public class ManageDataBase {
             System.out.println("Table klienci Delete");
     }
     public void createTableParcels() throws SQLException {
-            String sql = "CREATE TABLE przesylki (id INTEGER UNIQUE,list_przewozowy INTEGER UNIQUE, waga INTEGER," +
+            String sql = "CREATE TABLE przesylki (id BIGINT UNIQUE,list_przewozowy BIGINT UNIQUE, waga INTEGER," +
                     "wysokosc INTEGER, szerokosc INTEGER, dlugosc INTEGER, platnosc INTEGER UNIQUE, " +
                     "adres_dostawy INTEGER, adres_nadania INTEGER, status varchar(30), lokalizacja varchar(30)," +
                     " kod_nadania INTEGER , kod_odbioru INTEGER, id_klienta INTEGER )";
@@ -243,13 +250,13 @@ public class ManageDataBase {
             statement.executeUpdate(sql);
             System.out.println("Table przesylki Created");
     }
-    public void insertParcel(int id, int list_przewozowy, float waga, int wysokosc,
+    public void insertParcel(long  id, long  list_przewozowy, float waga, int wysokosc,
                                int szerokosc, int dlugosc, int platnosc,int adres_dostawy,
-                             int adres_nadania, String status, String lokalizacja, int kod_nadania, int kod_odbioru, int id_klienta) throws SQLException {
+                             int adres_nadania, String status, String lokalizacja, int kod_nadania, int kod_odbioru, long id_klienta) throws SQLException {
         String sql = "INSERT INTO przesylki(id, list_przewozowy, waga, wysokosc, szerokosc, dlugosc, platnosc, adres_dostawy, adres_nadania, status, lokalizacja, kod_odbioru, kod_nadania, id_klienta) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement pst = connection.prepareStatement(sql);
-        pst.setInt(1,id);
-        pst.setInt(2,list_przewozowy);
+        pst.setLong (1,id);
+        pst.setLong (2,list_przewozowy);
         pst.setFloat(3,waga);
         pst.setInt(4,wysokosc);
         pst.setInt(5,szerokosc);
@@ -261,16 +268,16 @@ public class ManageDataBase {
         pst.setString(11,lokalizacja);
         pst.setInt(12,kod_odbioru);
         pst.setInt(13,kod_nadania);
-        pst.setInt(14,id_klienta);
+        pst.setLong(14,id_klienta);
         pst.execute();
 
     }
-    public void insertParcel(int id, int list_przewozowy, float waga, int wysokosc,
-                             int szerokosc, int dlugosc, int platnosc,int adres_dostawy, int adres_nadania, String status, String lokalizacja, int id_klienta) throws SQLException {
+    public void insertParcel(long  id, long  list_przewozowy, float waga, int wysokosc,
+                             int szerokosc, int dlugosc, int platnosc,int adres_dostawy, int adres_nadania, String status, String lokalizacja, long id_klienta) throws SQLException {
         String sql = "INSERT INTO przesylki(id, list_przewozowy, waga, wysokosc, szerokosc, dlugosc, platnosc, adres_dostawy, adres_nadania, status, lokalizacjal, id_klienta) values (?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement pst = connection.prepareStatement(sql);
-        pst.setInt(1,id);
-        pst.setInt(2,list_przewozowy);
+        pst.setLong (1,id);
+        pst.setLong (2,list_przewozowy);
         pst.setFloat(3,waga);
         pst.setInt(4,wysokosc);
         pst.setInt(5,szerokosc);
@@ -280,7 +287,7 @@ public class ManageDataBase {
         pst.setInt(9,adres_nadania);
         pst.setString(10,status);
         pst.setString(11,lokalizacja);
-        pst.setInt(12,id_klienta);
+        pst.setLong(12,id_klienta);
         pst.execute();
 
     }
@@ -364,10 +371,10 @@ public class ManageDataBase {
     }
 
     /**dodanie Trasy */
-    public void insertRoute(int parcelNumber,int idKN,int idPN,int idO, int idKO, int idPO) throws SQLException {
+    public void insertRoute(long parcelNumber,int idKN,int idPN,int idO, int idKO, int idPO) throws SQLException {
         String sql = "INSERT INTO Route(parcelNumber,idAdresKlientN,idAdresPaczkomatN, idAdresOddzial,idAdresKlientO,idAdresPaczkomatO) values (?,?,?,?,?,?)";
         PreparedStatement pst = connection.prepareStatement(sql);
-        pst.setInt(1,parcelNumber);
+        pst.setLong(1,parcelNumber);
         pst.setInt(2,idKN);
         pst.setInt(3,idPN);
         pst.setInt(4,idO);
@@ -377,7 +384,7 @@ public class ManageDataBase {
     }
 
     /**wyszukanie trasy o podany numerze paczki */
-    public int searchRoute(int numberParcel) throws SQLException {
+    public int searchRoute(long numberParcel) throws SQLException {
         int salary = 0;
         String query = "select * from Route where numberParcel="+numberParcel+";";
         preparedStatement = connection.prepareStatement(query);
@@ -446,7 +453,7 @@ public class ManageDataBase {
     }
 
     /**zapytanie dajace miasto nadawcy*/
-    public String selectAdresToRoute(int numberParcel) throws SQLException {
+    public String selectAdresToRoute(long numberParcel) throws SQLException {
         String city = null;
         String street = null;
         String query = "select miasto,ulica from adres where id=(select idAdresKlientN from Route where parcelNumber = "+numberParcel+");";

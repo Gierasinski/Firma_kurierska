@@ -2,11 +2,11 @@ package org.example.PG;
 
 public class Account {
     private String login, password, email, phoneNumber, name, surname;
-    private int id;
+    private long id;
     boolean isNull;
     Address address;
 
-    public Account(int id,String login, String password, String email, String phoneNumber, String name, String surname) {
+    public Account(long id,String login, String password, String email, String phoneNumber, String name, String surname) {
         this.id = id;
         this.login = login;
         this.password = password;
@@ -23,7 +23,7 @@ public class Account {
     }
     public boolean getIsNull(){return isNull;}
 
-    public int getId() {
+    public long getId() {
         return id;
     }
 

@@ -77,14 +77,27 @@ public class Client {
         account = manageDataBase.loginClients(login,password);
 
        if(account.getIsNull()){
+           System.out.println("Login failed");
            return false;
        }else{
+           System.out.println("Login success");
            return true;
        }
    }
+    public boolean login(String login, String password, ManageDataBase manage) throws SQLException {
+        account = manage.loginClients(login,password);
+
+        if(account.getIsNull()){
+            System.out.println("Login failed");
+            return false;
+        }else{
+            System.out.println("Login success");
+            return true;
+        }
+    }
     public boolean register(String name, String surname, String phoneNumber, String email, String login, String password) throws SQLException {
         manageDataBase.connectToDataBase();
-        int id = manageDataBase.insertClient(name, surname, phoneNumber, email, login, password);
+        long id = manageDataBase.insertClient(name, surname, phoneNumber, email, login, password);
 
         if(id < 0){
             return false;
@@ -92,12 +105,15 @@ public class Client {
             return true;
         }
     }
-   public int generateParcelNumber(){
+   public long generateParcelNumber(){
        Calendar calendar= Calendar.getInstance();
-       int month = calendar.get(Calendar.MONTH) + 1;
-       int day = calendar.get(Calendar.DAY_OF_MONTH);
+       long month = (calendar.get(Calendar.MONTH) +1)* 100000;
+       long day = calendar.get(Calendar.DAY_OF_MONTH) *1000000;
+       long year = (calendar.get(Calendar.YEAR)-2000)*1000;
        Random rand = new Random();
-       return day+month*100+account.getId()*10000+rand.nextInt(10)*10000000;
+       long firstTen = account.getId()*1000000000*10;
+
+       return firstTen + day*100 + month*10 + year + rand.nextInt(999);
    }
 
     public void setOriginAddress(String city, String street, String postcode, ManageDataBase manage) throws SQLException {

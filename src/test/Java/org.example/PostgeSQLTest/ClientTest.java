@@ -20,16 +20,11 @@ public class ClientTest {
             testBase.createTableClients();
             testBase.insertClient("Adam","Nowak", "+48 110 110 110", "myEmail@gmail.com",
                     "admin","admin");
-            client.login("admin","admin");
+            client.login("admin","admin",testBase);
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        try {
-            client.login("admin","admin");
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
         try {
             testBase.connectToDataBase();
             testBase.dropDataBase(databaseName);
@@ -37,7 +32,6 @@ public class ClientTest {
             e.printStackTrace();
         }
     }
-
 
     @Test()
     public void shipParcel_test (){
@@ -49,7 +43,7 @@ public class ClientTest {
             testBase.createTableClients();
             testBase.insertClient("Adam","Nowak", "+48 110 110 110", "myEmail@gmail.com",
                     "admin","admin");
-            client.login("admin","admin");
+            client.login("admin","admin",testBase);
             testBase.createTableParcels();
             client.shipParcel(10,10,10,10,1,testBase);
         } catch (SQLException e) {

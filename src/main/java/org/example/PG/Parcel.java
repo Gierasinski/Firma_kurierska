@@ -1,10 +1,8 @@
 package org.example.PG;
 
-import java.util.Random;
-
 public class Parcel {
-    private int parcelNumber;
-    private int waybillNumber = 1;
+    private long parcelNumber;
+    private long waybillNumber = 1;
     private float weight;
     private int height, width, length;
     private int payment;
@@ -12,7 +10,7 @@ public class Parcel {
     private String status;
     private String localization;
 
-    public Parcel(int parcelNumber, int waybillNumber, float weight, int height, int width, int length, int payment,
+    public Parcel(long parcelNumber, long waybillNumber, float weight, int height, int width, int length, int payment,
                   int delivery_address, int shipment_address, String status, String localization) {
         this.parcelNumber = parcelNumber;
         this.waybillNumber = waybillNumber;
@@ -26,11 +24,11 @@ public class Parcel {
         this.status = status;
         this.localization = localization;
     }
-    public int getParcelNumber() {
+    public long  getParcelNumber() {
         return parcelNumber;
     }
 
-    public int getWaybillNumber() {
+    public long  getWaybillNumber() {
         return waybillNumber;
     }
 

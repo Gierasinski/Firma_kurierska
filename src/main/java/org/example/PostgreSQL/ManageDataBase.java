@@ -111,7 +111,7 @@ public class ManageDataBase {
         insertAdres("Kiece","mala 43","23-300");
 
         route.calculateRoute(1111,5,6);
-        insertParcel(1111,1,23,2,32,21,2,1,2,"oplacona","radom",2,1,1);
+        insertParcel(1111,1,23,2,32,21,0,1,2,"oplacona","radom",2,1,1);
 
         Employee employee = new Employee();
         employee.checkTheRoute(1111);

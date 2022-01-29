@@ -165,6 +165,11 @@ public class UserPanel implements Initializable {
          tfcityto.setText("");
          tfemailadto.setText("");
          tfphoneto.setText("");
+        try {
+            choiceBoxParcel.getItems().addAll(clientHolder.getClient().getParcelsID());
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
     @FXML
     public void changeToFunction(ActionEvent event) {

@@ -1,6 +1,7 @@
 package org.example.PT;
 
 import org.example.PostgreSQL.ManageDataBase;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -76,6 +77,7 @@ class EmployeeTest {
             java.sql.Date sqlDate = new java.sql.Date(date.getTime());
             testBase.insertEmployee("1234", "piotr", "Tkaczyl", 43242423, 1, 3432432, "delivery", 4344, (java.sql.Date) sqlDate, 1);
             employee.loginEmployee("1234");
+            Assert.assertEquals(-1, employee.loginEmployee("1234"));
         } catch (SQLException | ParseException e) {
             e.printStackTrace();
         }
@@ -87,5 +89,26 @@ class EmployeeTest {
             e.printStackTrace();
         }
     }
+    @Test()
+    public void checkRouteTestDB () {
+        try {
+            Employee employee = new Employee();
+            testBase.connectToPostgreSQL();
+            testBase.createDataBase(databaseName);
+            testBase.connectToDataBase(databaseName);
+            testBase.createTableEmployee();
+            employee.checkTheRoute(1);
+        } catch (SQLException  e) {
+            e.printStackTrace();
+        }
+
+        try {
+            testBase.connectToDataBase();
+            testBase.dropDataBase(databaseName);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

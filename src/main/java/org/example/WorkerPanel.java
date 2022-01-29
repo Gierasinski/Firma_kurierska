@@ -29,8 +29,7 @@ public class WorkerPanel {
     @FXML
     void workerlogin(ActionEvent event)throws IOException {
         employeeHolder.setEmployee(new Employee());
-        //Employee employee = new Employee();
-        //App.setRoot("Delivery");
+
 
         String code = tfworkercode.getText();
         if(!tfworkercode.getText().isEmpty()) {
@@ -43,7 +42,7 @@ public class WorkerPanel {
                     App.setRoot("Accountant");
                 } else {
                     tfworkercode.setText("Nie ma takiego pracownika");
-                    //App.setRoot("Login");
+
                 }
 
             } catch (SQLException e) {

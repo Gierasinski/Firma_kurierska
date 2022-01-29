@@ -1,10 +1,11 @@
 package org.example.PG;
 
+import org.example.PT.Employee;
+import org.example.PT.Route;
 import org.example.PostgreSQL.ManageDataBase;
 
 import java.sql.SQLException;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Random;
 
 public class Client {
@@ -180,4 +181,12 @@ public class Client {
     public int getDestinationAddress() {
         return destinationAddress;
     }
+
+
+    public void setRoute(long parcelNumber){
+        Route route = new Route();
+        route.calculateRoute(parcelNumber,originAddress,destinationAddress);
+        Employee employee = new Employee();
+        employee.checkTheRoute(parcelNumber);
+    };
 }

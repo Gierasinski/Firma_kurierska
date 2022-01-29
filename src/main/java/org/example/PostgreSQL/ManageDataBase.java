@@ -615,7 +615,7 @@ public class ManageDataBase {
 
     /**stworzenie tabeli zapisujace trase */
     public void createTableRoutePlan() throws SQLException {
-        String sql = "CREATE TABLE route_plan (id SERIAL,parcelNumber INTEGER, idPointA INTEGER, idPointB INTEGER)";
+        String sql = "CREATE TABLE route_plan (id SERIAL,parcelNumber BIGINT, idPointA INTEGER, idPointB INTEGER)";
         Statement statement = connection.createStatement();
 
         statement.executeUpdate(sql);
@@ -623,10 +623,10 @@ public class ManageDataBase {
     }
 
     /**dodanie dystancu */
-    public void insertRoutePlan(int parcelNumber,int A, int B) throws SQLException {
+    public void insertRoutePlan(long parcelNumber,int A, int B) throws SQLException {
         String sql = "INSERT INTO route_plan(parcelNumber,idPointA, idPointB) values (?,?,?)";
         PreparedStatement pst = connection.prepareStatement(sql);
-        pst.setInt(1,parcelNumber);
+        pst.setLong(1,parcelNumber);
         pst.setInt(2,A);
         pst.setInt(3,B);
         pst.execute();
@@ -635,14 +635,14 @@ public class ManageDataBase {
 
     /**wyszukanie trasy o podany numerze paczki*/
 
-    public ArrayList<RoutePlan> searchRouteToParcelNumber(int parcelNumber) throws SQLException {
+    public ArrayList<RoutePlan> searchRouteToParcelNumber(long parcelNumber) throws SQLException {
         ArrayList<RoutePlan> plan = new ArrayList<RoutePlan>();
         String query = "select * from route_plan where parcelNumber="+parcelNumber+";";
         preparedStatement = connection.prepareStatement(query);
         resultSet = preparedStatement.executeQuery();
         int i = 0;
         while(resultSet.next()) {
-            plan.add(new RoutePlan(resultSet.getInt("parcelnumber"),resultSet.getInt("idPointA"),resultSet.getInt("idPointB")));
+            plan.add(new RoutePlan(resultSet.getLong("parcelnumber"),resultSet.getInt("idPointA"),resultSet.getInt("idPointB")));
             i++;
         }
         return plan;

@@ -39,7 +39,7 @@ public class Route {
     }
 
 
-    public void calculateRoute(int parcelNumber, int idAddressA,int  idAddressB) {
+    public void calculateRoute(long parcelNumber, int idAddressA,int  idAddressB) {
         setDistanceABC();
         setDistance(idAddressA, idAddressB);
         int distance;

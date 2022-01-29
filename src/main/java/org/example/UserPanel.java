@@ -200,6 +200,7 @@ public class UserPanel implements Initializable {
                     clientHolder.getClient().setDestinationAddress(tfcityto.getText(), tfadressto.getText(), tfpostcodeto.getText());
 
                     parcel_number = clientHolder.getClient().shipParcel(weight, height, width, length, payment);
+                    clientHolder.getClient().setRoute(parcel_number);
                     resetText();
                     shippedWarning(parcel_number, 16);
                 } catch (SQLException e) {
@@ -212,6 +213,7 @@ public class UserPanel implements Initializable {
                     clientHolder.getClient().setDestinationAddress(tfcityto.getText(), tfadressto.getText(), tfpostcodeto.getText());
 
                     parcel_number = clientHolder.getClient().shipParcelFromLocker(weight, height, width, length, payment);
+                    clientHolder.getClient().setRoute(parcel_number);
                     resetText();
                     alert.setTitle("Shipped");
                     alert.setHeaderText("Parcel has been shipped");
@@ -231,6 +233,7 @@ public class UserPanel implements Initializable {
                     clientHolder.getClient().setDestinationAddress(tfcityto.getText(), tfadressto.getText(), tfpostcodeto.getText());
 
                     parcel_number =  clientHolder.getClient().shipParcelToLocker(weight, height, width, length, payment);
+                    clientHolder.getClient().setRoute(parcel_number);
                     resetText();
                     alert.setTitle("Shipped");
                     alert.setHeaderText("Parcel has been shipped");
@@ -250,6 +253,7 @@ public class UserPanel implements Initializable {
                     clientHolder.getClient().setDestinationAddress(tfcityto.getText(), tfadressto.getText(), tfpostcodeto.getText());
 
                     parcel_number = clientHolder.getClient().shipParcelFromToLocker(weight, height, width, length, payment);
+                    clientHolder.getClient().setRoute(parcel_number);
                     resetText();
                     alert.setTitle("Shipped");
                     alert.setHeaderText("Parcel has been shipped");

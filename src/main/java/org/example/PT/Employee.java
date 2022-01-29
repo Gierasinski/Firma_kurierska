@@ -40,11 +40,12 @@ public class Employee {
     public String getPosition() {return position;}
     public Date getDateOfEmployment() {return dateOfEmployment;}
 
-    public void checkTheRoute(int parcelNumber) {
+    public void checkTheRoute(long parcelNumber) {
         ArrayList<RoutePlan> plan = new ArrayList<RoutePlan>();
         try {
             base.connectToDataBase();
             plan  = base.searchRouteToParcelNumber(parcelNumber);
+            System.out.println("TRASA PRZESYLKI:");
             for(RoutePlan  x:plan) {
                 String napis;
                 napis =  base.selectAdresToRouteA(x.getIdAddressA());

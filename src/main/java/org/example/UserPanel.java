@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import org.example.PG.Account;
 import org.example.PG.Address;
 import org.example.PG.ClientHolder;
 import org.example.PG.Parcel;
@@ -45,7 +46,7 @@ public class UserPanel implements Initializable {
     private RadioButton fFlat,fLocker,tFlat,tLocker,sSmall,sMedium,sBig;
 
     @FXML
-    private TextField tfAdress;
+    private TextField tfAdress, tfCity, tfPostcode;
 
     @FXML
     private TextField tfCurrentPassword;
@@ -117,7 +118,7 @@ public class UserPanel implements Initializable {
     private Label tAddressDescription;
 
     @FXML
-    private Label lLocalization,lStatus,lPackageID,lPayment,lAddress;
+    private Label lLocalization,lStatus,lPackageID,lPayment,lAddress,lLoginLabel;
 
     @FXML
     private ChoiceBox<Long> choiceBoxParcel;
@@ -128,6 +129,21 @@ public class UserPanel implements Initializable {
         try {
             choiceBoxParcel.getItems().addAll(clientHolder.getClient().getParcelsID());
             choiceBoxParcel.setOnAction(this::pushShowChoose);
+
+            Account account = clientHolder.getClient().getAccount();
+            lLoginLabel.setText(account.getLogin());
+            tfName.setText(account.getName());
+            tfSurname.setText(account.getSurname());
+
+            Address address = account.getAddress();
+            if(address != null) {
+                tfAdress.setText(address.getStreet());
+                tfCity.setText(address.getCity());
+                tfPostcode.setText(address.getPostcode());
+            }
+            tfPhone.setText(account.getPhoneNumber());
+            tfEmail.setText(account.getEmail());
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -136,14 +152,7 @@ public class UserPanel implements Initializable {
     void logout(ActionEvent event)throws IOException {
         App.setRoot("Login");
     }
-    @FXML
-    void savechanges(ActionEvent event) {
-    }
 
-    @FXML
-    void savepassword(ActionEvent event) {
-
-    }
     @FXML
     public void changeFromFunction(ActionEvent event) {
         if(fLocker.isSelected()) {
@@ -220,14 +229,7 @@ public class UserPanel implements Initializable {
                     parcel_number = clientHolder.getClient().shipParcelFromLocker(weight, height, width, length, payment);
                     clientHolder.getClient().setRoute(parcel_number);
                     resetText();
-                    alert.setTitle("Shipped");
-                    alert.setHeaderText("Parcel has been shipped");
-                    alert.setContentText("Parcel has been shipped");
-                    alert.showAndWait().ifPresent(rs -> {
-                        if (rs == ButtonType.OK) {
-                            System.out.println("Pressed OK.");
-                        }
-                    });
+                    shippedWarning(parcel_number, 14.50);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -240,14 +242,7 @@ public class UserPanel implements Initializable {
                     parcel_number =  clientHolder.getClient().shipParcelToLocker(weight, height, width, length, payment);
                     clientHolder.getClient().setRoute(parcel_number);
                     resetText();
-                    alert.setTitle("Shipped");
-                    alert.setHeaderText("Parcel has been shipped");
-                    alert.setContentText("Parcel has been shipped");
-                    alert.showAndWait().ifPresent(rs -> {
-                        if (rs == ButtonType.OK) {
-                            System.out.println("Pressed OK.");
-                        }
-                    });
+                    shippedWarning(parcel_number, 13);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -260,14 +255,7 @@ public class UserPanel implements Initializable {
                     parcel_number = clientHolder.getClient().shipParcelFromToLocker(weight, height, width, length, payment);
                     clientHolder.getClient().setRoute(parcel_number);
                     resetText();
-                    alert.setTitle("Shipped");
-                    alert.setHeaderText("Parcel has been shipped");
-                    alert.setContentText("Parcel has been shipped");
-                    alert.showAndWait().ifPresent(rs -> {
-                        if (rs == ButtonType.OK) {
-                            System.out.println("Pressed OK.");
-                        }
-                    });
+                    shippedWarning(parcel_number, 11.50);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
@@ -286,8 +274,8 @@ public class UserPanel implements Initializable {
     }
     public void shippedWarning(long parcel_number, double price){
         alert.setTitle("Shipped");
-        alert.setHeaderText("Parcel has been shipped\n Be sure to transfer payment ont the account below");
-        alert.setContentText("Price: "+price+"\n Bank account for transfer 000100101101 \n Your parcel number:" +parcel_number);
+        alert.setHeaderText("Parcel has been shipped\nBe sure to transfer payment ont the account below");
+        alert.setContentText("Price: "+price+"\nBank account for transfer 000100101101 \nYour parcel number: " +parcel_number);
         alert.showAndWait().ifPresent(rs -> {
             if (rs == ButtonType.OK) {
                 System.out.println("Pressed OK.");
@@ -317,9 +305,141 @@ public class UserPanel implements Initializable {
     }
     @FXML
     void pushShowEnter(ActionEvent event) {
+        try {
+        Parcel parcel = null;
+            parcel = clientHolder.getClient().getParcelInfo(Long.parseLong(tfpackagecode.getText()));
+        lLocalization.setText(parcel.getLocalization());
+        lStatus.setText(parcel.getStatus());
+        lPackageID.setText(String.valueOf(parcel.getParcelNumber()));
+        lPayment.setText(clientHolder.getClient().getPaymentInfo(parcel.getPayment()).getStatus());
 
+        Address address = clientHolder.getClient().getAddressInfo(parcel.getDelivery_address());
+        lAddress.setText(String.valueOf(address.getStreet()));
+
+
+    } catch (SQLException e) {
+        e.printStackTrace();
+    }
     }
 
 
+    @FXML
+    void savechanges(ActionEvent event) {
+        try {
+            if(clientHolder.getClient().update(tfName.getText(),tfSurname.getText(),tfPhone.getText(),tfEmail.getText(),tfAdress.getText(),
+            tfCity.getText(),tfPostcode.getText())){
 
+                alert.setTitle("Account update");
+                alert.setHeaderText("Succes");
+                alert.setContentText("Account has been updated");
+                alert.showAndWait().ifPresent(rs -> {
+                    if (rs == ButtonType.OK) {
+                        System.out.println("Pressed OK.");
+                    }
+                });
+            }else{
+                alert.setTitle("Account update");
+                alert.setHeaderText("Failure");
+                alert.setContentText("Account has not been updated");
+                alert.showAndWait().ifPresent(rs -> {
+                    if (rs == ButtonType.OK) {
+                        System.out.println("Pressed OK.");
+                    }
+                });
+            }
+        } catch (SQLException e) {
+            alert.setTitle("Blad SQL");
+            alert.setHeaderText("Sprawdz poprawnosc danych");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait().ifPresent(rs -> {
+                if (rs == ButtonType.OK) {
+                    System.out.println("Pressed OK.");
+                }
+            });
+        } catch (Exception e){
+            alert.setTitle("Blad dodawania");
+            alert.setHeaderText("Sprawdz poprawnosc danych");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait().ifPresent(rs -> {
+                if (rs == ButtonType.OK) {
+                    System.out.println("Pressed OK.");
+                }
+            });
+        }
+
+    }
+    @FXML
+    void savepassword(ActionEvent event) {
+        try {
+            if(tfCurrentPassword.getText().equals(clientHolder.getClient().getAccount().getPassword())){
+                if(tfNewPassword.getText().equals(tfNewpassword.getText())) {
+                    if(tfNewPassword.getText().length()<6) {
+                        alert.setTitle("Password Update");
+                        alert.setHeaderText("Failure");
+                        alert.setContentText("New password needs to be 6 characters long");
+                        alert.showAndWait().ifPresent(rs -> {
+                            if (rs == ButtonType.OK) {
+                                System.out.println("Pressed OK.");
+                            }
+                        });
+                    }else if(clientHolder.getClient().updatePassword(tfNewPassword.getText())) {
+                        alert.setTitle("Account update");
+                        alert.setHeaderText("Succes");
+                        alert.setContentText("Account has been updated");
+                        alert.showAndWait().ifPresent(rs -> {
+                            if (rs == ButtonType.OK) {
+                                System.out.println("Pressed OK.");
+                            }
+                        });
+                    } else {
+                        alert.setTitle("Account update");
+                        alert.setHeaderText("Failure");
+                        alert.setContentText("Account has not been updated");
+                        alert.showAndWait().ifPresent(rs -> {
+                            if (rs == ButtonType.OK) {
+                                System.out.println("Pressed OK.");
+                            }
+                        });
+                    }
+                } else {
+                        alert.setTitle("Password Update");
+                        alert.setHeaderText("Failure");
+                        alert.setContentText("Passwords aren not the same");
+                        alert.showAndWait().ifPresent(rs -> {
+                            if (rs == ButtonType.OK) {
+                                System.out.println("Pressed OK.");
+                            }
+                        });
+                }
+            }else{
+                alert.setTitle("Password Update");
+                alert.setHeaderText("Failure");
+                alert.setContentText("Wrong current password");
+                alert.showAndWait().ifPresent(rs -> {
+                    if (rs == ButtonType.OK) {
+                        System.out.println("Pressed OK.");
+                    }
+                });
+            }
+        } catch (SQLException e) {
+            alert.setTitle("Blad SQL");
+            alert.setHeaderText("Sprawdz poprawnosc danych");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait().ifPresent(rs -> {
+                if (rs == ButtonType.OK) {
+                    System.out.println("Pressed OK.");
+                }
+            });
+        } catch (Exception e){
+            alert.setTitle("Blad dodawania");
+            alert.setHeaderText("Sprawdz poprawnosc danych");
+            alert.setContentText(e.getMessage());
+            alert.showAndWait().ifPresent(rs -> {
+                if (rs == ButtonType.OK) {
+                    System.out.println("Pressed OK.");
+                }
+            });
+        }
+
+    }
 }

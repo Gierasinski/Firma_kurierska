@@ -56,4 +56,7 @@ public class Account {
         return address;
     }
 
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 }

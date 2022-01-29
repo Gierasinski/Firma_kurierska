@@ -52,7 +52,7 @@ public class Register {
                                 System.out.println("Pressed OK.");
                             }
                         });
-                    }else if(client.register(tfName.getText(), tfName.getText(), "123", tfEmail.getText(), tfEmail.getText(), tfPassword.getText())){
+                    }else if(client.register("", "", "123", tfEmail.getText(), tfName.getText(), tfPassword.getText())){
                        alert.setTitle("Register Succes");
                        alert.setHeaderText("Account has been created");
                        alert.setContentText("You can Log in now");

@@ -123,6 +123,26 @@ public class Client {
             return true;
         }
     }
+    public boolean update(String name, String surname, String phoneNumber, String email, String street, String city, String post_code) throws SQLException {
+        manageDataBase.connectToDataBase();
+        long id = manageDataBase.updateClient(account.getId(), account.getAddress().getId(), name,surname,phoneNumber,email,street,city,post_code);
+
+        if(id < 0){
+            return false;
+        }else{
+            return true;
+        }
+    }
+    public boolean updatePassword(String password) throws SQLException {
+        manageDataBase.connectToDataBase();
+        long id = manageDataBase.updateClientPassword(account.getId(), password);
+
+        if(id < 0){
+            return false;
+        }else{
+            return true;
+        }
+    }
    public long generateParcelNumber(){
        Calendar calendar= Calendar.getInstance();
        long month = (calendar.get(Calendar.MONTH) +1)* 100000;
@@ -188,5 +208,9 @@ public class Client {
         route.calculateRoute(parcelNumber,originAddress,destinationAddress);
         Employee employee = new Employee();
         employee.checkTheRoute(parcelNumber);
-    };
+    }
+
+    public Account getAccount() {
+        return account;
+    }
 }

@@ -215,8 +215,8 @@ public class ManageDataBase {
         while(resultSet.next()) {
             return -3;
         }
-
-        String sql = "INSERT INTO klienci(imie, nazwisko, kontakt, email,login, haslo, id) values (?,?,?,?,?,?,nextval('klient_id')) RETURNING id";
+        int addressID = insertAdres("","","");
+        String sql = "INSERT INTO klienci(imie, nazwisko, kontakt, email,login, haslo, id, adres) values (?,?,?,?,?,?,nextval('klient_id'),?) RETURNING id";
         PreparedStatement pst = connection.prepareStatement(sql);
         pst.setString(1,imie);
         pst.setString(2,nazwisko);
@@ -224,11 +224,46 @@ public class ManageDataBase {
         pst.setString(4,email);
         pst.setString(5,login);
         pst.setString(6,haslo);
+        pst.setInt(7,addressID);
         resultSet = pst.executeQuery();
         while(resultSet.next()) {
             id = resultSet.getInt("id");
         }
         return id;
+
+    }
+    public long updateClient(long klientID,int adresID,String imie, String nazwisko, String kontakt,
+                             String email, String ulica, String miasto, String kod) throws SQLException {
+
+        String sql = "UPDATE adres SET miasto = ?, ulica = ?, kod_pocztowy = ? WHERE id = ?";
+        PreparedStatement pst = null;
+        pst = connection.prepareStatement(sql);
+        pst.setString(1,miasto);
+        pst.setString(2,ulica);
+        pst.setString(3,kod);
+        pst.setInt(4,adresID);
+        pst.executeUpdate();
+
+        String sql1 = "UPDATE klienci SET imie = ?, nazwisko = ?, kontakt = ?, email = ? WHERE id = ?";
+        PreparedStatement pst2 = connection.prepareStatement(sql1);
+        pst2.setString(1,imie);
+        pst2.setString(2,nazwisko);
+        pst2.setString(3,kontakt);
+        pst2.setString(4,email);
+        pst2.setLong(5,klientID);
+        pst2.executeUpdate();
+
+        return klientID;
+
+    }
+    public long updateClientPassword(long klientID,String haslo) throws SQLException {
+
+        String sql1 = "UPDATE klienci SET haslo = ? WHERE id = ?";
+        PreparedStatement pst2 = connection.prepareStatement(sql1);
+        pst2.setString(1,haslo);
+        pst2.setLong(2,klientID);
+        pst2.executeUpdate();
+        return klientID;
 
     }
     public Account loginClients(String login, String haslo) throws SQLException {
@@ -238,10 +273,21 @@ public class ManageDataBase {
         preparedStatement .setString(1,login);
         preparedStatement .setString(2,haslo);
         resultSet = preparedStatement.executeQuery();
-
+        int addressID=-1;
         while(resultSet.next()) {
             myAccount = new Account(resultSet.getLong("id"), login,haslo,resultSet.getString("email"), resultSet.getString("kontakt"),
                     resultSet.getString("imie"), resultSet.getString("nazwisko"));
+            addressID = resultSet.getInt("adres");
+        }
+        if(addressID>0) {
+            query = "select * from adres where id = ?;";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, addressID);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                myAccount.setAddress(new Address(resultSet.getInt("id"), resultSet.getString("miasto"),
+                        resultSet.getString("ulica"), resultSet.getString("kod_pocztowy")));
+            }
         }
         return myAccount;
     }
@@ -383,7 +429,7 @@ public class ManageDataBase {
         PreparedStatement pst = connection.prepareStatement(sql);
         pst.setString(1,status);
         pst.setInt(2,ID);
-        pst.executeQuery();
+        pst.executeUpdate();
     }
     public Payment getPaymentInfo(int paymentID) throws SQLException {
         Payment payment = new Payment();

@@ -17,6 +17,6 @@
       <TextField fx:id="tfUsername" layoutX="199.0" layoutY="91.0" />
       <Button fx:id="btnReInitDataBase" layoutX="478.0" layoutY="490.0" mnemonicParsing="false" onAction="#pushReInitDataBase" text="ReInitDataBase" />
       <PasswordField fx:id="pfPassword" layoutX="200.0" layoutY="169.0" />
-      <Label fx:id="lbLogin" layoutX="198.0" layoutY="223.0" prefHeight="17.0" prefWidth="149.0" textAlignment="CENTER" textFill="RED" />
+      <Label fx:id="lbLogin" layoutX="169.0" layoutY="223.0" prefHeight="17.0" prefWidth="212.0" textAlignment="CENTER" textFill="RED" />
    </children>
 </AnchorPane>

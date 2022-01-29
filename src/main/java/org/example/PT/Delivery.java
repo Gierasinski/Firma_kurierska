@@ -16,7 +16,7 @@ public class Delivery extends Employee{
     }
     public Delivery() {}
 
-    public void pickUpTheParcel(int parcelNumber){
+    public void pickUpTheParcel(long parcelNumber){
         try {
             base.connectToDataBase();
             base.updateParcelStatus(status.getSa1(),parcelNumber);
@@ -24,7 +24,7 @@ public class Delivery extends Employee{
             e.printStackTrace();
         }
     }
-    public void deliveredToTheRecipient(int parcelNumber){
+    public void deliveredToTheRecipient(long parcelNumber){
         try {
             base.connectToDataBase();
             base.updateParcelStatus(status.getSa7(),parcelNumber);
@@ -33,7 +33,7 @@ public class Delivery extends Employee{
         }
     }
 
-    public void deliveredToParcelLocker(int parcelNumber){
+    public void deliveredToParcelLocker(long parcelNumber){
         try {
             base.connectToDataBase();
             base.updateParcelStatus(status.getSa6(),parcelNumber);
@@ -42,7 +42,7 @@ public class Delivery extends Employee{
         }
     }
 
-    public String getInfoParcel(int parcelNumber) {
+    public String getInfoParcel(long parcelNumber) {
         try {
             base.connectToDataBase();
             Parcel parcel;

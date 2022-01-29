@@ -16,7 +16,7 @@ public class Storekeeper extends Employee {
 
 
 
-    public void reportTheDamage(int numberParcel) {
+    public void reportTheDamage(long numberParcel) {
         try {
             base.connectToDataBase();
             base.updateParcelStatus(status.getSa8(),numberParcel);
@@ -26,7 +26,7 @@ public class Storekeeper extends Employee {
 
 
     }
-    public void acceptParcel(int parcelNumber)  {
+    public void acceptParcel(long parcelNumber)  {
         try {
             base.connectToDataBase();
             base.updateParcelStatus(status.getSa5(),parcelNumber);

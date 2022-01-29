@@ -26,7 +26,7 @@ public class StorekeeperFX {
     @FXML
     void packageaccepted(ActionEvent event) {
         if(!tfpackagenumberS.getText().isEmpty()) {
-            int code = Integer.parseInt(tfpackagenumberS.getText());
+            long code = Long.parseLong(tfpackagenumberS.getText());
             storekeeper.acceptParcel(code);
         }
     }
@@ -34,7 +34,7 @@ public class StorekeeperFX {
     @FXML
     void reportdamage(ActionEvent event) {
         if(!tfpackagenumberS.getText().isEmpty()) {
-            int code = Integer.parseInt(tfpackagenumberS.getText());
+            long code = Long.parseLong(tfpackagenumberS.getText());
             storekeeper.reportTheDamage(code);
         }
     }

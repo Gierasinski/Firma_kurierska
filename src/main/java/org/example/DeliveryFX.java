@@ -41,7 +41,7 @@ public class DeliveryFX {
     @FXML
     void bt6(ActionEvent event) {
             if(!tfpackagenumberD.getText().isEmpty()){
-                int code = Integer.parseInt(tfpackagenumberD.getText());
+                long code = Long.parseLong(tfpackagenumberD.getText());
                 taDelivery.setText(delivery.getInfoParcel(code));
             }
     }
@@ -49,7 +49,7 @@ public class DeliveryFX {
     @FXML
     void deliveredtoaparcellocker(ActionEvent event) {
         if(!tfpackagenumberD.getText().isEmpty()) {
-            int code = Integer.parseInt(tfpackagenumberD.getText());
+            long code = Long.parseLong(tfpackagenumberD.getText());
             delivery.deliveredToParcelLocker(code);
         }
     }
@@ -57,7 +57,7 @@ public class DeliveryFX {
     @FXML
     void deliveredtotherecipient(ActionEvent event) {
         if(!tfpackagenumberD.getText().isEmpty()) {
-            int code = Integer.parseInt(tfpackagenumberD.getText());
+            long code = Long.parseLong(tfpackagenumberD.getText());
             delivery.deliveredToTheRecipient(code);
         }
 
@@ -67,7 +67,7 @@ public class DeliveryFX {
     @FXML
     void pickupthepackage0(ActionEvent event) {
         if(!tfpackagenumberD.getText().isEmpty()) {
-            int code = Integer.parseInt(tfpackagenumberD.getText());
+            long code = Long.parseLong(tfpackagenumberD.getText());
             delivery.pickUpTheParcel(code);
         }
     }

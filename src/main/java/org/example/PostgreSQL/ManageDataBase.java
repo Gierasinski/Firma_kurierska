@@ -519,11 +519,11 @@ public class ManageDataBase {
     }
 
     /**aktualizacja statusu przesylki*/
-    public void updateParcelStatus(String status, int numberParcel) throws SQLException {
+    public void updateParcelStatus(String status, long numberParcel) throws SQLException {
         String sql = "UPDATE przesylki SET status = ? WHERE id = ?";
         PreparedStatement pst = connection.prepareStatement(sql);
         pst.setString(1, status);
-        pst.setInt(2, numberParcel);
+        pst.setLong(2, numberParcel);
         pst.execute();
     }
 
@@ -560,7 +560,7 @@ public class ManageDataBase {
         return city+", "+street;
     }
     /**zwraca paczke po numerze paczki*/
-    public Parcel getParcelInfoNumberCode(int numberCode) throws SQLException {
+    public Parcel getParcelInfoNumberCode(long numberCode) throws SQLException {
         Parcel parcel = new Parcel();
         String query = "select * from przesylki where id = ?;";
         preparedStatement = connection.prepareStatement(query);

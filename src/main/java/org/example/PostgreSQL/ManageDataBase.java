@@ -87,7 +87,7 @@ public class ManageDataBase {
         String sql = "INSERT INTO employee(pesel,salary,phoneNumber,workerCode,name,surname,position,dateofemployment)\n" +
                 "VALUES ('543534', '4344', '43432423', '1111','ppp','gdfgd','delivery','10-12-2021');\n" +
                 "INSERT INTO klienci(imie, nazwisko, kontakt, email,login, haslo, id)\n" +
-                "VALUES ('kuba','stawka','543534','kubafsdfsd','kuba','1234', nextval('klient_id'));\n";
+                "VALUES ('kuba','stawka','543534','kubafsdfsd','admin','admin', nextval('klient_id'));\n";
 
         Statement statement = connection.createStatement();
 

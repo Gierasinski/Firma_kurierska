@@ -1,11 +1,11 @@
 Faktura
 Nazwa firmy: Firma Kurierska PSP Spolka Zoo
-data wystawienia faktury: 2022-01-29 02:31:30
+data wystawienia faktury: 2022-01-29 20:54:37
 Dane odbiorcy: 
-Imie: Moja
-Nazwisko: faktura
-Miasto: z miasta
-Ulica: i z luciy
-Numer Domu: 21
+Imie: fsd
+Nazwisko: fds
+Miasto: fds
+Ulica: 432
+Numer Domu: 432
 Metoda platnosc: Bank transfer
 Kwota: 10.0

@@ -19,10 +19,14 @@ public class Branch {
 
     public int getId() {return id;}
 
-    public void addBranch() throws SQLException {
-        base.connectToDataBase();
+    public void addBranch(String city, String road, String numberHause)  {
+
         try {
-            base.insertBranch(name,code);
+            int idAddress;
+            base.connectToDataBase();
+            idAddress = base.insertAdres(city, road+numberHause, "23-650");
+            base.insertBranch(name,code, idAddress);
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

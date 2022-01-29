@@ -5,6 +5,7 @@ import org.example.PG.Address;
 import org.example.PostgreSQL.ManageDataBase;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class Employee {
@@ -39,9 +40,21 @@ public class Employee {
     public String getPosition() {return position;}
     public Date getDateOfEmployment() {return dateOfEmployment;}
 
-    public void checkTheRoute() throws SQLException {
-        base.connectToDataBase();
-        base.searchRoute(12);
+    public void checkTheRoute(int parcelNumber) {
+        ArrayList<RoutePlan> plan = new ArrayList<RoutePlan>();
+        try {
+            base.connectToDataBase();
+            plan  = base.searchRouteToParcelNumber(parcelNumber);
+            for(RoutePlan  x:plan) {
+                String napis;
+                napis =  base.selectAdresToRouteA(x.getIdAddressA());
+                System.out.print("From: " + napis );
+                napis =  base.selectAdresToRouteB(x.getIdAddressB());
+                System.out.println(" TO: " + napis);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
 

@@ -42,23 +42,20 @@ public class Accountant extends Employee{
         write.close();
     }
 
-    public void givePremium(int id, int premium) throws SQLException {
-        base.connectToDataBase();
-        int salaryFromDB = 0;
+    public void givePremium(String workerCode, int premium){
         try {
-            salaryFromDB = base.searchEmployee(id);
+            int salaryFromDB = 0;
+            base.connectToDataBase();
+            salaryFromDB = base.searchEmployee(workerCode);
+            salaryFromDB += premium;
+            base.updateSalary(salaryFromDB,workerCode);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        salaryFromDB += premium;
-        try {
-            base.updateSalary(salaryFromDB,id);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+
     }
 
-    public void payWages(int id) throws SQLException {
+    public void payWages(String id) throws SQLException {
         base.connectToDataBase();
         try {
             int salary = base.searchEmployee(id);

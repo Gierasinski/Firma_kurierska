@@ -140,6 +140,26 @@ public class AccountantFX {
 
     @FXML
     void payout(ActionEvent event) {
+        if(!tfamount.getText().isEmpty() && !tfWorkerNumber.getText().isEmpty() ){
+            accountant.givePremium(tfWorkerNumber.getText(),Integer.parseInt(tfamount.getText()));
+            alert.setTitle("Premium");
+            alert.setHeaderText("Premium is add");
+            alert.setContentText("Press OK");
+            alert.showAndWait().ifPresent(rs -> {
+                if (rs == ButtonType.OK) {
+                    System.out.println("Pressed OK.");
+                }
+            });
+        }else{
+            alert.setTitle("Premium");
+            alert.setHeaderText("Premium is not add");
+            alert.setContentText("Check data");
+            alert.showAndWait().ifPresent(rs -> {
+                if (rs == ButtonType.OK) {
+                    System.out.println("Pressed OK.");
+                }
+            });
+        }
 
     }
 

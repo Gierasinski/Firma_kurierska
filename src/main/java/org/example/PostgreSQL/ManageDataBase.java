@@ -6,8 +6,10 @@ import org.example.PG.Parcel;
 import org.example.PG.Payment;
 import org.example.PT.Employee;
 import org.example.PT.Route;
+import org.example.PT.RoutePlan;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class ManageDataBase {
@@ -70,10 +72,10 @@ public class ManageDataBase {
             createTablePayment();
             createTableParcels();
             createTableClients();
-            createTableRoute();
             createTableTruck();
             createTableBranch();
             createTableDistance();
+            createTableRoutePlan();
             insertToTable();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -108,14 +110,11 @@ public class ManageDataBase {
         insertAdres("Kiece","wysoka 1","23-300");
         insertAdres("Kiece","mala 43","23-300");
 
-
-        route.calculateRoute(5,6);
-
+        route.calculateRoute(1111,5,6);
         insertParcel(1111,1,23,2,32,21,2,1,2,"oplacona","radom",2,1,1);
 
-        System.out.println(selectAdresToRoute(111));
-        System.out.println(selectAdresToRoute(222));
-
+        Employee employee = new Employee();
+        employee.checkTheRoute(1111);
     }
     public void dropDataBase() throws SQLException {
         String sql = "DROP DATABASE "+databaseName+" WITH (FORCE)";
@@ -167,15 +166,6 @@ public class ManageDataBase {
 
             statement.executeUpdate(sql);
             System.out.println("Table Truck Delete");
-    }
-    /**stworzenie tabeli trasa */
-    public void createTableRoute() throws SQLException {
-        String sql = "CREATE TABLE Route (id SERIAL,parcelNumber INTEGER,idAdresNadania INTEGER,idAdresOddzial1 INTEGER, idAdresOddzial2 INTEGER," +
-                "idAdresOddzial3 INTEGER, idAdresOdbioru INTEGER)";
-        Statement statement = connection.createStatement();
-
-        statement.executeUpdate(sql);
-        System.out.println("Table Route Created");
     }
 
     /**stworzenie tabeli oddzial */
@@ -432,9 +422,9 @@ public class ManageDataBase {
 
 
     /**wyszukanie pracownika o podany id */
-    public int searchEmployee(int id) throws SQLException {
+    public int searchEmployee(String workerCode) throws SQLException {
         int salary = 0;
-        String query = "select salary from employee where id="+id+";";
+        String query = "select salary from employee where workerCode like '"+workerCode+"';";
             preparedStatement = connection.prepareStatement(query);
             resultSet = preparedStatement.executeQuery();
             int i = 0;
@@ -480,32 +470,6 @@ public class ManageDataBase {
         return myEmployee;
     }
 
-    /**dodanie Trasy */
-    public void insertRoute(long parcelNumber,int idN,int idO1,int idO2,int idO3, int idO) throws SQLException {
-        String sql = "INSERT INTO Route(parcelNumber,idAdresNadania, idAdresOddzial1, idAdresOddzial2, idAdresOddzial3,idAdresOdbioru) values (?,?,?,?,?,?)";
-        PreparedStatement pst = connection.prepareStatement(sql);
-        pst.setLong(1,parcelNumber);
-        pst.setInt(2,idN);
-        pst.setInt(3,idO1);
-        pst.setInt(4,idO2);
-        pst.setInt(5,idO3);
-        pst.setInt(6,idO);
-        pst.execute();
-    }
-
-    /**wyszukanie trasy o podany numerze paczki */
-    public int searchRoute(long numberParcel) throws SQLException {
-        int salary = 0;
-        String query = "select * from Route where numberParcel="+numberParcel+";";
-        preparedStatement = connection.prepareStatement(query);
-        resultSet = preparedStatement.executeQuery();
-        int i = 0;
-        while(resultSet.next()) {
-            //salary = resultSet.getInt("id");
-            i++;
-        }
-        return salary;
-    }
 
     /**dodanie oddzialu */
     public void insertBranch(String name, int code,int idAddress) throws SQLException {
@@ -545,11 +509,11 @@ public class ManageDataBase {
 
     }
     /**aktualizacja pensji pracownika*/
-    public void updateSalary(int salary,int id) throws SQLException {
-            String sql = "UPDATE employee SET salary = ? WHERE id = ?";
+    public void updateSalary(int salary,String workerCode) throws SQLException {
+            String sql = "UPDATE employee SET salary = ? WHERE workercode = ?";
             PreparedStatement pst = connection.prepareStatement(sql);
             pst.setInt(1, salary);
-            pst.setInt(2, id);
+            pst.setString(2, workerCode);
             pst.execute();
             System.out.println("Salary update");
     }
@@ -566,10 +530,25 @@ public class ManageDataBase {
 
 
     /**zapytanie dajace miasto nadawcy*/
-    public String selectAdresToRoute(long numberParcel) throws SQLException {
+    public String selectAdresToRouteA(int id) throws SQLException {
         String city = null;
         String street = null;
-        String query = "select miasto,ulica from adres where id=(select idAdresNadania from Route where parcelNumber = "+numberParcel+");";
+        String query = "select miasto,ulica from adres where id="+id+";";
+        preparedStatement = connection.prepareStatement(query);
+        resultSet = preparedStatement.executeQuery();
+        int i = 0;
+        while(resultSet.next()) {
+            city = resultSet.getString("miasto");
+            street = resultSet.getString("ulica");
+            i++;
+        }
+        return city+", "+street;
+    }
+    /**zapytanie dajace miasto odbiorce*/
+    public String selectAdresToRouteB(int id) throws SQLException {
+        String city = null;
+        String street = null;
+        String query = "select miasto,ulica from adres where id="+id+";";
         preparedStatement = connection.prepareStatement(query);
         resultSet = preparedStatement.executeQuery();
         int i = 0;
@@ -633,5 +612,41 @@ public class ManageDataBase {
         }
         return distance;
     }
+
+    /**stworzenie tabeli zapisujace trase */
+    public void createTableRoutePlan() throws SQLException {
+        String sql = "CREATE TABLE route_plan (id SERIAL,parcelNumber INTEGER, idPointA INTEGER, idPointB INTEGER)";
+        Statement statement = connection.createStatement();
+
+        statement.executeUpdate(sql);
+        System.out.println("Table route_plan Created");
+    }
+
+    /**dodanie dystancu */
+    public void insertRoutePlan(int parcelNumber,int A, int B) throws SQLException {
+        String sql = "INSERT INTO route_plan(parcelNumber,idPointA, idPointB) values (?,?,?)";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setInt(1,parcelNumber);
+        pst.setInt(2,A);
+        pst.setInt(3,B);
+        pst.execute();
+    }
+
+
+    /**wyszukanie trasy o podany numerze paczki*/
+
+    public ArrayList<RoutePlan> searchRouteToParcelNumber(int parcelNumber) throws SQLException {
+        ArrayList<RoutePlan> plan = new ArrayList<RoutePlan>();
+        String query = "select * from route_plan where parcelNumber="+parcelNumber+";";
+        preparedStatement = connection.prepareStatement(query);
+        resultSet = preparedStatement.executeQuery();
+        int i = 0;
+        while(resultSet.next()) {
+            plan.add(new RoutePlan(resultSet.getInt("parcelnumber"),resultSet.getInt("idPointA"),resultSet.getInt("idPointB")));
+            i++;
+        }
+        return plan;
+    }
+
 
 }

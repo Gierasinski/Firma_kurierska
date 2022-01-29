@@ -26,6 +26,7 @@ public class Delivery extends Employee{
     }
     public void deliveredToTheRecipient(int parcelNumber){
         try {
+            base.connectToDataBase();
             base.updateParcelStatus(status.getSa7(),parcelNumber);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -34,6 +35,7 @@ public class Delivery extends Employee{
 
     public void deliveredToParcelLocker(int parcelNumber){
         try {
+            base.connectToDataBase();
             base.updateParcelStatus(status.getSa6(),parcelNumber);
         } catch (SQLException e) {
             e.printStackTrace();

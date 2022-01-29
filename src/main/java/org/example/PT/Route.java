@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class Route {
     int distanceAB ,distanceAC, distanceBC;
-    boolean aBranch=false, bBranch=false, cBranch=false;
+    boolean aBranch=false, bBranch=true, cBranch=false;
     ManageDataBase base =  new  ManageDataBase();
 
 
@@ -39,7 +39,7 @@ public class Route {
     }
 
 
-    public void calculateRoute(int idAddressA,int  idAddressB) {
+    public void calculateRoute(int parcelNumber, int idAddressA,int  idAddressB) {
         setDistanceABC();
         setDistance(idAddressA, idAddressB);
         int distance;
@@ -107,8 +107,65 @@ public class Route {
             e.printStackTrace();
         }
 
+        try{
+            base.connectToDataBase();
 
-        System.out.println(min);
+            if(aBranch && bBranch & cBranch){
+                base.insertRoutePlan(parcelNumber,idAddressA,1);
+                base.insertRoutePlan(parcelNumber,1,2);
+                base.insertRoutePlan(parcelNumber,2,3);
+                base.insertRoutePlan(parcelNumber,3,idAddressB);
+            }else if(aBranch){
+                if(bBranch){
+                    base.insertRoutePlan(parcelNumber,idAddressA,1);
+                    base.insertRoutePlan(parcelNumber,1,2);
+                    base.insertRoutePlan(parcelNumber,2,idAddressB);
+                }else if(cBranch){
+                    base.insertRoutePlan(parcelNumber,idAddressA,1);
+                    base.insertRoutePlan(parcelNumber,1,3);
+                    base.insertRoutePlan(parcelNumber,3,idAddressB);
+                }else if(aBranch){
+                    base.insertRoutePlan(parcelNumber,idAddressA,1);
+                    base.insertRoutePlan(parcelNumber,1,idAddressB);
+                }
+
+            }else if(bBranch){
+                if(aBranch){
+                    base.insertRoutePlan(parcelNumber,idAddressA,2);
+                    base.insertRoutePlan(parcelNumber,2,1);
+                    base.insertRoutePlan(parcelNumber,1,idAddressB);
+                }else if(cBranch){
+                    base.insertRoutePlan(parcelNumber,idAddressA,2);
+                    base.insertRoutePlan(parcelNumber,2,3);
+                    base.insertRoutePlan(parcelNumber,3,idAddressB);
+                }else if(bBranch){
+                    base.insertRoutePlan(parcelNumber,idAddressA,2);
+                    base.insertRoutePlan(parcelNumber,2,idAddressB);
+                }
+
+            }else if(cBranch){
+                if(aBranch){
+                    base.insertRoutePlan(parcelNumber,idAddressA,3);
+                    base.insertRoutePlan(parcelNumber,3,1);
+                    base.insertRoutePlan(parcelNumber,1,idAddressB);
+                }else if(bBranch){
+                    base.insertRoutePlan(parcelNumber,idAddressA,3);
+                    base.insertRoutePlan(parcelNumber,3,2);
+                    base.insertRoutePlan(parcelNumber,2,idAddressB);
+                }else if(cBranch){
+                    base.insertRoutePlan(parcelNumber,idAddressA,3);
+                    base.insertRoutePlan(parcelNumber,3,idAddressB);
+                }
+
+            }
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
+        System.out.println("liczba kilometrów: " + min);
     }
 
 }

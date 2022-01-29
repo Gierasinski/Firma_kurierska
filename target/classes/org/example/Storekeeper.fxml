@@ -13,14 +13,9 @@
             <Font size="18.0" />
          </font>
       </Label>
-      <Label layoutX="420.0" layoutY="128.0" text="package number" textFill="WHITE">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <TextField fx:id="tfpackagenumberS" layoutX="140.0" layoutY="125.0" prefHeight="26.0" prefWidth="242.0" />
+      <TextField fx:id="tfpackagenumberS" layoutX="140.0" layoutY="125.0" prefHeight="26.0" prefWidth="306.0" promptText="Package number" />
       <Button fx:id="btnreportdamage" layoutX="114.0" layoutY="200.0" mnemonicParsing="false" onAction="#reportdamage" prefHeight="62.0" prefWidth="123.0" text="Report damage" />
       <Button fx:id="btnpackageaccepted" layoutX="334.0" layoutY="203.0" mnemonicParsing="false" onAction="#packageaccepted" prefHeight="62.0" prefWidth="123.0" text="Package accepted" />
-      <Button fx:id="btnexit" layoutX="508.0" layoutY="27.0" mnemonicParsing="false" onAction="#switchtoWorkerpanel" prefHeight="41.0" prefWidth="68.0" text="Button" />
+      <Button fx:id="btnexit" layoutX="508.0" layoutY="27.0" mnemonicParsing="false" onAction="#switchtoWorkerpanel" prefHeight="41.0" prefWidth="68.0" text="Exit" />
    </children>
 </AnchorPane>

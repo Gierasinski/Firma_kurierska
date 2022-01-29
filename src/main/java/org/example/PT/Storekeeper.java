@@ -3,8 +3,6 @@ package org.example.PT;
 import org.example.PostgreSQL.ManageDataBase;
 
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 
 public class Storekeeper extends Employee {
@@ -16,12 +14,15 @@ public class Storekeeper extends Employee {
     }
     public Storekeeper() {}
 
+
+
     public void reportTheDamage(int numberParcel) {
-        Calendar calendar = Calendar.getInstance();
-        Date date = calendar.getTime();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
-        simpleDateFormat.format(date);
-        status.getSa8();
+        try {
+            base.connectToDataBase();
+            base.updateParcelStatus(status.getSa8(),numberParcel);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
 
     }

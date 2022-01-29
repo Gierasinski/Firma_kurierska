@@ -8,6 +8,8 @@ import javafx.scene.control.TextField;
 import javafx.scene.input.InputMethodEvent;
 import org.example.PT.Delivery;
 
+import java.io.IOException;
+
 
 public class DeliveryFX {
     Delivery delivery = new Delivery();
@@ -77,8 +79,8 @@ public class DeliveryFX {
 
     }
     @FXML
-    void exit(ActionEvent event) {
-
+    void exit(ActionEvent event) throws IOException {
+        App.setRoot("WorkerPanel");
     }
 
 }

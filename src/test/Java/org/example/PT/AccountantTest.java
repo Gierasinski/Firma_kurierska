@@ -25,7 +25,7 @@ class AccountantTest {
             Date date = new Date(format.parse("01-01-1999").getTime());
             java.sql.Date sqlDate = new java.sql.Date(date.getTime());
             accountant.addEmployee("piotr","tkaczyk","Krakow","biala","43",34324,4234,"storekeeper",2600,(java.sql.Date)sqlDate);
-            accountant.givePremium(1,100);
+            accountant.givePremium("1111",100);
 
         } catch (SQLException | ParseException e) {
             e.printStackTrace();

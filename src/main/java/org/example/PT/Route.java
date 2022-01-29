@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class Route {
     int distanceAB ,distanceAC, distanceBC;
-    boolean aBranch=false, bBranch=true, cBranch=false;
+    boolean aBranch=false, bBranch=false, cBranch=false;
     ManageDataBase base =  new  ManageDataBase();
 
 

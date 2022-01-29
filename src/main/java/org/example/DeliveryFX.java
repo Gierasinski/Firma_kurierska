@@ -15,13 +15,14 @@ public class DeliveryFX {
     private Button btn6;
 
     @FXML
+    private Button btnexit;
+
+    @FXML
     private Button btndeliveredtoapercellocker;
 
     @FXML
     private Button btndeliveredtorecipient;
 
-    @FXML
-    private Button btngetthefee;
 
     @FXML
     private Button btnpickingupthepackagef;
@@ -60,10 +61,6 @@ public class DeliveryFX {
 
     }
 
-    @FXML
-    void getthefee(ActionEvent event) {
-
-    }
 
     @FXML
     void pickupthepackage0(ActionEvent event) {
@@ -73,14 +70,14 @@ public class DeliveryFX {
         }
     }
 
-    @FXML
-    void pickupthepackage1(ActionEvent event) {
-
-    }
 
     @FXML
     void taDeliverymethod(InputMethodEvent event) {
 
+
+    }
+    @FXML
+    void exit(ActionEvent event) {
 
     }
 

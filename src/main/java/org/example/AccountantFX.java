@@ -15,6 +15,7 @@ public class AccountantFX {
     @FXML
     private Button btnAddWorker;
 
+
     @FXML
     private Button btnIssue;
 
@@ -25,7 +26,8 @@ public class AccountantFX {
     private Button btnpayout;
 
     @FXML
-    private ListView<?> lvlistapracownikow;
+    private TextField tfWorkerNumber;
+
 
     @FXML
     private TextField tfICity;
@@ -40,16 +42,10 @@ public class AccountantFX {
     private TextField tfIamount;
 
     @FXML
-    private TextField tfIblanktf;
-
-    @FXML
     private TextField tfIname;
 
     @FXML
     private TextField tfIsurname;
-
-    @FXML
-    private TextField tfWblanktf;
 
     @FXML
     private TextField tfWbranchname;
@@ -77,9 +73,6 @@ public class AccountantFX {
 
     @FXML
     private TextField tfWsurname;
-
-    @FXML
-    private TextField tfWworkernumber;
 
     @FXML
     private TextField tfamount;

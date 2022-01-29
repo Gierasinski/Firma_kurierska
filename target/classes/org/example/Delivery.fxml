@@ -20,12 +20,11 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <Button fx:id="btnpickingupthepackagef" layoutX="24.0" layoutY="14.0" mnemonicParsing="false" onAction="#pickupthepackage0" prefHeight="62.0" prefWidth="172.0" text="Picking up the package 0" />
-      <Button fx:id="btndeliveredtorecipient" layoutX="24.0" layoutY="238.0" mnemonicParsing="false" onAction="#deliveredtotherecipient" prefHeight="62.0" prefWidth="172.0" text="Delivered to the recipient" />
-      <Button fx:id="btngetthefee" layoutX="443.0" layoutY="300.0" mnemonicParsing="false" onAction="#getthefee" prefHeight="73.0" prefWidth="142.0" text="Get the fee" />
-      <Button fx:id="btndeliveredtoapercellocker" layoutX="24.0" layoutY="168.0" mnemonicParsing="false" onAction="#deliveredtoaparcellocker" prefHeight="62.0" prefWidth="172.0" text="Delivered to a parcel locker" />
-      <Button fx:id="btnpickingupthepackaget" layoutX="24.0" layoutY="91.0" mnemonicParsing="false" onAction="#pickupthepackage1" prefHeight="62.0" prefWidth="172.0" text="Picking up the package1" />
-      <Button fx:id="btn6" layoutX="24.0" layoutY="311.0" mnemonicParsing="false" onAction="#bt6" prefHeight="62.0" prefWidth="172.0" text="btn6" />
+      <Button fx:id="btnpickingupthepackagef" layoutX="24.0" layoutY="52.0" mnemonicParsing="false" onAction="#pickupthepackage0" prefHeight="62.0" prefWidth="172.0" text="Picking up the package" />
+      <Button fx:id="btndeliveredtorecipient" layoutX="24.0" layoutY="219.0" mnemonicParsing="false" onAction="#deliveredtotherecipient" prefHeight="62.0" prefWidth="172.0" text="Delivered to the recipient" />
+      <Button fx:id="btndeliveredtoapercellocker" layoutX="24.0" layoutY="137.0" mnemonicParsing="false" onAction="#deliveredtoaparcellocker" prefHeight="62.0" prefWidth="172.0" text="Delivered to a parcel locker" />
+      <Button fx:id="btn6" layoutX="24.0" layoutY="300.0" mnemonicParsing="false" onAction="#bt6" prefHeight="62.0" prefWidth="172.0" text="Check Info" />
       <TextArea fx:id="taDelivery" layoutX="225.0" layoutY="100.0" onInputMethodTextChanged="#taDeliverymethod" prefHeight="266.0" prefWidth="200.0" />
+      <Button fx:id="btnexit" layoutX="452.0" layoutY="306.0" mnemonicParsing="false" onAction="#exit" prefHeight="50.0" prefWidth="104.0" text="Exit" />
    </children>
 </AnchorPane>

@@ -1,14 +1,14 @@
 package org.example.PT;
 
 public class Status {
-    String sa1 = "Odebrana przez kuriera";
-    String sa2 = "Wyslana przez nadawce";
-    String sa3 = "Odebrana przez odbiorce";
-    String sa4 = "Gotowa do odbioru";
-    String sa5 = "Przyjeta w oddziale";
-    String sa6 = "Dostarczona do paczkomatu";
-    String sa7 = "Dostarczona do odbiorcy";
-    String sa8 = "Uszkodzona";
+    String sa1 = "CollectedByDel";
+    String sa2 = "PostedByShiper";
+    String sa3 = "ReceivedByRecp";
+    String sa4 = "ReadyToPickUp";
+    String sa5 = "ReceivedAtBran";
+    String sa6 = "DeliveredToLock";
+    String sa7 = "DeliveredToRecp";
+    String sa8 = "Damaged";
 
 
     public Status(String sa1, String sa2, String sa3, String sa4, String sa5, String sa6, String sa7, String sa8) {

@@ -65,7 +65,4 @@ public class Delivery extends Employee{
         return "";
     }
 
-    public void pobierzOplate(){
-
-    }
 }

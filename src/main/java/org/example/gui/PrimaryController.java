@@ -1,7 +1,8 @@
-package org.example;
+package org.example.gui;
 
 import java.io.IOException;
 import javafx.fxml.FXML;
+import org.example.App;
 
 public class PrimaryController {
 

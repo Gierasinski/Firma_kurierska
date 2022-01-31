@@ -1,8 +1,9 @@
-package org.example;
+package org.example.gui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import org.example.App;
 import org.example.worker.Accountant;
 
 import java.io.FileNotFoundException;

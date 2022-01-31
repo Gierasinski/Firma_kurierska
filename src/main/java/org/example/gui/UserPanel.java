@@ -1,9 +1,10 @@
-package org.example;
+package org.example.gui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import org.example.App;
 import org.example.client.Account;
 import org.example.global.Address;
 import org.example.client.ClientHolder;

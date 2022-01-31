@@ -1,9 +1,10 @@
-package org.example;
+package org.example.gui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
+import org.example.App;
 import org.example.worker.Storekeeper;
 
 import java.io.IOException;

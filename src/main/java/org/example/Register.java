@@ -3,7 +3,7 @@ package org.example;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import org.example.PG.Client;
+import org.example.client.Client;
 
 import java.io.IOException;
 import java.sql.SQLException;

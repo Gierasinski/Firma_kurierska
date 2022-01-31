@@ -1,9 +1,10 @@
 package org.example.PT;
 
-import org.example.PG.Parcel;
-import org.example.PG.ShipmentFactory;
+import org.example.parcel.Parcel;
+import org.example.parcel.ShipmentFactory;
 import org.example.PostgreSQL.ManageDataBase;
-import org.junit.Assert;
+import org.example.worker.Delivery;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -52,8 +53,8 @@ class DeliveryTest {
             Parcel myParcel = factory.createParcel(1,1,10.f,20,20,
                     20,1,1,1,"Shipped", "Sender");
 
-            Assert.assertNotNull("Obiekt jest pusty",  delivery);
-            Assert.assertEquals("", delivery.getInfoParcel(1));
+            Assertions.assertNotNull(delivery);
+            Assertions.assertEquals("", delivery.getInfoParcel(1));
 
 
         } catch (SQLException e) {

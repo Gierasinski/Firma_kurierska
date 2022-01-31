@@ -1,8 +1,9 @@
 package org.example.PT;
 
-import org.example.PG.Parcel;
-import org.example.PG.ShipmentFactory;
+import org.example.parcel.Parcel;
+import org.example.parcel.ShipmentFactory;
 import org.example.PostgreSQL.ManageDataBase;
+import org.example.worker.Storekeeper;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;

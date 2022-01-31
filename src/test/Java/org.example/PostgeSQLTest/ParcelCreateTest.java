@@ -1,6 +1,9 @@
 package org.example.PostgeSQLTest;
 
-import org.example.PG.*;
+import org.example.parcel.Parcel;
+import org.example.parcel.ParcelFromToLocker;
+import org.example.parcel.ShipmentFactory;
+import org.example.parcel.ShipmentFromToLockerFactory;
 import org.junit.jupiter.api.*;
 
 

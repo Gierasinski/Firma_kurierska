@@ -1,6 +1,7 @@
 package org.example.PT;
 
 import org.example.PostgreSQL.ManageDataBase;
+import org.example.worker.Accountant;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;

@@ -5,8 +5,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.example.PG.Client;
-import org.example.PG.ClientHolder;
 
 import java.io.IOException;
 

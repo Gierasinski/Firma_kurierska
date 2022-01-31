@@ -1,9 +1,8 @@
 package org.example.PostgeSQLTest;
 
-import org.example.PG.*;
 import org.example.PostgreSQL.ManageDataBase;
+import org.example.client.Client;
 import org.junit.jupiter.api.*;
-import org.postgresql.util.PSQLException;
 
 import java.sql.SQLException;
 

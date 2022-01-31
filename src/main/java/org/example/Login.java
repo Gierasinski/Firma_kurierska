@@ -3,8 +3,8 @@ package org.example;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import org.example.PG.Client;
-import org.example.PG.ClientHolder;
+import org.example.client.Client;
+import org.example.client.ClientHolder;
 import org.example.PostgreSQL.ManageDataBase;
 
 import java.io.IOException;

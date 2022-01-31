@@ -1,6 +1,7 @@
 package org.example.PT;
 
 import org.example.PostgreSQL.ManageDataBase;
+import org.example.global.Truck;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;

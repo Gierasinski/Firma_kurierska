@@ -1,7 +1,9 @@
 package org.example.PT;
 
 import org.example.PostgreSQL.ManageDataBase;
-import org.junit.Assert;
+import org.example.worker.Accountant;
+import org.example.worker.Employee;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -77,7 +79,7 @@ class EmployeeTest {
             java.sql.Date sqlDate = new java.sql.Date(date.getTime());
             testBase.insertEmployee("1234", "piotr", "Tkaczyl", 43242423, 1, 3432432, "delivery", 4344, (java.sql.Date) sqlDate, 1);
             employee.loginEmployee("1234");
-            Assert.assertEquals(-1, employee.loginEmployee("1234"));
+            Assertions.assertEquals(-1, employee.loginEmployee("1234"));
         } catch (SQLException | ParseException e) {
             e.printStackTrace();
         }

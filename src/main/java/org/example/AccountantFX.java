@@ -3,7 +3,7 @@ package org.example;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
-import org.example.PT.Accountant;
+import org.example.worker.Accountant;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;

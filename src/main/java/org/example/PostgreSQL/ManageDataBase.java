@@ -1,12 +1,12 @@
 package org.example.PostgreSQL;
 
-import org.example.PG.Account;
-import org.example.PG.Address;
-import org.example.PG.Parcel;
-import org.example.PG.Payment;
-import org.example.PT.Employee;
-import org.example.PT.Route;
-import org.example.PT.RoutePlan;
+import org.example.client.Account;
+import org.example.global.Address;
+import org.example.parcel.Parcel;
+import org.example.parcel.Payment;
+import org.example.worker.Employee;
+import org.example.parcel.Route;
+import org.example.parcel.RoutePlan;
 
 import java.sql.*;
 import java.util.ArrayList;

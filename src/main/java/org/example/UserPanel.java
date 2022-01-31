@@ -4,10 +4,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import org.example.PG.Account;
-import org.example.PG.Address;
-import org.example.PG.ClientHolder;
-import org.example.PG.Parcel;
+import org.example.client.Account;
+import org.example.global.Address;
+import org.example.client.ClientHolder;
+import org.example.parcel.Parcel;
 
 import java.io.IOException;
 import java.net.URL;

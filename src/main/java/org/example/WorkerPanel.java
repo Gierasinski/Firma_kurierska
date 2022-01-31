@@ -4,8 +4,8 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
-import org.example.PT.Employee;
-import org.example.PT.EmployeeHolder;
+import org.example.worker.Employee;
+import org.example.worker.EmployeeHolder;
 
 import java.io.IOException;
 import java.sql.SQLException;

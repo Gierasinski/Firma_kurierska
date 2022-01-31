@@ -28,12 +28,6 @@ public class ClientTest {
             Assertions.assertEquals(false, client.login("nieadmin","admin",testBase));
             Assertions.assertDoesNotThrow(() -> client.login("admin","admin",testBase));
 
-            Assertions.assertEquals(true, client.login("admin","admin",testBase));
-            Assertions.assertEquals(false, client.login("nieadmin","admin",testBase));
-            Assertions.assertDoesNotThrow(() -> client.login("admin","admin",testBase));
-
-
-
         } catch (SQLException e) {
             e.printStackTrace();
         }

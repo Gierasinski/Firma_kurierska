@@ -16,11 +16,14 @@ public class ParcelCreateTest{
         ShipmentFactory factory = new ShipmentFactory();
         Parcel myParcel = factory.createParcel(1,1,10.f,20,20,
                 20,1,1,1,"Shipped", "Sender");
+        Assertions.assertNotNull(myParcel);
     }
     @Test()
     public void shipmentFromToParcelFactory_test (){
         ShipmentFromToLockerFactory factory = new ShipmentFromToLockerFactory();
         ParcelFromToLocker myParcel = factory.createParcel(1,1,10.f,20,20,
                 20,1,1,1,"Shipped", "Sender");
+
+        Assertions.assertNotNull(myParcel);
     }
 }

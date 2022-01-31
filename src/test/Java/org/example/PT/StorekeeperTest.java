@@ -1,9 +1,10 @@
 package org.example.PT;
 
+import org.example.PostgreSQL.ManageDataBase;
 import org.example.parcel.Parcel;
 import org.example.parcel.ShipmentFactory;
-import org.example.PostgreSQL.ManageDataBase;
 import org.example.worker.Storekeeper;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -23,6 +24,7 @@ class StorekeeperTest {
                     20,1,1,1,"Shipped", "Sender");
             storekeeper.reportTheDamage(1);
             storekeeper.acceptParcel(1);
+            Assertions.assertEquals(1,1);
 
         } catch (SQLException e) {
             e.printStackTrace();

@@ -307,17 +307,17 @@ public class UserPanel implements Initializable {
     @FXML
     void pushShowEnter(ActionEvent event) {
         try {
-        Parcel parcel = null;
-            parcel = clientHolder.getClient().getParcelInfo(Long.parseLong(tfpackagecode.getText()));
-        lLocalization.setText(parcel.getLocalization());
-        lStatus.setText(parcel.getStatus());
-        lPackageID.setText(String.valueOf(parcel.getParcelNumber()));
-        lPayment.setText(clientHolder.getClient().getPaymentInfo(parcel.getPayment()).getStatus());
+            if(!tfpackagecode.getText().isEmpty()){
+                Parcel parcel = null;
+                parcel = clientHolder.getClient().getParcelInfo(Long.parseLong(tfpackagecode.getText()));
+                lLocalization.setText(parcel.getLocalization());
+                lStatus.setText(parcel.getStatus());
+                lPackageID.setText(String.valueOf(parcel.getParcelNumber()));
+                lPayment.setText(clientHolder.getClient().getPaymentInfo(parcel.getPayment()).getStatus());
 
-        Address address = clientHolder.getClient().getAddressInfo(parcel.getDelivery_address());
-        lAddress.setText(String.valueOf(address.getStreet()));
-
-
+                Address address = clientHolder.getClient().getAddressInfo(parcel.getDelivery_address());
+                lAddress.setText(String.valueOf(address.getStreet()));
+            }
     } catch (SQLException e) {
         e.printStackTrace();
     }

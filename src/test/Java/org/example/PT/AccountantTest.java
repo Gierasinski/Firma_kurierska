@@ -2,6 +2,7 @@ package org.example.PT;
 
 import org.example.PostgreSQL.ManageDataBase;
 import org.example.worker.Accountant;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import java.io.FileNotFoundException;
@@ -49,9 +50,15 @@ class AccountantTest {
             e.printStackTrace();
         }
 
-
-
     }
+    @Test()
+    public void generateWorkerCodeNumberTest() {
+        Assertions.assertTrue(accountant.generateWorkerCodeNumber()>0);
+        Assertions.assertNotEquals(1,accountant.generateWorkerCodeNumber());
+        Assertions.assertNotEquals(100,accountant.generateWorkerCodeNumber());
+        Assertions.assertNotEquals(1000,accountant.generateWorkerCodeNumber());
+    }
+
 
 
 }

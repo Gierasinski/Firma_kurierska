@@ -49,6 +49,19 @@ public class Client {
                 , parcel.getStatus(), parcel.getLocalization(), 0,parcel.getPickupCode(), account.getId());
         return parcel.getParcelNumber();
     }
+
+    public long shipParcelToLocker(float weight, int height, int width, int length, int payment,
+                                   ManageDataBase manage) throws SQLException {
+        ShipmentToLockerFactory shipmentFactory = new ShipmentToLockerFactory();
+        ParcelToLocker parcel = shipmentFactory.createParcel( generateParcelNumber(), generateParcelNumber(),weight, height, width, length, payment,
+                destinationAddress, originAddress, "Shipped", "Shipper");
+
+
+        manage.insertParcel(parcel.getParcelNumber(),parcel.getWaybillNumber(), parcel.getWeight(), parcel.getHeight()
+                ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
+                , parcel.getStatus(), parcel.getLocalization(), 0,parcel.getPickupCode(), account.getId());
+        return parcel.getParcelNumber();
+    }
     public long shipParcelFromLocker(float weight, int height, int width, int length, int payment) throws SQLException {
         ShipmentFromLockerFactory shipmentFactory = new ShipmentFromLockerFactory();
         ParcelFromLocker parcel = shipmentFactory.createParcel( generateParcelNumber(), generateParcelNumber(),weight, height, width, length, payment,
@@ -56,6 +69,18 @@ public class Client {
 
         manageDataBase.connectToDataBase();
         manageDataBase.insertParcel(parcel.getParcelNumber(),parcel.getWaybillNumber(), parcel.getWeight(), parcel.getHeight()
+                ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
+                , parcel.getStatus(), parcel.getLocalization(), parcel.getShipmentCode(),0, account.getId());
+        return parcel.getParcelNumber();
+    }
+
+    public long shipParcelFromLocker(float weight, int height, int width, int length, int payment,ManageDataBase manage) throws SQLException {
+        ShipmentFromLockerFactory shipmentFactory = new ShipmentFromLockerFactory();
+        ParcelFromLocker parcel = shipmentFactory.createParcel( generateParcelNumber(), generateParcelNumber(),weight, height, width, length, payment,
+                destinationAddress, originAddress, "Shipped", "Shipper");
+
+
+        manage.insertParcel(parcel.getParcelNumber(),parcel.getWaybillNumber(), parcel.getWeight(), parcel.getHeight()
                 ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
                 , parcel.getStatus(), parcel.getLocalization(), parcel.getShipmentCode(),0, account.getId());
         return parcel.getParcelNumber();

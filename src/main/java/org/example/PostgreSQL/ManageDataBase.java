@@ -4,7 +4,7 @@ import org.example.client.Account;
 import org.example.global.Address;
 import org.example.parcel.Parcel;
 import org.example.parcel.Payment;
-import org.example.worker.Employee;
+
 import org.example.parcel.Route;
 import org.example.parcel.RoutePlan;
 
@@ -113,8 +113,8 @@ public class ManageDataBase {
         route.calculateRoute(1111,5,6);
         insertParcel(1111,1,23,2,32,21,0,1,2,"oplacona","radom",2,1,1);
 
-        Employee employee = new Employee();
-        employee.checkTheRoute(1111);
+        //Employee employee = new Employee();
+        //employee.checkTheRoute(1111);
     }
     public void dropDataBase() throws SQLException {
         String sql = "DROP DATABASE "+databaseName+" WITH (FORCE)";
@@ -498,25 +498,6 @@ public class ManageDataBase {
             pst.setInt(10,idBranch);
             pst.execute();
     }
-
-    /**wyszukanie pracownika o podany numerze pracownika */
-    public Employee searchEmployeeWorkerCode(String workerCode) throws SQLException {
-        Employee myEmployee = new Employee();
-        String query = "select * from employee where workerCode like '"+workerCode+"';";
-        preparedStatement = connection.prepareStatement(query);
-        resultSet = preparedStatement.executeQuery();
-        int i = 0;
-        while(resultSet.next()) {
-            myEmployee = new Employee(resultSet.getInt("id"),resultSet.getInt("pesel"),resultSet.getInt("salary"),
-                    resultSet.getInt("phoneNumber"),workerCode, resultSet.getString("name"), resultSet.getString("surname"),
-                    resultSet.getString("position"), resultSet.getDate("dateOfEmployment"));
-
-            i++;
-        }
-        return myEmployee;
-    }
-
-
     /**dodanie oddzialu */
     public void insertBranch(String name, int code,int idAddress) throws SQLException {
         String sql = "INSERT INTO Branch(name,code,idAdrress) values (?,?,?)";

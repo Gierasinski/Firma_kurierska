@@ -6,56 +6,72 @@
 <?import javafx.scene.control.PasswordField?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<AnchorPane prefHeight="559.0" prefWidth="624.0" styleClass="backgroundLogin" stylesheets="@style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gui.Login">
-   <children>
-      <Button fx:id="btnWorker" layoutX="444.0" layoutY="78.0" mnemonicParsing="false" onAction="#SwitchToWorkerPanel" styleClass="button2" stylesheets="@style.css" text="Worker">
-         <font>
-            <Font size="24.0" />
-         </font></Button>
-      <Button fx:id="btnUser" layoutX="446.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnUserClicked" prefHeight="51.0" prefWidth="106.0" styleClass="button2" stylesheets="@style.css" text="User">
-         <font>
-            <Font size="24.0" />
-         </font></Button>
-      <Button fx:id="btnCreateanaccount" layoutX="275.0" layoutY="347.0" mnemonicParsing="false" onAction="#btnCreateanaccountClicked" prefHeight="50.0" prefWidth="242.0" styleClass="button2" stylesheets="@style.css" text="Create an account">
-         <font>
-            <Font size="24.0" />
-         </font></Button>
-      <Button fx:id="btnLogin" layoutX="95.0" layoutY="347.0" mnemonicParsing="false" onAction="#switchToUserPanel" prefHeight="44.0" prefWidth="149.0" styleClass="button2" stylesheets="@style.css" text="Login" textFill="#4270ff">
-         <opaqueInsets>
-            <Insets />
-         </opaqueInsets>
-         <font>
-            <Font size="24.0" />
-         </font></Button>
-      <Label layoutX="220.0" layoutY="77.0" styleClass="text" stylesheets="@style.css" text="Username">
-         <font>
-            <Font size="36.0" />
-         </font></Label>
-      <Label layoutX="225.0" layoutY="190.0" text="Password">
-         <font>
-            <Font size="36.0" />
-         </font></Label>
-      <TextField fx:id="tfUsername" layoutX="175.0" layoutY="138.0" styleClass="textField" stylesheets="@style.css">
-         <font>
-            <Font size="20.0" />
-         </font></TextField>
-      <Button fx:id="btnReInitDataBase" layoutX="396.0" layoutY="430.0" mnemonicParsing="false" onAction="#pushReInitDataBase" styleClass="button2" stylesheets="@style.css" text="ReInitDataBase">
-         <font>
-            <Font size="24.0" />
-         </font></Button>
-      <PasswordField fx:id="pfPassword" layoutX="175.0" layoutY="249.0" styleClass="textField" stylesheets="@style.css">
-         <font>
-            <Font size="20.0" />
-         </font></PasswordField>
-      <Label fx:id="lbLogin" alignment="CENTER" layoutX="96.0" layoutY="307.0" prefHeight="31.0" prefWidth="408.0" textAlignment="CENTER" textFill="WHITE">
-         <font>
-            <Font size="21.0" />
-         </font></Label>
-      <FontIcon iconColor="#343436" iconLiteral="eva-person" iconSize="40" layoutX="134.0" layoutY="177.0" selectionFill="BLACK" styleClass="icon" text="" wrappingWidth="41.0" />
-      <FontIcon iconColor="#343436" iconLiteral="eva-unlock" iconSize="40" layoutX="134.0" layoutY="288.0" styleClass="icon" wrappingWidth="41.0" />
 
+<VBox xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gui.Login">
+   <children>
+      <AnchorPane prefHeight="559.0" prefWidth="624.0" styleClass="backgroundLogin" stylesheets="@style.css">
+         <children>
+            <Button fx:id="btnWorker" layoutX="444.0" layoutY="78.0" mnemonicParsing="false" onAction="#SwitchToWorkerPanel" styleClass="button2" stylesheets="@style.css" text="Worker" visible="false">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnUser" layoutX="446.0" layoutY="14.0" mnemonicParsing="false" onAction="#btnUserClicked" prefHeight="51.0" prefWidth="106.0" styleClass="button2" stylesheets="@style.css" text="User" visible="false">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnCreateanaccount" layoutX="275.0" layoutY="347.0" mnemonicParsing="false" onAction="#btnCreateanaccountClicked" prefHeight="50.0" prefWidth="242.0" styleClass="button2" stylesheets="@style.css" text="Create an account">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Button>
+            <Button fx:id="btnLogin" layoutX="95.0" layoutY="347.0" mnemonicParsing="false" onAction="#switchToUserPanel" prefHeight="44.0" prefWidth="149.0" styleClass="button2" stylesheets="@style.css" text="Login" textFill="#4270ff">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Button>
+            <Label layoutX="220.0" layoutY="77.0" styleClass="text" stylesheets="@style.css" text="Username">
+               <font>
+                  <Font size="36.0" />
+               </font>
+            </Label>
+            <Label layoutX="225.0" layoutY="190.0" styleClass="text" stylesheets="@style.css" text="Password">
+               <font>
+                  <Font size="36.0" />
+               </font>
+            </Label>
+            <TextField fx:id="tfUsername" layoutX="175.0" layoutY="138.0" styleClass="textField" stylesheets="@style.css">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </TextField>
+            <Button fx:id="btnReInitDataBase" layoutX="396.0" layoutY="430.0" mnemonicParsing="false" onAction="#pushReInitDataBase" styleClass="button2" stylesheets="@style.css" text="ReInitDataBase">
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Button>
+            <PasswordField fx:id="pfPassword" layoutX="175.0" layoutY="249.0" styleClass="textField" stylesheets="@style.css">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </PasswordField>
+            <Label fx:id="lbLogin" alignment="CENTER" layoutX="96.0" layoutY="307.0" prefHeight="31.0" prefWidth="408.0" textAlignment="CENTER" textFill="WHITE">
+               <font>
+                  <Font size="21.0" />
+               </font>
+            </Label>
+            <FontIcon iconColor="#343436" iconLiteral="eva-person" iconSize="40" layoutX="134.0" layoutY="177.0" selectionFill="BLACK" styleClass="icon" text="" wrappingWidth="41.0" />
+            <FontIcon iconColor="#343436" iconLiteral="eva-unlock" iconSize="40" layoutX="134.0" layoutY="288.0" styleClass="icon" wrappingWidth="41.0" />
+      
+         </children>
+      </AnchorPane>
    </children>
-</AnchorPane>
+</VBox>

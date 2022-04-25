@@ -50,7 +50,7 @@ public class UserPanel implements Initializable {
     private TextField tfAdress, tfCity, tfPostcode;
 
     @FXML
-    private TextField tfCurrentPassword;
+    private PasswordField tfCurrentPassword;
 
     @FXML
     private TextField tfDateofBirth;
@@ -62,10 +62,10 @@ public class UserPanel implements Initializable {
     private TextField tfName;
 
     @FXML
-    private TextField tfNewPassword;
+    private PasswordField tfNewPassword;
 
     @FXML
-    private TextField tfNewpassword;
+    private PasswordField tfNewpassword;
 
     @FXML
     private TextField tfPhone;
@@ -215,7 +215,7 @@ public class UserPanel implements Initializable {
                     clientHolder.getClient().setDestinationAddress(tfcityto.getText(), tfadressto.getText(), tfpostcodeto.getText());
 
                     parcel_number = clientHolder.getClient().shipParcel(weight, height, width, length, payment);
-                    clientHolder.getClient().setRoute(parcel_number);
+                    //clientHolder.getClient().setRoute(parcel_number);
                     resetText();
                     shippedWarning(parcel_number, 16);
                 } catch (SQLException e) {
@@ -228,7 +228,7 @@ public class UserPanel implements Initializable {
                     clientHolder.getClient().setDestinationAddress(tfcityto.getText(), tfadressto.getText(), tfpostcodeto.getText());
 
                     parcel_number = clientHolder.getClient().shipParcelFromLocker(weight, height, width, length, payment);
-                    clientHolder.getClient().setRoute(parcel_number);
+                    //clientHolder.getClient().setRoute(parcel_number);
                     resetText();
                     shippedWarning(parcel_number, 14.50);
                 } catch (SQLException e) {
@@ -241,7 +241,7 @@ public class UserPanel implements Initializable {
                     clientHolder.getClient().setDestinationAddress(tfcityto.getText(), tfadressto.getText(), tfpostcodeto.getText());
 
                     parcel_number =  clientHolder.getClient().shipParcelToLocker(weight, height, width, length, payment);
-                    clientHolder.getClient().setRoute(parcel_number);
+                    //clientHolder.getClient().setRoute(parcel_number);
                     resetText();
                     shippedWarning(parcel_number, 13);
                 } catch (SQLException e) {
@@ -254,7 +254,7 @@ public class UserPanel implements Initializable {
                     clientHolder.getClient().setDestinationAddress(tfcityto.getText(), tfadressto.getText(), tfpostcodeto.getText());
 
                     parcel_number = clientHolder.getClient().shipParcelFromToLocker(weight, height, width, length, payment);
-                    clientHolder.getClient().setRoute(parcel_number);
+                   // clientHolder.getClient().setRoute(parcel_number);
                     resetText();
                     shippedWarning(parcel_number, 11.50);
                 } catch (SQLException e) {

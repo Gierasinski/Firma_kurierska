@@ -7,43 +7,66 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: gray;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gui.Register">
+<AnchorPane prefHeight="559.0" prefWidth="624.0" styleClass="backgroundLogin" stylesheets="@style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gui.Register">
    <children>
-      <Label layoutX="244.0" layoutY="20.0" text="Fill in all fields" textFill="WHITE">
+      <Label layoutX="200.0" layoutY="14.0" styleClass="text" stylesheets="@style.css" text="Fill in all fields" textFill="WHITE">
+         <font>
+            <Font size="36.0" />
+         </font></Label>
+      <Label layoutX="28.0" layoutY="103.0" styleClass="text" stylesheets="@style.css" text="E-mail" textFill="WHITE">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="28.0" layoutY="184.0" styleClass="text" stylesheets="@style.css" text="Login" textFill="WHITE">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <Label layoutX="28.0" layoutY="262.0" styleClass="text" stylesheets="@style.css" text="Password" textFill="WHITE">
+         <font>
+            <Font size="24.0" />
+         </font>
+      </Label>
+      <TextField fx:id="tfEmail" layoutX="217.0" layoutY="101.0" prefHeight="26.0" prefWidth="230.0" styleClass="textField" stylesheets="@style.css">
          <font>
             <Font size="18.0" />
-         </font></Label>
-      <Label layoutX="75.0" layoutY="83.0" text="E-mail" textFill="WHITE">
+         </font></TextField>
+      <TextField fx:id="tfName" layoutX="221.0" layoutY="182.0" styleClass="textField" stylesheets="@style.css">
          <font>
-            <Font size="14.0" />
+            <Font size="18.0" />
+         </font></TextField>
+      <Label layoutX="28.0" layoutY="340.0" styleClass="text" stylesheets="@style.css" text="Repeat password" textFill="WHITE">
+         <font>
+            <Font size="24.0" />
          </font>
       </Label>
-      <Label layoutX="76.0" layoutY="128.0" text="Login" textFill="WHITE">
+      <CheckBox fx:id="cbPolicy" layoutX="16.0" layoutY="450.0" mnemonicParsing="false" stylesheets="@style.css" text="I accept the regulations and privacy policy" textFill="WHITE">
          <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <Label layoutX="65.0" layoutY="171.0" text="Password" textFill="WHITE">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <TextField fx:id="tfEmail" layoutX="151.0" layoutY="81.0" />
-      <TextField fx:id="tfName" layoutX="152.0" layoutY="126.0" />
-      <Label layoutX="41.0" layoutY="211.0" text="Repeat password" textFill="WHITE">
-         <font>
-            <Font size="14.0" />
-         </font>
-      </Label>
-      <CheckBox fx:id="cbPolicy" layoutX="41.0" layoutY="252.0" mnemonicParsing="false" text="I accept the regulations and privacy policy" textFill="WHITE">
-         <font>
-            <Font size="14.0" />
+            <Font size="20.0" />
          </font>
       </CheckBox>
-      <Button fx:id="btnRegister" layoutX="244.0" layoutY="297.0" mnemonicParsing="false" onAction="#registerPush" prefHeight="37.0" prefWidth="111.0" text="Register" />
-      <Button fx:id="btnexit" layoutX="497.0" layoutY="56.0" mnemonicParsing="false" onAction="#SwitchToLogin" text="Exit" />
-      <PasswordField fx:id="tfPassword" layoutX="151.0" layoutY="169.0" />
-      <PasswordField fx:id="tfRPassword" layoutX="152.0" layoutY="219.0" />
+      <Button fx:id="btnRegister" layoutX="478.0" layoutY="440.0" mnemonicParsing="false" onAction="#registerPush" prefHeight="51.0" prefWidth="132.0" styleClass="button2" stylesheets="@style.css" text="Register">
+         <font>
+            <Font size="24.0" />
+         </font></Button>
+      <Button fx:id="btnexit" layoutX="535.0" layoutY="51.0" mnemonicParsing="false" onAction="#SwitchToLogin" prefHeight="51.0" prefWidth="74.0" styleClass="button2" stylesheets="@style.css" text="Exit">
+         <font>
+            <Font size="24.0" />
+         </font></Button>
+      <PasswordField fx:id="tfPassword" layoutX="221.0" layoutY="260.0" styleClass="textField" stylesheets="@style.css">
+         <font>
+            <Font size="18.0" />
+         </font></PasswordField>
+      <PasswordField fx:id="tfRPassword" layoutX="221.0" layoutY="338.0" styleClass="textField" stylesheets="@style.css">
+         <font>
+            <Font size="18.0" />
+         </font></PasswordField>
+      <FontIcon iconLiteral="eva-person" iconSize="40" layoutX="458.0" layoutY="219.0" styleClass="icon" />
+      <FontIcon iconLiteral="eva-email" iconSize="40" layoutX="458.0" layoutY="138.0" styleClass="icon" />
+      <FontIcon iconLiteral="eva-lock" iconSize="40" layoutX="458.0" layoutY="297.0" styleClass="icon" />
+      <FontIcon iconLiteral="eva-lock-outline" iconSize="40" layoutX="458.0" layoutY="375.0" styleClass="icon" />
    </children>
 </AnchorPane>

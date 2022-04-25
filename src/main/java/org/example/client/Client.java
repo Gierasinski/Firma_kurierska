@@ -1,6 +1,5 @@
 package org.example.client;
 
-import org.example.worker.Employee;
 import org.example.parcel.Route;
 import org.example.PostgreSQL.ManageDataBase;
 import org.example.global.Address;
@@ -229,13 +228,6 @@ public class Client {
         return destinationAddress;
     }
 
-
-    public void setRoute(long parcelNumber){
-        Route route = new Route();
-        route.calculateRoute(parcelNumber,originAddress,destinationAddress);
-        Employee employee = new Employee();
-        employee.checkTheRoute(parcelNumber);
-    }
 
     public Account getAccount() {
         return account;

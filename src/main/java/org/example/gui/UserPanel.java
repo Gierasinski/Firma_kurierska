@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
 import org.example.App;
 import org.example.client.Account;
 import org.example.global.Address;
@@ -17,11 +18,15 @@ import java.util.ResourceBundle;
 
 public class UserPanel implements Initializable {
 
+    private float price = 0;
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
     private static ClientHolder clientHolder = ClientHolder.getInstance();
     @FXML
     private Tab TabProfile;
-
+    @FXML
+    private Pane FormPane;
+    @FXML
+    private Pane ShipperFlatDetails, RecipientFlatDetails;
     @FXML
     private Tab TabSendingapackage;
 
@@ -42,6 +47,15 @@ public class UserPanel implements Initializable {
 
     @FXML
     private Button btnlogout;
+
+    @FXML
+    private Button btnNextPage;
+
+    @FXML
+    private Button btnNextPageSecond;
+
+    @FXML
+    private Button btnPreviousPage;
 
     @FXML
     private RadioButton fFlat,fLocker,tFlat,tLocker,sSmall,sMedium,sBig;
@@ -86,10 +100,10 @@ public class UserPanel implements Initializable {
     private TextField tfcityto;
 
     @FXML
-    private TextField tfemailadfrom;
+    private TextField tfEmailFrom;
 
     @FXML
-    private TextField tfemailadto;
+    private TextField tfEmailTo;
 
     @FXML
     private TextField tfnameandsurfrom;
@@ -110,7 +124,13 @@ public class UserPanel implements Initializable {
     private TextField tfpostcodefrom;
 
     @FXML
+    private TextField tfstreetfrom;
+
+    @FXML
     private TextField tfpostcodeto;
+
+    @FXML
+    private Label fPrice;
 
     @FXML
     private Label fAddressDescription;
@@ -121,6 +141,9 @@ public class UserPanel implements Initializable {
     @FXML
     private Label lLocalization,lStatus,lPackageID,lPayment,lAddress,lLoginLabel;
 
+    //Warnings
+    @FXML
+    private Label lWarningEmail, lWarningMobile, lWarningPostcode, lWarningName, lWarningCity, lWarningStreet;
     @FXML
     private ChoiceBox<Long> choiceBoxParcel;
 
@@ -128,6 +151,8 @@ public class UserPanel implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
         try {
+            calculateCost();
+            hideWarnings();
             choiceBoxParcel.getItems().addAll(clientHolder.getClient().getParcelsID());
             choiceBoxParcel.setOnAction(this::pushShowChoose);
 
@@ -156,6 +181,7 @@ public class UserPanel implements Initializable {
 
     @FXML
     public void changeFromFunction(ActionEvent event) {
+        calculateCost();
         if(fLocker.isSelected()) {
             fAddressDescription.setText("Locker name");
         }else if(fFlat.isSelected()){
@@ -167,13 +193,13 @@ public class UserPanel implements Initializable {
          tfadressfrom.setText("");
          tfpostcodefrom.setText("");
          tfcityfrom.setText("");
-         tfemailadfrom.setText("");
+         tfEmailFrom.setText("");
          tfphonefrom.setText("");
          tfnameandsurto.setText("");
          tfadressto.setText("");
          tfpostcodeto.setText("");
          tfcityto.setText("");
-         tfemailadto.setText("");
+         tfEmailTo.setText("");
          tfphoneto.setText("");
         try {
             choiceBoxParcel.getItems().addAll(clientHolder.getClient().getParcelsID());
@@ -183,6 +209,7 @@ public class UserPanel implements Initializable {
     }
     @FXML
     public void changeToFunction(ActionEvent event) {
+        calculateCost();
         if(tLocker.isSelected()) {
             tAddressDescription.setText("Locker name");
         }else if(tFlat.isSelected()){
@@ -190,11 +217,15 @@ public class UserPanel implements Initializable {
         }
     }
     @FXML
+    public void changeSizeFunction(ActionEvent event) {
+        calculateCost();
+    }
+    @FXML
     void pushSendButton(ActionEvent event) {
         if (!tfnameandsurfrom.getText().isEmpty() && !tfadressfrom.getText().isEmpty() && !tfpostcodefrom.getText().isEmpty()
-                && !tfcityfrom.getText().isEmpty() && !tfemailadfrom.getText().isEmpty() && !tfphonefrom.getText().isEmpty() &&
+                && !tfcityfrom.getText().isEmpty() && !tfEmailFrom.getText().isEmpty() && !tfphonefrom.getText().isEmpty() &&
                 !tfnameandsurto.getText().isEmpty() && !tfadressto.getText().isEmpty() && !tfpostcodeto.getText().isEmpty()
-                && !tfcityto.getText().isEmpty() && !tfemailadto.getText().isEmpty() && !tfphoneto.getText().isEmpty()) {
+                && !tfcityto.getText().isEmpty() && !tfEmailTo.getText().isEmpty() && !tfphoneto.getText().isEmpty()) {
 
             float weight = 25;
             int width = 38;
@@ -443,4 +474,114 @@ public class UserPanel implements Initializable {
         }
 
     }
+
+    public void pushNextPage(ActionEvent event) {
+        if(fFlat.isSelected()){
+            FormPane.setVisible(false);
+            ShipperFlatDetails.setVisible(true);
+        }else {
+            FormPane.setVisible(false);
+            //ShipperLockerDetails.setVisible(true);
+        }
+
+    }
+    public void pushPreviousPage(ActionEvent event) {
+        FormPane.setVisible(true);
+        ShipperFlatDetails.setVisible(false);
+        //ShipperLockerDetails.setVisible(false);
+    }
+
+    public void pushPreviousPageSecond(ActionEvent event) {
+        if(fFlat.isSelected()){
+            RecipientFlatDetails.setVisible(false);
+            //RecipientLockerDetails.setVisible(false);
+            ShipperFlatDetails.setVisible(true);
+        }else{
+            RecipientFlatDetails.setVisible(false);
+            //RecipientLockerDetails.setVisible(false);
+            //ShipperLockerDetails.setVisible(true);
+        }
+
+    }
+    public void pushNextPageSecond(ActionEvent event) {
+        hideWarnings();
+        int validations = 0;
+        if(!DataValidation.validateEmail(tfEmailFrom)) {
+            lWarningEmail.setVisible(true);
+            validations ++;
+        }
+        if(!DataValidation.validateMobile(tfphonefrom)) {
+            lWarningMobile.setVisible(true);
+            validations ++;
+        }
+        if(!DataValidation.validatePostcode(tfpostcodefrom)) {
+            lWarningPostcode.setVisible(true);
+            validations ++;
+        }
+        if(!DataValidation.validateLazy(tfnameandsurfrom)) {
+            lWarningName.setVisible(true);
+            validations ++;
+        }
+        if(!DataValidation.validateLazy(tfcityfrom)) {
+            lWarningCity.setVisible(true);
+            validations ++;
+        }
+        if(!DataValidation.validateLazy(tfstreetfrom)) {
+            lWarningStreet.setVisible(true);
+            validations ++;
+        }
+
+        if(validations == 0){
+            if(tFlat.isSelected()){
+                ShipperFlatDetails.setVisible(false);
+                //ShipperLockerDetails.setVisible(false);
+                RecipientFlatDetails.setVisible(true);
+            }else{
+                ShipperFlatDetails.setVisible(false);
+                //ShipperLockerDetails.setVisible(false);
+                //RecipientLockerDetails.setVisible(true);
+            }
+        } else {
+            alert.setTitle("Some information's are invalid");
+            alert.setHeaderText(null);
+            alert.setContentText("Please Enter Valid Informations");
+            alert.showAndWait().ifPresent(rs -> {
+                if (rs == ButtonType.OK) {
+                    System.out.println("Pressed OK.");
+                }
+            });
+        }
+    }
+    private void calculateCost() {
+        price = 0;
+        if (fLocker.isSelected()) {
+            price += 5;
+        } else {
+            price += 7;
+        }
+        if (tLocker.isSelected()) {
+            price += 5;
+        } else {
+            price += 7;
+        }
+
+        if (sSmall.isSelected()) {
+            price += 2;
+        } else if (sMedium.isSelected()) {
+            price += 3;
+        } else {
+            price += 4;
+        }
+
+        fPrice.setText("$" + price);
+    }
+    private void hideWarnings(){
+        lWarningEmail.setVisible(false);
+        lWarningMobile.setVisible(false);
+        lWarningPostcode.setVisible(false);
+        lWarningCity.setVisible(false);
+        lWarningStreet.setVisible(false);
+        lWarningName.setVisible(false);
+    }
+
 }

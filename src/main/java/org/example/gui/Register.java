@@ -41,6 +41,17 @@ public class Register {
     void registerPush(ActionEvent event) {
         try {
             if(cbPolicy.isSelected()){
+                if(!DataValidation.validateEmail(tfEmail)){
+                    alert.setTitle("Validate Email");
+                    alert.setHeaderText(null);
+                    alert.setContentText("Please Enter Valid Email");
+                    alert.showAndWait().ifPresent(rs -> {
+                        if (rs == ButtonType.OK) {
+                            System.out.println("Pressed OK.");
+                        }
+                    });
+                    return;
+                }
             if(!tfEmail.getText().isEmpty() && !tfName.getText().isEmpty() && !tfPassword.getText().isEmpty()
                     && !tfRPassword.getText().isEmpty()) {
                 if(tfPassword.getText().equals(tfRPassword.getText())) {

@@ -50,10 +50,11 @@ public class DataValidation {
         }
     }
     public static boolean validateLazy(TextField tf){
-        String regex = "^\\w{3,}";
+        /*String regex = "^\\w{3,}";
         Pattern p = Pattern.compile(regex,Pattern.CASE_INSENSITIVE);
         Matcher m = p.matcher(tf.getText());
-        if(m.find() && m.group().equals(tf.getText())){
+        if(m.find() && m.group().equals(tf.getText())){*/
+        if(tf.getText().length()>=3){
             return true;
         }else {
             return false;

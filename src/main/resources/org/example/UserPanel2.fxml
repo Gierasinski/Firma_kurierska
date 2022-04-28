@@ -14,34 +14,34 @@
 
 <TabPane prefHeight="550.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gui.UserPanel">
    <tabs>
-      <Tab fx:id="TabSendingapackage" text="Sending a package">
+      <Tab fx:id="TabSendingPackage" text="Sending a package">
          <content>
             <AnchorPane maxHeight="537.0" maxWidth="602.0" minHeight="0.0" minWidth="0.0" prefHeight="520.0" prefWidth="602.0" style="-fx-background-color: lightblue;">
                <children>
                   <Label layoutX="90.0" layoutY="155.0" text=" Name and Surname" />
-                  <Label fx:id="fAddressDescription" layoutX="110.0" layoutY="200.0" text="Locker name" />
-                  <TextField fx:id="tfnameandsurfrom" layoutX="70.0" layoutY="174.0" />
-                  <TextField fx:id="tfadressfrom" layoutX="70.0" layoutY="218.0" />
-                  <TextField fx:id="tfpostcodefrom" layoutX="70.0" layoutY="280.0" />
+                  <Label fx:id="lAddressDescription" layoutX="110.0" layoutY="200.0" text="Locker name" />
+                  <TextField fx:id="tfNameAndSurFromF" layoutX="70.0" layoutY="174.0" />
+                  <TextField fx:id="tfAddressFromF" layoutX="70.0" layoutY="218.0" />
+                  <TextField fx:id="tfPostcodeFromF" layoutX="70.0" layoutY="280.0" />
                   <Label layoutX="120.0" layoutY="252.0" text="Postcode" />
                   <Label layoutX="140.0" layoutY="323.0" text="City" />
                   <Label layoutX="37.0" layoutY="390.0" text="E-mail adress" />
                   <Label layoutX="194.0" layoutY="390.0" text="Phone" />
                   <TextField fx:id="tfemailadfrom" layoutX="10.0" layoutY="426.0" prefHeight="26.0" prefWidth="126.0" />
-                  <TextField fx:id="tfcityfrom" layoutX="70.0" layoutY="347.0" />
-                  <TextField fx:id="tfphonefrom" layoutX="148.0" layoutY="426.0" prefHeight="26.0" prefWidth="126.0" />
+                  <TextField fx:id="tfCityFromF" layoutX="70.0" layoutY="347.0" />
+                  <TextField fx:id="tfPhoneFromF" layoutX="148.0" layoutY="426.0" prefHeight="26.0" prefWidth="126.0" />
                   <Label layoutX="369.0" layoutY="155.0" text=" Name and Surname" />
                   <Label fx:id="tAddressDescription" layoutX="391.0" layoutY="200.0" text="Locker name" />
                   <Label layoutX="399.0" layoutY="252.0" text="Postcode" />
                   <Label layoutX="409.0" layoutY="323.0" text="City" />
                   <Label layoutX="329.0" layoutY="390.0" text="E-mail adress" />
                   <Label layoutX="498.0" layoutY="390.0" text="Phone" />
-                  <TextField fx:id="tfnameandsurto" layoutX="350.0" layoutY="174.0" />
-                  <TextField fx:id="tfadressto" layoutX="349.0" layoutY="218.0" />
-                  <TextField fx:id="tfpostcodeto" layoutX="350.0" layoutY="280.0" />
-                  <TextField fx:id="tfcityto" layoutX="345.0" layoutY="347.0" />
+                  <TextField fx:id="tfNameAndSurToF" layoutX="350.0" layoutY="174.0" />
+                  <TextField fx:id="tfAddressToF" layoutX="349.0" layoutY="218.0" />
+                  <TextField fx:id="tfPostcodeToF" layoutX="350.0" layoutY="280.0" />
+                  <TextField fx:id="tfCityToF" layoutX="345.0" layoutY="347.0" />
                   <TextField fx:id="tfemailadto" layoutX="304.0" layoutY="426.0" prefHeight="26.0" prefWidth="126.0" />
-                  <TextField fx:id="tfphoneto" layoutX="452.0" layoutY="426.0" prefHeight="26.0" prefWidth="126.0" />
+                  <TextField fx:id="tfPhoneToF" layoutX="452.0" layoutY="426.0" prefHeight="26.0" prefWidth="126.0" />
                   <Button fx:id="btnSend" layoutX="268.0" layoutY="468.0" mnemonicParsing="false" onAction="#pushSendButton" text="Send" />
                   <Label layoutX="37.0" layoutY="35.0" prefHeight="35.0" prefWidth="47.0" text="From">
                      <font>
@@ -116,7 +116,7 @@
                </children></AnchorPane>
          </content>
       </Tab>
-      <Tab fx:id="TabTrackingyourpackage" text="Tracking your package">
+      <Tab fx:id="TabTrackingYourPackage" text="Tracking your package">
          <content>
             <AnchorPane maxHeight="380.0" maxWidth="600.0" minHeight="0.0" minWidth="0.0" prefHeight="379.0" prefWidth="600.0">
                <children>
@@ -133,7 +133,7 @@
                               <Font size="18.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="tfpackagecode" layoutX="365.0" layoutY="86.0" prefHeight="26.0" prefWidth="203.0" />
+                        <TextField fx:id="tfPackageCode" layoutX="365.0" layoutY="86.0" prefHeight="26.0" prefWidth="203.0" />
                         <ChoiceBox fx:id="choiceBoxParcel" layoutX="58.0" layoutY="86.0" prefWidth="150.0" />
                         <Label layoutX="283.0" layoutY="35.0" text="or">
                            <font>
@@ -214,7 +214,7 @@
                      <children>
                         <Button fx:id="btnSavePassword" layoutX="45.0" layoutY="220.0" mnemonicParsing="false" onAction="#savepassword" style="-fx-background-color: orange;" text="Save Password" />
                         <TextField fx:id="tfNewPassword" layoutX="18.0" layoutY="120.0" />
-                        <TextField fx:id="tfNewpassword" layoutX="18.0" layoutY="170.0" />
+                        <TextField fx:id="tfChangePassword" layoutX="18.0" layoutY="170.0" />
                         <Label layoutX="46.0" layoutY="46.0" text="Current password" />
                         <TextField fx:id="tfCurrentPassword" layoutX="18.0" layoutY="70.0" />
                         <Label layoutX="54.0" layoutY="103.0" text="New password" />
@@ -240,9 +240,9 @@
                   <TextField fx:id="tfName" layoutX="285.0" layoutY="100.0" prefHeight="26.0" prefWidth="160.0" />
                   <TextField fx:id="tfSurname" layoutX="285.0" layoutY="140.0" prefHeight="26.0" prefWidth="160.0" />
                   <Label layoutX="207.0" layoutY="185.0" text="Street" />
-                  <TextField fx:id="tfAdress" layoutX="285.0" layoutY="180.0" prefHeight="26.0" prefWidth="160.0" />
+                  <TextField fx:id="tfAddress" layoutX="285.0" layoutY="180.0" prefHeight="26.0" prefWidth="160.0" />
                   <Button fx:id="btnSaveChanges" layoutX="483.0" layoutY="428.0" mnemonicParsing="false" onAction="#savechanges" style="-fx-background-color: darkblue;" text="Save Changes" textFill="WHITE" />
-                  <Button fx:id="btnlogout" layoutX="498.0" layoutY="15.0" mnemonicParsing="false" onAction="#logout" style="-fx-background-color: darkblue;" text="Log Out" textFill="WHITE" />
+                  <Button fx:id="btnLogout" layoutX="498.0" layoutY="15.0" mnemonicParsing="false" onAction="#logout" style="-fx-background-color: darkblue;" text="Log Out" textFill="WHITE" />
                   <Label layoutX="196.0" layoutY="15.0" text="Hello" textAlignment="CENTER">
                      <font>
                         <Font size="18.0" />

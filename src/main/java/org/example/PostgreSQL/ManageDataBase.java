@@ -96,19 +96,19 @@ public class ManageDataBase {
         insertEmployee("2222","kuba","jalek",6666,3,939393,"accountant",3600, null,2);
         insertEmployee("3333","maciek","gutek",33332,1,435435435,"storekeeper",4300, null,2);
         //oddzialy
-        insertAdres("Warszawa","zlota 1","11-111");
-        insertAdres("Krakow","czarna 1","22-2222");
-        insertAdres("Kiece","biala 23","33-333");
+        insertAdres("Warszawa","zlota","1",null,"11-111");
+        insertAdres("Krakow","czarna","1",null,"22-2222");
+        insertAdres("Kiece","biala","23",null,"33-333");
         //
         //odleglosci miedzy nimi
         insertDistance(1,2);
         insertDistance(1,3);
         insertDistance(2,3);
         //
-        insertAdres("Kiece","czarna 32","23-300");
-        insertAdres("Radom","zielona 42","23-300");
-        insertAdres("Kiece","wysoka 1","23-300");
-        insertAdres("Kiece","mala 43","23-300");
+        insertAdres("Kiece","czarna","32",null,"23-300");
+        insertAdres("Radom","zielona","42",null,"23-300");
+        insertAdres("Kiece","wysoka","1",null,"23-300");
+        insertAdres("Kiece","mala","43",null,"23-300");
 
         route.calculateRoute(1111,5,6);
         insertParcel(1111,1,23,2,32,21,0,1,2,"oplacona","radom",2,1,1);
@@ -215,7 +215,7 @@ public class ManageDataBase {
         while(resultSet.next()) {
             return -3;
         }
-        int addressID = insertAdres("","","");
+        int addressID = insertAdres("","","","","");
         String sql = "INSERT INTO klienci(imie, nazwisko, kontakt, email,login, haslo, id, adres) values (?,?,?,?,?,?,nextval('klient_id'),?) RETURNING id";
         PreparedStatement pst = connection.prepareStatement(sql);
         pst.setString(1,imie);
@@ -233,15 +233,17 @@ public class ManageDataBase {
 
     }
     public long updateClient(long klientID,int adresID,String imie, String nazwisko, String kontakt,
-                             String email, String ulica, String miasto, String kod) throws SQLException {
+                             String email, String ulica, String numer, String lokal, String miasto, String kod) throws SQLException {
 
-        String sql = "UPDATE adres SET miasto = ?, ulica = ?, kod_pocztowy = ? WHERE id = ?";
+        String sql = "UPDATE adres SET miasto = ?, ulica = ?,numer = ?,lokal = ?, kod_pocztowy = ? WHERE id = ?";
         PreparedStatement pst = null;
         pst = connection.prepareStatement(sql);
         pst.setString(1,miasto);
         pst.setString(2,ulica);
-        pst.setString(3,kod);
-        pst.setInt(4,adresID);
+        pst.setString(3,numer);
+        pst.setString(4,lokal);
+        pst.setString(5,kod);
+        pst.setInt(6,adresID);
         pst.executeUpdate();
 
         String sql1 = "UPDATE klienci SET imie = ?, nazwisko = ?, kontakt = ?, email = ? WHERE id = ?";
@@ -286,7 +288,7 @@ public class ManageDataBase {
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 myAccount.setAddress(new Address(resultSet.getInt("id"), resultSet.getString("miasto"),
-                        resultSet.getString("ulica"), resultSet.getString("kod_pocztowy")));
+                        resultSet.getString("ulica"), resultSet.getString("numer"), resultSet.getString("lokal"), resultSet.getString("kod_pocztowy")));
             }
         }
         return myAccount;
@@ -353,7 +355,7 @@ public class ManageDataBase {
 
         while(resultSet.next()) {
             address= new Address(resultSet.getInt("id"),resultSet.getString("miasto"),
-                    resultSet.getString("ulica"),resultSet.getString("kod_pocztowy"));
+                    resultSet.getString("ulica"),resultSet.getString("numer"), resultSet.getString("lokal"), resultSet.getString("kod_pocztowy"));
         }
         return address;
     }
@@ -399,7 +401,7 @@ public class ManageDataBase {
 
     }
     public void createTableAdres() throws SQLException {
-            String sql = "CREATE TABLE adres (id SERIAL, miasto varchar(20),ulica varchar(20), kod_pocztowy varchar(7))";
+            String sql = "CREATE TABLE adres (id SERIAL, miasto varchar(20),ulica varchar(20),numer varchar(20),lokal varchar(20), kod_pocztowy varchar(7))";
             Statement statement = connection.createStatement();
 
             statement.executeUpdate(sql);
@@ -444,13 +446,15 @@ public class ManageDataBase {
         }
         return payment;
     }
-    public int insertAdres(String miasto, String ulica, String kod_pocztowy) throws SQLException {
+    public int insertAdres(String miasto, String ulica,String numer,String lokal, String kod_pocztowy) throws SQLException {
         int id = -1;
-        String sql = "INSERT INTO adres(miasto, ulica, kod_pocztowy) values (?,?,?) RETURNING id";
+        String sql = "INSERT INTO adres(miasto, ulica, numer, lokal, kod_pocztowy) values (?,?,?,?,?) RETURNING id";
         PreparedStatement pst = connection.prepareStatement(sql);
         pst.setString(1,miasto);
         pst.setString(2,ulica);
-        pst.setString(3,kod_pocztowy);
+        pst.setString(3,numer);
+        pst.setString(4,lokal);
+        pst.setString(5,kod_pocztowy);
         resultSet = pst.executeQuery();
         while(resultSet.next()) {
             id = resultSet.getInt("id");

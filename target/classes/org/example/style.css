@@ -59,6 +59,10 @@
  {
      -fx-text-fill : #4270ff;
  }
+.textWarning
+{
+    -fx-text-fill : #c42525;
+}
 .check-box
 {
     -fx-text-fill : #343436;

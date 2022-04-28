@@ -22,128 +22,43 @@ public class UserPanel implements Initializable {
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
     private static ClientHolder clientHolder = ClientHolder.getInstance();
     @FXML
-    private Tab TabProfile;
+    private Tab TabProfile, TabSendingPackage, TabTrackingYourPackage;
     @FXML
-    private Pane FormPane;
-    @FXML
-    private Pane ShipperFlatDetails, RecipientFlatDetails;
-    @FXML
-    private Tab TabSendingapackage;
+    private Pane FormPane, ShipperFlatDetails, RecipientFlatDetails;
 
     @FXML
-    private Tab TabTrackingyourpackage;
-
+    private Button btnOK, btnSend, btnLogout, btnSaveChanges, btnSavePassword;
     @FXML
-    private Button btnOK;
-
-    @FXML
-    private Button btnSaveChanges;
-
-    @FXML
-    private Button btnSavePassword;
-
-    @FXML
-    private Button btnSend;
-
-    @FXML
-    private Button btnlogout;
-
-    @FXML
-    private Button btnNextPage;
-
-    @FXML
-    private Button btnNextPageSecond;
-
-    @FXML
-    private Button btnPreviousPage;
+    private Button btnNextPage, btnNextPageFF, btnPreviousPageFF, btnNextPageTF, btnPreviousPageTF;
 
     @FXML
     private RadioButton fFlat,fLocker,tFlat,tLocker,sSmall,sMedium,sBig;
 
     @FXML
-    private TextField tfAdress, tfCity, tfPostcode;
-
-    @FXML
     private PasswordField tfCurrentPassword;
 
     @FXML
-    private TextField tfDateofBirth;
-
+    private TextField tfStreet, tfCity, tfPostcode, tfNumber, tfLocal;
     @FXML
-    private TextField tfEmail;
-
+    private TextField tfDateOfBirth;
     @FXML
-    private TextField tfName;
-
+    private TextField tfEmail, tfName, tfNewPassword, tfChangePassword;
     @FXML
-    private PasswordField tfNewPassword;
-
+    private TextField tfPhone, tfSurname, tfPackageCode;
     @FXML
-    private PasswordField tfNewpassword;
-
+    private TextField tfEmailFromF, tfAddressFromF, tfCityFromF, tfNameAndSurFromF, tfPhoneFromF, tfPostcodeFromF,
+            tfStreetFromF, tfNumberFromF, tfLocalFromF;
     @FXML
-    private TextField tfPhone;
-
+    private TextField tfEmailToF, tfAddressToF, tfCityToF, tfNameAndSurToF, tfPhoneToF, tfPostcodeToF,
+            tfStreetToF, tfNumberToF, tfLocalToF;
     @FXML
-    private TextField tfSurname;
-
-    @FXML
-    private TextField tfadressfrom;
-
-    @FXML
-    private TextField tfadressto;
-
-    @FXML
-    private TextField tfcityfrom;
-
-    @FXML
-    private TextField tfcityto;
-
-    @FXML
-    private TextField tfEmailFrom;
-
-    @FXML
-    private TextField tfEmailTo;
-
-    @FXML
-    private TextField tfnameandsurfrom;
-
-    @FXML
-    private TextField tfnameandsurto;
-
-    @FXML
-    private TextField tfpackagecode;
-
-    @FXML
-    private TextField tfphonefrom;
-
-    @FXML
-    private TextField tfphoneto;
-
-    @FXML
-    private TextField tfpostcodefrom;
-
-    @FXML
-    private TextField tfstreetfrom;
-
-    @FXML
-    private TextField tfpostcodeto;
-
-    @FXML
-    private Label fPrice;
-
-    @FXML
-    private Label fAddressDescription;
-
-    @FXML
-    private Label tAddressDescription;
-
+    private Label lPrice, lAddressDescription, tAddressDescription;
     @FXML
     private Label lLocalization,lStatus,lPackageID,lPayment,lAddress,lLoginLabel;
-
-    //Warnings
     @FXML
-    private Label lWarningEmail, lWarningMobile, lWarningPostcode, lWarningName, lWarningCity, lWarningStreet;
+    private Label lWarningEmailFF, lWarningMobileFF, lWarningPostcodeFF, lWarningNameFF, lWarningCityFF, lWarningStreetFF;
+    @FXML
+    private Label lWarningEmailTF, lWarningMobileTF, lWarningPostcodeTF, lWarningNameTF, lWarningCityTF, lWarningStreetTF;
     @FXML
     private ChoiceBox<Long> choiceBoxParcel;
 
@@ -163,16 +78,35 @@ public class UserPanel implements Initializable {
 
             Address address = account.getAddress();
             if(address != null) {
-                tfAdress.setText(address.getStreet());
+                tfStreet.setText(address.getStreet());
+                tfNumber.setText(address.getNumber());
+                tfLocal.setText(address.getLocal());
                 tfCity.setText(address.getCity());
                 tfPostcode.setText(address.getPostcode());
             }
             tfPhone.setText(account.getPhoneNumber());
             tfEmail.setText(account.getEmail());
 
+            //set shipper data on load
+            setUserShipmentData();
+
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    void setUserShipmentData(){
+        Account account = clientHolder.getClient().getAccount();
+        Address address = account.getAddress();
+
+        tfNameAndSurFromF.setText(account.getName() + " " + account.getSurname());
+        tfEmailFromF.setText(account.getEmail());
+        tfPhoneFromF.setText(account.getPhoneNumber());
+
+        tfPostcodeFromF.setText(address.getPostcode());
+        tfCityFromF.setText(address.getCity());
+        tfStreetFromF.setText(address.getStreet());
+        tfNumberFromF.setText(address.getNumber());
+        tfLocalFromF.setText(address.getLocal());
     }
     @FXML
     void logout(ActionEvent event)throws IOException {
@@ -183,25 +117,33 @@ public class UserPanel implements Initializable {
     public void changeFromFunction(ActionEvent event) {
         calculateCost();
         if(fLocker.isSelected()) {
-            fAddressDescription.setText("Locker name");
+            lAddressDescription.setText("Locker name");
         }else if(fFlat.isSelected()){
-            fAddressDescription.setText("House/Flat address");
+            lAddressDescription.setText("House/Flat address");
         }
     }
     public void resetText(){
-        tfnameandsurfrom.setText("");
-         tfadressfrom.setText("");
-         tfpostcodefrom.setText("");
-         tfcityfrom.setText("");
-         tfEmailFrom.setText("");
-         tfphonefrom.setText("");
-         tfnameandsurto.setText("");
-         tfadressto.setText("");
-         tfpostcodeto.setText("");
-         tfcityto.setText("");
-         tfEmailTo.setText("");
-         tfphoneto.setText("");
+         tfNameAndSurFromF.setText("");
+         tfPostcodeFromF.setText("");
+         tfCityFromF.setText("");
+         tfStreetFromF.setText("");
+         tfNumberFromF.setText("");
+         tfLocalFromF.setText("");
+         tfEmailFromF.setText("");
+         tfPhoneFromF.setText("");
+
+         tfNameAndSurToF.setText("");
+         tfPostcodeToF.setText("");
+         tfCityToF.setText("");
+         tfStreetToF.setText("");
+         tfNumberToF.setText("");
+         tfLocalToF.setText("");
+         tfEmailToF.setText("");
+         tfPhoneToF.setText("");
+
+         setUserShipmentData();
         try {
+            choiceBoxParcel.getItems().removeAll(choiceBoxParcel.getItems());
             choiceBoxParcel.getItems().addAll(clientHolder.getClient().getParcelsID());
         } catch (SQLException e) {
             e.printStackTrace();
@@ -221,16 +163,11 @@ public class UserPanel implements Initializable {
         calculateCost();
     }
     @FXML
-    void pushSendButton(ActionEvent event) {
-        if (!tfnameandsurfrom.getText().isEmpty() && !tfadressfrom.getText().isEmpty() && !tfpostcodefrom.getText().isEmpty()
-                && !tfcityfrom.getText().isEmpty() && !tfEmailFrom.getText().isEmpty() && !tfphonefrom.getText().isEmpty() &&
-                !tfnameandsurto.getText().isEmpty() && !tfadressto.getText().isEmpty() && !tfpostcodeto.getText().isEmpty()
-                && !tfcityto.getText().isEmpty() && !tfEmailTo.getText().isEmpty() && !tfphoneto.getText().isEmpty()) {
-
+    void pushSendButton() {
             float weight = 25;
             int width = 38;
             int length = 64;
-            int height = 64;
+            int height = 41;
             int payment = -1;
             long parcel_number = -1;
             if(sSmall.isSelected()){
@@ -241,68 +178,57 @@ public class UserPanel implements Initializable {
             if(fFlat.isSelected() && tFlat.isSelected()){
 
                 try {
-                    payment = clientHolder.getClient().createPayment(16);
-                    clientHolder.getClient().setOriginAddress(tfcityfrom.getText(), tfadressfrom.getText(), tfpostcodefrom.getText());
-                    clientHolder.getClient().setDestinationAddress(tfcityto.getText(), tfadressto.getText(), tfpostcodeto.getText());
+                    payment = clientHolder.getClient().createPayment(price);
+                    clientHolder.getClient().setOriginAddress(tfCityFromF.getText(), tfStreetFromF.getText(), tfNumberFromF.getText(), tfLocalFromF.getText(),tfPostcodeFromF.getText());
+                    clientHolder.getClient().setDestinationAddress(tfCityToF.getText(), tfStreetToF.getText(),tfNumberToF.getText(), tfLocalToF.getText(), tfPostcodeToF.getText());
 
                     parcel_number = clientHolder.getClient().shipParcel(weight, height, width, length, payment);
                     //clientHolder.getClient().setRoute(parcel_number);
                     resetText();
-                    shippedWarning(parcel_number, 16);
+                    shippedWarning(parcel_number, price);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }else  if(fLocker.isSelected() && tFlat.isSelected()){
                 try {
-                    payment = clientHolder.getClient().createPayment(14.50);
-                    clientHolder.getClient().setOriginAddress(tfcityfrom.getText(), tfadressfrom.getText(), tfpostcodefrom.getText());
-                    clientHolder.getClient().setDestinationAddress(tfcityto.getText(), tfadressto.getText(), tfpostcodeto.getText());
+                    payment = clientHolder.getClient().createPayment(price);
+                    //clientHolder.getClient().setOriginAddress(tfCityFromF.getText(), tfStreetFromF.getText(), tfNumberFromF.getText(), tfLocalFromF.getText(), tfPostcodeFromF.getText());
+                    clientHolder.getClient().setDestinationAddress(tfCityToF.getText(), tfStreetToF.getText(), tfNumberToF.getText(), tfLocalToF.getText(), tfPostcodeToF.getText());
 
                     parcel_number = clientHolder.getClient().shipParcelFromLocker(weight, height, width, length, payment);
                     //clientHolder.getClient().setRoute(parcel_number);
                     resetText();
-                    shippedWarning(parcel_number, 14.50);
+                    shippedWarning(parcel_number, price);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }else  if(fFlat.isSelected() && tLocker.isSelected()){
                 try {
-                    payment = clientHolder.getClient().createPayment(13);
-                    clientHolder.getClient().setOriginAddress(tfcityfrom.getText(), tfadressfrom.getText(), tfpostcodefrom.getText());
-                    clientHolder.getClient().setDestinationAddress(tfcityto.getText(), tfadressto.getText(), tfpostcodeto.getText());
+                    payment = clientHolder.getClient().createPayment(price);
+                    clientHolder.getClient().setOriginAddress(tfCityFromF.getText(), tfStreetFromF.getText(), tfNumberFromF.getText(), tfLocalFromF.getText(), tfPostcodeFromF.getText());
+                    //clientHolder.getClient().setDestinationAddress(tfCityToF.getText(), tfStreetToF.getText(), tfPostcodeToF.getText());
 
                     parcel_number =  clientHolder.getClient().shipParcelToLocker(weight, height, width, length, payment);
                     //clientHolder.getClient().setRoute(parcel_number);
                     resetText();
-                    shippedWarning(parcel_number, 13);
+                    shippedWarning(parcel_number, price);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }else  if(fLocker.isSelected() && tLocker.isSelected()){
                 try {
-                    payment = clientHolder.getClient().createPayment(11.5);
-                    clientHolder.getClient().setOriginAddress(tfcityfrom.getText(), tfadressfrom.getText(), tfpostcodefrom.getText());
-                    clientHolder.getClient().setDestinationAddress(tfcityto.getText(), tfadressto.getText(), tfpostcodeto.getText());
+                    payment = clientHolder.getClient().createPayment(price);
+                   // clientHolder.getClient().setOriginAddress(tfCityFromF.getText(), tfStreetFromF.getText(), tfPostcodeFromF.getText());
+                   // clientHolder.getClient().setDestinationAddress(tfCityToF.getText(), tfStreetToF.getText(), tfPostcodeToF.getText());
 
                     parcel_number = clientHolder.getClient().shipParcelFromToLocker(weight, height, width, length, payment);
                    // clientHolder.getClient().setRoute(parcel_number);
                     resetText();
-                    shippedWarning(parcel_number, 11.50);
+                    shippedWarning(parcel_number, price);
                 } catch (SQLException e) {
                     e.printStackTrace();
                 }
             }
-
-        } else {
-            alert.setTitle("Sending error");
-            alert.setHeaderText("Check your data");
-            alert.setContentText("All fields needs to be filled");
-            alert.showAndWait().ifPresent(rs -> {
-                if (rs == ButtonType.OK) {
-                    System.out.println("Pressed OK.");
-                }
-            });
-        }
     }
     public void shippedWarning(long parcel_number, double price){
         alert.setTitle("Shipped");
@@ -314,6 +240,7 @@ public class UserPanel implements Initializable {
             }
         });
         try {
+            choiceBoxParcel.getItems().removeAll(choiceBoxParcel.getItems());
             choiceBoxParcel.getItems().addAll(clientHolder.getClient().getParcelsID());
         } catch (SQLException e) {
             e.printStackTrace();
@@ -329,7 +256,7 @@ public class UserPanel implements Initializable {
             lPayment.setText(clientHolder.getClient().getPaymentInfo(parcel.getPayment()).getStatus());
 
             Address address = clientHolder.getClient().getAddressInfo(parcel.getDelivery_address());
-            lAddress.setText(String.valueOf(address.getStreet()));
+            lAddress.setText(String.valueOf(address.getPostcode() +" " + address.getCity() +" "+address.getStreet() + " "+ address.getNumber()+"/"+address.getLocal()));
 
         } catch (SQLException e) {
             e.printStackTrace();
@@ -338,9 +265,9 @@ public class UserPanel implements Initializable {
     @FXML
     void pushShowEnter(ActionEvent event) {
         try {
-            if(!tfpackagecode.getText().isEmpty()){
+            if(!tfPackageCode.getText().isEmpty()){
                 Parcel parcel = null;
-                parcel = clientHolder.getClient().getParcelInfo(Long.parseLong(tfpackagecode.getText()));
+                parcel = clientHolder.getClient().getParcelInfo(Long.parseLong(tfPackageCode.getText()));
                 lLocalization.setText(parcel.getLocalization());
                 lStatus.setText(parcel.getStatus());
                 lPackageID.setText(String.valueOf(parcel.getParcelNumber()));
@@ -356,10 +283,10 @@ public class UserPanel implements Initializable {
 
 
     @FXML
-    void savechanges(ActionEvent event) {
+    void saveChanges(ActionEvent event) {
         try {
-            if(clientHolder.getClient().update(tfName.getText(),tfSurname.getText(),tfPhone.getText(),tfEmail.getText(),tfAdress.getText(),
-            tfCity.getText(),tfPostcode.getText())){
+            if(clientHolder.getClient().update(tfName.getText(),tfSurname.getText(),tfPhone.getText(),tfEmail.getText(), tfStreet.getText(),
+            tfNumber.getText(), tfLocal.getText(),tfCity.getText(),tfPostcode.getText())){
 
                 alert.setTitle("Account update");
                 alert.setHeaderText("Succes");
@@ -401,10 +328,10 @@ public class UserPanel implements Initializable {
 
     }
     @FXML
-    void savepassword(ActionEvent event) {
+    void savePassword(ActionEvent event) {
         try {
             if(tfCurrentPassword.getText().equals(clientHolder.getClient().getAccount().getPassword())){
-                if(tfNewPassword.getText().equals(tfNewpassword.getText())) {
+                if(tfNewPassword.getText().equals(tfChangePassword.getText())) {
                     if(tfNewPassword.getText().length()<6) {
                         alert.setTitle("Password Update");
                         alert.setHeaderText("Failure");
@@ -485,13 +412,13 @@ public class UserPanel implements Initializable {
         }
 
     }
-    public void pushPreviousPage(ActionEvent event) {
+    public void pushPreviousPageFF(ActionEvent event) {
         FormPane.setVisible(true);
         ShipperFlatDetails.setVisible(false);
         //ShipperLockerDetails.setVisible(false);
     }
 
-    public void pushPreviousPageSecond(ActionEvent event) {
+    public void pushPreviousPageTF(ActionEvent event) {
         if(fFlat.isSelected()){
             RecipientFlatDetails.setVisible(false);
             //RecipientLockerDetails.setVisible(false);
@@ -503,31 +430,31 @@ public class UserPanel implements Initializable {
         }
 
     }
-    public void pushNextPageSecond(ActionEvent event) {
+    public void pushNextPageFF(ActionEvent event) {
         hideWarnings();
         int validations = 0;
-        if(!DataValidation.validateEmail(tfEmailFrom)) {
-            lWarningEmail.setVisible(true);
+        if(!DataValidation.validateEmail(tfEmailFromF)) {
+            lWarningEmailFF.setVisible(true);
             validations ++;
         }
-        if(!DataValidation.validateMobile(tfphonefrom)) {
-            lWarningMobile.setVisible(true);
+        if(!DataValidation.validateMobile(tfPhoneFromF)) {
+            lWarningMobileFF.setVisible(true);
             validations ++;
         }
-        if(!DataValidation.validatePostcode(tfpostcodefrom)) {
-            lWarningPostcode.setVisible(true);
+        if(!DataValidation.validatePostcode(tfPostcodeFromF)) {
+            lWarningPostcodeFF.setVisible(true);
             validations ++;
         }
-        if(!DataValidation.validateLazy(tfnameandsurfrom)) {
-            lWarningName.setVisible(true);
+        if(!DataValidation.validateLazy(tfNameAndSurFromF)) {
+            lWarningNameFF.setVisible(true);
             validations ++;
         }
-        if(!DataValidation.validateLazy(tfcityfrom)) {
-            lWarningCity.setVisible(true);
+        if(!DataValidation.validateLazy(tfCityFromF)) {
+            lWarningCityFF.setVisible(true);
             validations ++;
         }
-        if(!DataValidation.validateLazy(tfstreetfrom)) {
-            lWarningStreet.setVisible(true);
+        if(!DataValidation.validateLazy(tfStreetFromF)) {
+            lWarningStreetFF.setVisible(true);
             validations ++;
         }
 
@@ -541,6 +468,47 @@ public class UserPanel implements Initializable {
                 //ShipperLockerDetails.setVisible(false);
                 //RecipientLockerDetails.setVisible(true);
             }
+        } else {
+            alert.setTitle("Some information's are invalid");
+            alert.setHeaderText(null);
+            alert.setContentText("Please Enter Valid Informations");
+            alert.showAndWait().ifPresent(rs -> {
+                if (rs == ButtonType.OK) {
+                    System.out.println("Pressed OK.");
+                }
+            });
+        }
+    }
+    public void checkSendTF(ActionEvent event) {
+        hideWarnings();
+        int validations = 0;
+        if(!DataValidation.validateEmail(tfEmailToF)) {
+            lWarningEmailTF.setVisible(true);
+            validations ++;
+        }
+        if(!DataValidation.validateMobile(tfPhoneToF)) {
+            lWarningMobileTF.setVisible(true);
+            validations ++;
+        }
+        if(!DataValidation.validatePostcode(tfPostcodeToF)) {
+            lWarningPostcodeTF.setVisible(true);
+            validations ++;
+        }
+        if(!DataValidation.validateLazy(tfNameAndSurToF)) {
+            lWarningNameTF.setVisible(true);
+            validations ++;
+        }
+        if(!DataValidation.validateLazy(tfCityToF)) {
+            lWarningCityTF.setVisible(true);
+            validations ++;
+        }
+        if(!DataValidation.validateLazy(tfStreetToF)) {
+            lWarningStreetTF.setVisible(true);
+            validations ++;
+        }
+
+        if(validations == 0){
+            pushSendButton();
         } else {
             alert.setTitle("Some information's are invalid");
             alert.setHeaderText(null);
@@ -573,15 +541,22 @@ public class UserPanel implements Initializable {
             price += 4;
         }
 
-        fPrice.setText("$" + price);
+        lPrice.setText("$" + price);
     }
     private void hideWarnings(){
-        lWarningEmail.setVisible(false);
-        lWarningMobile.setVisible(false);
-        lWarningPostcode.setVisible(false);
-        lWarningCity.setVisible(false);
-        lWarningStreet.setVisible(false);
-        lWarningName.setVisible(false);
+        lWarningEmailFF.setVisible(false);
+        lWarningMobileFF.setVisible(false);
+        lWarningPostcodeFF.setVisible(false);
+        lWarningCityFF.setVisible(false);
+        lWarningStreetFF.setVisible(false);
+        lWarningNameFF.setVisible(false);
+
+        lWarningEmailTF.setVisible(false);
+        lWarningMobileTF.setVisible(false);
+        lWarningPostcodeTF.setVisible(false);
+        lWarningCityTF.setVisible(false);
+        lWarningStreetTF.setVisible(false);
+        lWarningNameTF.setVisible(false);
     }
 
 }

@@ -24,7 +24,7 @@ public class Branch {
         try {
             int idAddress;
             base.connectToDataBase();
-            idAddress = base.insertAdres(city, road+numberHause, "23-650");
+            idAddress = base.insertAdres(city, road,numberHause,null, "23-650");
             base.insertBranch(name,code, idAddress);
 
         } catch (SQLException e) {

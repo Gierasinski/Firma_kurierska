@@ -2,16 +2,19 @@ package org.example.global;
 
 public class Address {
     private int id;
+    private double lat, lon;
     private String  city, street, number, local;
     private String postcode;
     public Address() {}
-    public Address(int id, String city, String street, String number, String local, String postcode) {
+    public Address(int id, String city, String street, String number, String local, String postcode, double lat, double lon) {
         this.id = id;
         this.city = city;
         this.street = street;
         this.number = number;
         this.local = local;
         this.postcode = postcode;
+        this.lat = lat;
+        this.lon = lon;
     }
 
     public int getId() {return id;}
@@ -50,5 +53,13 @@ public class Address {
 
     public void setPostcode(String postcode) {
         this.postcode = postcode;
+    }
+
+    public double getLat() {
+        return lat;
+    }
+
+    public double getLon() {
+        return lon;
     }
 }

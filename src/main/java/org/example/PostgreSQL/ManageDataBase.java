@@ -1,7 +1,10 @@
 package org.example.PostgreSQL;
 
 import org.example.client.Account;
+import org.example.client.Client;
 import org.example.global.Address;
+import org.example.global.Branch;
+import org.example.maps.OpenStreetMapUtils;
 import org.example.parcel.Parcel;
 import org.example.parcel.Payment;
 
@@ -10,6 +13,8 @@ import org.example.parcel.RoutePlan;
 
 import java.sql.*;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 public class ManageDataBase {
@@ -72,9 +77,7 @@ public class ManageDataBase {
             createTablePayment();
             createTableParcels();
             createTableClients();
-            createTableTruck();
             createTableBranch();
-            createTableDistance();
             createTableRoutePlan();
             insertToTable();
         } catch (SQLException e) {
@@ -83,7 +86,6 @@ public class ManageDataBase {
 
     }
     public void insertToTable() throws SQLException {
-        Route route = new Route();
         String sql = "INSERT INTO employee(pesel,salary,phoneNumber,workerCode,name,surname,position,dateofemployment)\n" +
                 "VALUES ('543534', '4344', '43432423', '1111','ppp','gdfgd','delivery','10-12-2021');\n" +
                 "INSERT INTO klienci(imie, nazwisko, kontakt, email,login, haslo, id)\n" +
@@ -96,25 +98,25 @@ public class ManageDataBase {
         insertEmployee("2222","kuba","jalek",6666,3,939393,"accountant",3600, null,2);
         insertEmployee("3333","maciek","gutek",33332,1,435435435,"storekeeper",4300, null,2);
         //oddzialy
-        insertAdres("Warszawa","zlota","1",null,"11-111");
-        insertAdres("Krakow","czarna","1",null,"22-2222");
-        insertAdres("Kiece","biala","23",null,"33-333");
-        //
-        //odleglosci miedzy nimi
-        insertDistance(1,2);
-        insertDistance(1,3);
-        insertDistance(2,3);
-        //
-        insertAdres("Kiece","czarna","32",null,"23-300");
-        insertAdres("Radom","zielona","42",null,"23-300");
-        insertAdres("Kiece","wysoka","1",null,"23-300");
-        insertAdres("Kiece","mala","43",null,"23-300");
+        insertAdres("Warszawa","Zlota","1",null,"00-032");
+        insertAdres("Lodz","Piotrkowska","3",null,"90-406");
+        insertAdres("Kielce","Warszawska","4",null,"25-306");
+        insertAdres("Poznań","Składowa","5",null,"60-001");
 
-        route.calculateRoute(1111,5,6);
-        insertParcel(1111,1,23,2,32,21,0,1,2,"oplacona","radom",2,1,1);
+        insertBranch("Sortownia","S01",1);
+        insertBranch("Oddzial Lodz","L01",2);
+        insertBranch("Oddzial Kielce","K01",3);
+        insertBranch("Oddzial Poznań","P01",4);
+        //
+        //
+        insertAdres("Jaworzno","Jagiellońska","82",null,"43-602");
+        insertAdres("Warszawa","Dunikowskiego","42",null,"02-783");
+        insertAdres("Koszalin","Zwycięstwa","78",null,"75-615");
+        insertAdres("Poznań","Łozowa","45",null,"61-466");
 
-        //Employee employee = new Employee();
-        //employee.checkTheRoute(1111);
+        //starting user
+        int tempAddress = insertAdres("Kielce", "Nowowiejska", "15", null,"25-532");
+        long tempClient = insertClient("Tomek", "Nowak", "123123321", "tomek@mail.com", "user", "user123",tempAddress);
     }
     public void dropDataBase() throws SQLException {
         String sql = "DROP DATABASE "+databaseName+" WITH (FORCE)";
@@ -149,28 +151,10 @@ public class ManageDataBase {
             statement.executeUpdate(sql);
             System.out.println("Table employee Delete");
     }
-    /**stworzenie tabeli samochod */
-    public void createTableTruck() throws SQLException {
-            String sql = "CREATE TABLE truck (id SERIAL,sideNumber varchar(20), type varchar(20)," +
-                    "mark varchar(20), yearOfProduction INTEGER)";
-            Statement statement = connection.createStatement();
-
-            statement.executeUpdate(sql);
-            System.out.println("Table Truck Created");
-    }
-
-    /**usuniecie tabeli samochod */
-    public void deleteTableTruck() throws SQLException {
-            String sql = "DROP TABLE Truck";
-            Statement statement = connection.createStatement();
-
-            statement.executeUpdate(sql);
-            System.out.println("Table Truck Delete");
-    }
 
     /**stworzenie tabeli oddzial */
     public void createTableBranch() throws SQLException {
-        String sql = "CREATE TABLE Branch (id SERIAL,name varchar(20), code INTEGER, idAddress INTEGER)";
+        String sql = "CREATE TABLE Branch (id SERIAL,name varchar(20), code varchar(10) UNIQUE, idaddress INTEGER)";
         Statement statement = connection.createStatement();
 
         statement.executeUpdate(sql);
@@ -183,6 +167,19 @@ public class ManageDataBase {
 
         statement.executeUpdate(sql);
         System.out.println("Table Branch Delete");
+    }
+    /**Pozyskanie wszystkich oddzialow*/
+    public List<Branch> getBranches() throws SQLException {
+        List<Branch> branches = new ArrayList<Branch>();
+        String query = "SELECT * FROM branch";
+
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(query);
+
+        while(rs.next()) {
+            branches.add(new Branch(rs.getInt("id"),rs.getString("name"),rs.getString("code"),getAddressInfo(rs.getInt("idaddress"))));
+        }
+        return branches;
     }
 
     public void createTableClients() throws SQLException {
@@ -215,7 +212,39 @@ public class ManageDataBase {
         while(resultSet.next()) {
             return -3;
         }
-        int addressID = insertAdres("","","","","");
+        int addressID = insertEmptyAddress();
+        String sql = "INSERT INTO klienci(imie, nazwisko, kontakt, email,login, haslo, id, adres) values (?,?,?,?,?,?,nextval('klient_id'),?) RETURNING id";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setString(1,imie);
+        pst.setString(2,nazwisko);
+        pst.setString(3,kontakt);
+        pst.setString(4,email);
+        pst.setString(5,login);
+        pst.setString(6,haslo);
+        pst.setInt(7,addressID);
+        resultSet = pst.executeQuery();
+        while(resultSet.next()) {
+            id = resultSet.getInt("id");
+        }
+        return id;
+
+    }
+    public long insertClient(String imie, String nazwisko, String kontakt,
+                             String email, String login, String haslo, int addressID) throws SQLException {
+        long id = -1;
+        String query = "select * from klienci where login like '"+login+"';";
+        preparedStatement = connection.prepareStatement(query);
+        resultSet = preparedStatement.executeQuery();
+        while(resultSet.next()) {
+            return -2;
+        }
+
+        query = "select * from klienci where email like '"+email+"';";
+        preparedStatement = connection.prepareStatement(query);
+        resultSet = preparedStatement.executeQuery();
+        while(resultSet.next()) {
+            return -3;
+        }
         String sql = "INSERT INTO klienci(imie, nazwisko, kontakt, email,login, haslo, id, adres) values (?,?,?,?,?,?,nextval('klient_id'),?) RETURNING id";
         PreparedStatement pst = connection.prepareStatement(sql);
         pst.setString(1,imie);
@@ -288,7 +317,8 @@ public class ManageDataBase {
             resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 myAccount.setAddress(new Address(resultSet.getInt("id"), resultSet.getString("miasto"),
-                        resultSet.getString("ulica"), resultSet.getString("numer"), resultSet.getString("lokal"), resultSet.getString("kod_pocztowy")));
+                        resultSet.getString("ulica"), resultSet.getString("numer"), resultSet.getString("lokal"),
+                        resultSet.getString("kod_pocztowy"), resultSet.getDouble("lat"), resultSet.getDouble("lon")));
             }
         }
         return myAccount;
@@ -355,7 +385,8 @@ public class ManageDataBase {
 
         while(resultSet.next()) {
             address= new Address(resultSet.getInt("id"),resultSet.getString("miasto"),
-                    resultSet.getString("ulica"),resultSet.getString("numer"), resultSet.getString("lokal"), resultSet.getString("kod_pocztowy"));
+                    resultSet.getString("ulica"),resultSet.getString("numer"), resultSet.getString("lokal"),
+                    resultSet.getString("kod_pocztowy"), resultSet.getDouble("lat"), resultSet.getDouble("lon"));
         }
         return address;
     }
@@ -401,7 +432,7 @@ public class ManageDataBase {
 
     }
     public void createTableAdres() throws SQLException {
-            String sql = "CREATE TABLE adres (id SERIAL, miasto varchar(20),ulica varchar(20),numer varchar(20),lokal varchar(20), kod_pocztowy varchar(7))";
+            String sql = "CREATE TABLE adres (id SERIAL, miasto varchar(20),ulica varchar(20),numer varchar(20),lokal varchar(20), kod_pocztowy varchar(7), lat Decimal(8,6), lon Decimal(9,6))";
             Statement statement = connection.createStatement();
 
             statement.executeUpdate(sql);
@@ -448,20 +479,43 @@ public class ManageDataBase {
     }
     public int insertAdres(String miasto, String ulica,String numer,String lokal, String kod_pocztowy) throws SQLException {
         int id = -1;
-        String sql = "INSERT INTO adres(miasto, ulica, numer, lokal, kod_pocztowy) values (?,?,?,?,?) RETURNING id";
+        Map<String, Double> coords;
+        coords = OpenStreetMapUtils.getInstance().getCoordinates(kod_pocztowy +" "+ miasto +" "+ ulica +" "+ numer);
+        if(coords.get("lat") == null){
+            coords = OpenStreetMapUtils.getInstance().getCoordinates(miasto +" "+ ulica +" "+ numer);
+        }
+        String sql = "INSERT INTO adres(miasto, ulica, numer, lokal, kod_pocztowy, lat, lon) values (?,?,?,?,?,?,?) RETURNING id";
         PreparedStatement pst = connection.prepareStatement(sql);
         pst.setString(1,miasto);
         pst.setString(2,ulica);
         pst.setString(3,numer);
         pst.setString(4,lokal);
         pst.setString(5,kod_pocztowy);
+        if(coords.get("lat") != null && coords != null) {
+            pst.setDouble(6, coords.get("lat"));
+            pst.setDouble(7, coords.get("lon"));
+        }else {
+            pst.setDouble(6, 0);
+            pst.setDouble(7, 0);
+            System.out.println("Address was not found");
+        }
         resultSet = pst.executeQuery();
         while(resultSet.next()) {
             id = resultSet.getInt("id");
         }
         return id;
     }
-
+    public int insertEmptyAddress() throws SQLException {
+        int id = -1;
+        String sql = "INSERT INTO adres(miasto) values (?) RETURNING id";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setString(1,"");
+        resultSet = pst.executeQuery();
+        while(resultSet.next()) {
+            id = resultSet.getInt("id");
+        }
+        return id;
+    }
     public void deleteTableAdres() throws SQLException {
             String sql = "DROP TABLE adres";
             Statement statement = connection.createStatement();
@@ -503,11 +557,11 @@ public class ManageDataBase {
             pst.execute();
     }
     /**dodanie oddzialu */
-    public void insertBranch(String name, int code,int idAddress) throws SQLException {
-        String sql = "INSERT INTO Branch(name,code,idAdrress) values (?,?,?)";
+    public void insertBranch(String name, String code,int idAddress) throws SQLException {
+        String sql = "INSERT INTO Branch(name,code,idaddress) values (?,?,?)";
         PreparedStatement pst = connection.prepareStatement(sql);
         pst.setString(1,name);
-        pst.setInt(2,code);
+        pst.setString(2,code);
         pst.setInt(3,idAddress);
         pst.execute();
     }
@@ -517,26 +571,6 @@ public class ManageDataBase {
         PreparedStatement pst = connection.prepareStatement(sql);
         pst.setInt(1, id);
         pst.execute();
-
-    }
-    /**dodanie samochodu */
-    public void insertTruck(String sideNumber, String type, String mark, int yearOfProduction) throws SQLException {
-            String sql = "INSERT INTO truck(sideNumber,type,mark,yearOfProduction) values (?,?,?,?)";
-            PreparedStatement pst = connection.prepareStatement(sql);
-            pst.setString(1,sideNumber);
-            pst.setString(2,type);
-            pst.setString(3,mark);
-            pst.setInt(4,yearOfProduction);
-            pst.execute();
-        System.out.println("Truck Add");
-    }
-    /**usuniecie samochodu */
-    public void deleteTruck(int id) throws SQLException {
-            String sql = "DELETE FROM Truck WHERE id = ? ";
-            PreparedStatement pst = connection.prepareStatement(sql);
-            pst.setInt(1, id);
-            pst.execute();
-            System.out.println("Truck Delete");
 
     }
     /**aktualizacja pensji pracownika*/
@@ -610,43 +644,10 @@ public class ManageDataBase {
 
 
     /**TRASA PLANOWANIE  */
-    /**stworzenie tabeli podajaca losowa ilosc kilometrow miedzy punktami */
-    public void createTableDistance() throws SQLException {
-        String sql = "CREATE TABLE Distance (id SERIAL,idPointA INTEGER, idPointB INTEGER, distance INTEGER)";
-        Statement statement = connection.createStatement();
-
-        statement.executeUpdate(sql);
-        System.out.println("Table Distance Created");
-    }
-    /**dodanie dystancu */
-    public void insertDistance(int A, int B) throws SQLException {
-        Random rand = new Random();
-        int distance = rand.nextInt(100);
-        String sql = "INSERT INTO distance(idPointA, idPointB, distance) values (?,?,?)";
-        PreparedStatement pst = connection.prepareStatement(sql);
-        pst.setInt(1,A);
-        pst.setInt(2,B);
-        pst.setInt(3,distance);
-        pst.execute();
-    }
-
-    /**zwrocenie dystansu miedzy punktami */
-    public int getDistance(int a, int b) throws SQLException {
-        int distance = 0;
-        String query = "select * from Distance where idPointA="+a+" AND idPointB="+b+";";
-        preparedStatement = connection.prepareStatement(query);
-        resultSet = preparedStatement.executeQuery();
-        int i = 0;
-        while(resultSet.next()) {
-            distance = resultSet.getInt("distance");
-            i++;
-        }
-        return distance;
-    }
 
     /**stworzenie tabeli zapisujace trase */
     public void createTableRoutePlan() throws SQLException {
-        String sql = "CREATE TABLE route_plan (id SERIAL,parcelNumber BIGINT, idPointA INTEGER, idPointB INTEGER)";
+        String sql = "CREATE TABLE route_plan (id SERIAL,parcelNumber BIGINT, idPointA INTEGER, idPointB INTEGER, stage INTEGER)";
         Statement statement = connection.createStatement();
 
         statement.executeUpdate(sql);
@@ -654,12 +655,13 @@ public class ManageDataBase {
     }
 
     /**dodanie dystancu */
-    public void insertRoutePlan(long parcelNumber,int A, int B) throws SQLException {
-        String sql = "INSERT INTO route_plan(parcelNumber,idPointA, idPointB) values (?,?,?)";
+    public void insertRoutePlan(long parcelNumber,int A, int B, int stage) throws SQLException {
+        String sql = "INSERT INTO route_plan(parcelNumber,idPointA, idPointB, stage) values (?,?,?,?)";
         PreparedStatement pst = connection.prepareStatement(sql);
         pst.setLong(1,parcelNumber);
         pst.setInt(2,A);
         pst.setInt(3,B);
+        pst.setInt(4,stage);
         pst.execute();
     }
 

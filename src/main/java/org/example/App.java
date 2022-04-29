@@ -5,6 +5,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.apache.log4j.BasicConfigurator;
 
 import java.io.IOException;
 
@@ -15,6 +16,7 @@ public class App extends Application {
     private static Scene scene;
     @Override
     public void start(Stage stage) throws IOException {
+        BasicConfigurator.configure();
         scene = new Scene(loadFXML("Login"));
         stage.setScene(scene);
         stage.setResizable(false);

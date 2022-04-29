@@ -24,6 +24,8 @@ public class Client {
         manageDataBase.insertParcel(parcel.getParcelNumber(),parcel.getWaybillNumber(), parcel.getWeight(), parcel.getHeight()
         ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
         , parcel.getStatus(), parcel.getLocalization(), 0,0, account.getId());
+
+        Route.getInstance().calculateRoute(parcel);
         return parcel.getParcelNumber();
     }
     public long shipParcel(float weight, int height, int width, int length, int payment,
@@ -35,6 +37,7 @@ public class Client {
         manage.insertParcel(parcel.getParcelNumber(),parcel.getWaybillNumber(), parcel.getWeight(), parcel.getHeight()
                 ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
                 , parcel.getStatus(), parcel.getLocalization(), 0,0, account.getId());
+        Route.getInstance().calculateRoute(parcel);
         return parcel.getParcelNumber();
     }
     public long shipParcelToLocker(float weight, int height, int width, int length, int payment) throws SQLException {
@@ -46,6 +49,7 @@ public class Client {
         manageDataBase.insertParcel(parcel.getParcelNumber(),parcel.getWaybillNumber(), parcel.getWeight(), parcel.getHeight()
                 ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
                 , parcel.getStatus(), parcel.getLocalization(), 0,parcel.getPickupCode(), account.getId());
+        Route.getInstance().calculateRoute(parcel);
         return parcel.getParcelNumber();
     }
 
@@ -59,6 +63,7 @@ public class Client {
         manage.insertParcel(parcel.getParcelNumber(),parcel.getWaybillNumber(), parcel.getWeight(), parcel.getHeight()
                 ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
                 , parcel.getStatus(), parcel.getLocalization(), 0,parcel.getPickupCode(), account.getId());
+        Route.getInstance().calculateRoute(parcel);
         return parcel.getParcelNumber();
     }
     public long shipParcelFromLocker(float weight, int height, int width, int length, int payment) throws SQLException {
@@ -70,6 +75,7 @@ public class Client {
         manageDataBase.insertParcel(parcel.getParcelNumber(),parcel.getWaybillNumber(), parcel.getWeight(), parcel.getHeight()
                 ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
                 , parcel.getStatus(), parcel.getLocalization(), parcel.getShipmentCode(),0, account.getId());
+        Route.getInstance().calculateRoute(parcel);
         return parcel.getParcelNumber();
     }
 
@@ -82,6 +88,7 @@ public class Client {
         manage.insertParcel(parcel.getParcelNumber(),parcel.getWaybillNumber(), parcel.getWeight(), parcel.getHeight()
                 ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
                 , parcel.getStatus(), parcel.getLocalization(), parcel.getShipmentCode(),0, account.getId());
+        Route.getInstance().calculateRoute(parcel);
         return parcel.getParcelNumber();
     }
     public long shipParcelFromToLocker(float weight, int height, int width, int length, int payment) throws SQLException {
@@ -93,6 +100,7 @@ public class Client {
         manageDataBase.insertParcel(parcel.getParcelNumber(),parcel.getWaybillNumber(), parcel.getWeight(), parcel.getHeight()
                 ,parcel.getWidth(), parcel.getLength(), parcel.getPayment(), parcel.getDelivery_address(), parcel.getShipment_address()
                 , parcel.getStatus(), parcel.getLocalization(), parcel.getShipmentCode(),parcel.getPickupCode(), account.getId());
+        Route.getInstance().calculateRoute(parcel);
         return parcel.getParcelNumber();
     }
 

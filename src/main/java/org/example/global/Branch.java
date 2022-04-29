@@ -1,49 +1,33 @@
 package org.example.global;
 
-import org.example.PostgreSQL.ManageDataBase;
-
-import java.sql.SQLException;
-
 public class Branch {
     private int id;
     private String name;
-    private int code;
+    private String code;
+    private Address address;
 
-    ManageDataBase base =  new  ManageDataBase();
 
-    public Branch(int id, String name, int code) {
+    public Branch(int id, String name, String code, Address address) {
         this.id = id;
         this.name = name;
         this.code = code;
+        this.address = address;
     }
 
-    public int getId() {return id;}
-
-    public void addBranch(String city, String road, String numberHause)  {
-
-        try {
-            int idAddress;
-            base.connectToDataBase();
-            idAddress = base.insertAdres(city, road,numberHause,null, "23-650");
-            base.insertBranch(name,code, idAddress);
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public int getId() {
+        return id;
     }
 
-    public void deleteBranch(int id) throws SQLException {
-        base.connectToDataBase();
-        try {
-            base.deleteBranch(id);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+    public String getName() {
+        return name;
     }
 
-    public void receivetheparcel() {
+    public String getCode() {
+        return code;
     }
-    public void sendtheparcel() {
+
+    public Address getAddress() {
+        return address;
     }
 }
 

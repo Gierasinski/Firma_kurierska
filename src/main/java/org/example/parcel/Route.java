@@ -1,171 +1,99 @@
 package org.example.parcel;
 
 import org.example.PostgreSQL.ManageDataBase;
+import org.example.global.Address;
+import org.example.global.Branch;
+import org.example.maps.OpenStreetMapUtils;
+import org.json.simple.parser.JSONParser;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class Route {
-    int distanceAB ,distanceAC, distanceBC;
-    boolean aBranch=false, bBranch=false, cBranch=false;
+
+    private static Route instance = null;
+
+    public static Route getInstance() {
+        if (instance == null) {
+            instance = new Route();
+        }
+        return instance;
+    }
+    Branch closestToShipper, closestToRecipient;
+    double shipperClosestDistance = 0, recipientClosestDistance = 0;
+    List<Branch> branches;
+
     ManageDataBase base =  new  ManageDataBase();
-
-
-    public void setDistance(int a, int b)  {
-
-            try {
-                base.connectToDataBase();
-                for (int i = 1; i < 4; i++) {
-                    base.insertDistance(a, i);
-                }
-                for (int i = 1; i < 4; i++) {
-                    base.insertDistance(b, i);
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-
-    }
-
-    public void setDistanceABC(){
-    try{
+    public void updateBranches() throws SQLException {
         base.connectToDataBase();
-        distanceAB = base.getDistance(1, 2);
-        distanceAC = base.getDistance(1, 3);
-        distanceBC = base.getDistance(2, 3);
-
-    } catch (SQLException e) {
-        e.printStackTrace();
+        branches = base.getBranches();
     }
+    private void getBranches() throws SQLException {
+        if(branches==null){
+            updateBranches();
+        }
     }
-
-
-    public void calculateRoute(long parcelNumber, int idAddressA,int  idAddressB) {
-        setDistanceABC();
-        setDistance(idAddressA, idAddressB);
-        int distance;
-        int min = 1000;
-        int minA = 1000;
-        int branch = 0;
-
-        try {
-            base.connectToDataBase();
-            for (int i = 1; i < 4; i++) {
-                distance = base.getDistance(idAddressA, i);
-                if (distance <= minA) {
-                    minA = distance;
-                    branch = i;
-                }
+    private static double calculateDistance(double lat1, double lon1, double lat2, double lon2, String unit) {
+        if ((lat1 == lat2) && (lon1 == lon2)) {
+            return 0;
+        }
+        else {
+            double theta = lon1 - lon2;
+            double dist = Math.sin(Math.toRadians(lat1)) * Math.sin(Math.toRadians(lat2)) + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) * Math.cos(Math.toRadians(theta));
+            dist = Math.acos(dist);
+            dist = Math.toDegrees(dist);
+            dist = dist * 60 * 1.1515;
+            if (unit.equals("K")) {
+                dist = dist * 1.609344;
+            } else if (unit.equals("N")) {
+                dist = dist * 0.8684;
             }
-            distance = base.getDistance(idAddressB, branch);
-            min = minA + distance;
-            if (branch == 1) {
-                aBranch = true;
-            } else if (branch == 2) {
-                bBranch = true;
-            } else if (branch == 3) {
-                cBranch = true;
-            }
+            return (dist);
+        }
+    }
+    public void calculateRoute(Parcel parcel) throws SQLException {
+        base.connectToDataBase();
+        getBranches();
+        shipperClosestDistance = 0;
+        recipientClosestDistance = 0;
+        int stage = 0;
 
-            if (branch == 1) {
-                distance = base.getDistance(idAddressB, 2);
-                if (distance + distanceAB + minA < min) {
-                    min = distance + distanceAB + minA;
-                    bBranch = true;
-                }
-                distance = base.getDistance(idAddressB, 3);
-                if (distance + distanceAC + minA < min) {
-                    min = distance + distanceAC + minA;
-                    cBranch = true;
-                }
-            }
-            if (branch == 2) {
-                distance = base.getDistance(idAddressB, 1);
-                if (distance + distanceAB + minA < min) {
-                    min = distance + distanceAB + minA;
-                    aBranch = true;
-                }
-                distance = base.getDistance(idAddressB, 3);
-                if (distance + distanceBC + minA < min) {
-                    min = distance + distanceBC + minA;
-                    cBranch = true;
-                }
-            }
-            if (branch == 3) {
-                distance = base.getDistance(idAddressB, 1);
-                if (distance + distanceAC + minA < min) {
-                    min = distance + distanceAC + minA;
-                    aBranch = true;
-                }
-                distance = base.getDistance(idAddressB, 2);
-                if (distance + distanceBC + minA < min) {
-                    min = distance + distanceBC + minA;
-                    bBranch = true;
-                }
-            }
+        closestToShipper = null;
+        closestToRecipient = null;
 
-        } catch (SQLException e) {
-            e.printStackTrace();
+        Address shipmentAddress = base.getAddressInfo(parcel.getShipment_address());
+        Address recipientAddress = base.getAddressInfo(parcel.getShipment_address());
+        for (Branch br : branches) {
+            double temp = calculateDistance(shipmentAddress.getLat(),shipmentAddress.getLon(),
+                    br.getAddress().getLat(), br.getAddress().getLon(), "K");
+            if(temp<shipperClosestDistance || shipperClosestDistance == 0){
+                shipperClosestDistance = temp;
+                closestToShipper = br;
+            }
+            temp = calculateDistance(recipientAddress.getLat(),recipientAddress.getLon(),
+                    br.getAddress().getLat(), br.getAddress().getLon(), "K");
+            if(temp<recipientClosestDistance || recipientClosestDistance == 0){
+                recipientClosestDistance = temp;
+                closestToRecipient = br;
+            }
+        }
+        base.insertRoutePlan(parcel.getParcelNumber(), parcel.getShipment_address(), closestToShipper.getAddress().getId(),stage);
+        stage++;
+        if(!closestToShipper.getCode().equals("S01")){
+            base.insertRoutePlan(parcel.getParcelNumber(), closestToShipper.getAddress().getId(), 1, stage);
+            stage++;
         }
 
-        try{
-            base.connectToDataBase();
-
-            if(aBranch && bBranch & cBranch){
-                base.insertRoutePlan(parcelNumber,idAddressA,1);
-                base.insertRoutePlan(parcelNumber,1,2);
-                base.insertRoutePlan(parcelNumber,2,3);
-                base.insertRoutePlan(parcelNumber,3,idAddressB);
-            }else if(aBranch){
-                if(bBranch){
-                    base.insertRoutePlan(parcelNumber,idAddressA,1);
-                    base.insertRoutePlan(parcelNumber,1,2);
-                    base.insertRoutePlan(parcelNumber,2,idAddressB);
-                }else if(cBranch){
-                    base.insertRoutePlan(parcelNumber,idAddressA,1);
-                    base.insertRoutePlan(parcelNumber,1,3);
-                    base.insertRoutePlan(parcelNumber,3,idAddressB);
-                }else if(aBranch){
-                    base.insertRoutePlan(parcelNumber,idAddressA,1);
-                    base.insertRoutePlan(parcelNumber,1,idAddressB);
-                }
-
-            }else if(bBranch){
-                if(aBranch){
-                    base.insertRoutePlan(parcelNumber,idAddressA,2);
-                    base.insertRoutePlan(parcelNumber,2,1);
-                    base.insertRoutePlan(parcelNumber,1,idAddressB);
-                }else if(cBranch){
-                    base.insertRoutePlan(parcelNumber,idAddressA,2);
-                    base.insertRoutePlan(parcelNumber,2,3);
-                    base.insertRoutePlan(parcelNumber,3,idAddressB);
-                }else if(bBranch){
-                    base.insertRoutePlan(parcelNumber,idAddressA,2);
-                    base.insertRoutePlan(parcelNumber,2,idAddressB);
-                }
-
-            }else if(cBranch){
-                if(aBranch){
-                    base.insertRoutePlan(parcelNumber,idAddressA,3);
-                    base.insertRoutePlan(parcelNumber,3,1);
-                    base.insertRoutePlan(parcelNumber,1,idAddressB);
-                }else if(bBranch){
-                    base.insertRoutePlan(parcelNumber,idAddressA,3);
-                    base.insertRoutePlan(parcelNumber,3,2);
-                    base.insertRoutePlan(parcelNumber,2,idAddressB);
-                }else if(cBranch){
-                    base.insertRoutePlan(parcelNumber,idAddressA,3);
-                    base.insertRoutePlan(parcelNumber,3,idAddressB);
-                }
-
-            }
-
-
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if(!closestToRecipient.getCode().equals("S01")){
+            base.insertRoutePlan(parcel.getParcelNumber(), 1, closestToShipper.getAddress().getId(),stage);
+            stage++;
         }
+        base.insertRoutePlan(parcel.getParcelNumber(),closestToRecipient.getAddress().getId(), parcel.getDelivery_address(),stage);
+        stage++;
 
 
-        System.out.println("liczba kilometrów: " + min);
+
     }
+
 
 }

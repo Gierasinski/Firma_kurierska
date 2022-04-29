@@ -126,6 +126,7 @@ public class Register {
                     System.out.println("Pressed OK.");
                 }
             });
+            System.out.println(e);
         } catch (Exception e){
             alert.setTitle("Blad dodawania");
             alert.setHeaderText("Sprawdz poprawnosc danych");
@@ -135,6 +136,7 @@ public class Register {
                     System.out.println("Pressed OK.");
                 }
             });
+            System.out.println(e);
         }
 
     }

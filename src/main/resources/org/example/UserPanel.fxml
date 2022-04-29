@@ -20,7 +20,7 @@
          <content>
             <AnchorPane maxHeight="559.0" maxWidth="624.0" minHeight="0.0" minWidth="0.0" prefHeight="559.0" prefWidth="624.0" styleClass="backgroundLogin" stylesheets="@style.css">
                <children>
-                  <Pane fx:id="FormPane" layoutX="29.0" layoutY="8.0" visible="false">
+                  <Pane fx:id="FormPane" layoutX="29.0" layoutY="8.0">
                      <children>
                         <Pane layoutY="46.0" prefHeight="185.0" prefWidth="566.0" styleClass="backgroundPane" stylesheets="@style.css">
                            <children>
@@ -118,7 +118,7 @@
                         </Label>
                      </children>
                   </Pane>
-                  <Pane fx:id="ShipperFlatDetails" layoutX="29.0" layoutY="8.0">
+                  <Pane fx:id="ShipperFlatDetails" layoutX="29.0" layoutY="8.0" visible="false">
                      <children>
                         <Pane layoutY="61.0" prefHeight="384.0" prefWidth="573.0" styleClass="backgroundPane" stylesheets="@style.css">
                            <children>

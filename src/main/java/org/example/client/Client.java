@@ -208,10 +208,22 @@ public class Client {
             System.out.println("Something went wrong with setting up Origin Address");
         }
     }
+    public void setOriginAddress(Address address) throws SQLException {
+        originAddress = address.getId();
+        if(originAddress == -1){
+            System.out.println("Something went wrong with setting up Origin Address");
+        }
+    }
 
     public void setDestinationAddress(String city, String street, String number,String local, String postcode) throws SQLException {
         manageDataBase.connectToDataBase();
         destinationAddress = manageDataBase.insertAdres(city, street, number, local, postcode);
+        if(destinationAddress == -1){
+            System.out.println("Something went wrong with setting up Destination Address");
+        }
+    }
+    public void setDestinationAddress(Address address) throws SQLException {
+        destinationAddress = address.getId();
         if(destinationAddress == -1){
             System.out.println("Something went wrong with setting up Destination Address");
         }

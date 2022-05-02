@@ -1,21 +1,22 @@
 package org.example.PostgreSQL;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import org.example.client.Account;
-import org.example.client.Client;
 import org.example.global.Address;
 import org.example.global.Branch;
+import org.example.gui.Locker;
 import org.example.maps.OpenStreetMapUtils;
 import org.example.parcel.Parcel;
 import org.example.parcel.Payment;
 
-import org.example.parcel.Route;
 import org.example.parcel.RoutePlan;
+import org.example.worker.Employee;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 public class ManageDataBase {
     String jdbcUrl = ConnectionParameters.jdbcUrl;
@@ -79,6 +80,7 @@ public class ManageDataBase {
             createTableClients();
             createTableBranch();
             createTableRoutePlan();
+            createTableLocker();
             insertToTable();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -117,6 +119,14 @@ public class ManageDataBase {
         //starting user
         int tempAddress = insertAdres("Kielce", "Nowowiejska", "15", null,"25-532");
         long tempClient = insertClient("Tomek", "Nowak", "123123321", "tomek@mail.com", "user", "user123",tempAddress);
+
+        //Lockers
+        tempAddress = insertAdres("Leszno", "Jana Matejki", "5", null,"64-100");
+        insertLocker(tempAddress, "LESZ01", null);
+        tempAddress = insertAdres("Radom", "Młodzianowska", "4", null,"26-618");
+        insertLocker(tempAddress, "RAD01", null);
+        tempAddress = insertAdres("Olsztyn", "Zakole", "6", null,"11-111");
+        insertLocker(tempAddress, "OLSZ01", null);
     }
     public void dropDataBase() throws SQLException {
         String sql = "DROP DATABASE "+databaseName+" WITH (FORCE)";
@@ -445,6 +455,41 @@ public class ManageDataBase {
         statement.executeUpdate(sql);
         System.out.println("Table platnosc Created");
     }
+    public void createTableLocker() throws SQLException {
+        String sql = "CREATE TABLE paczkomat (id SERIAL, adres INTEGER, kod varchar(20), opis varchar(200))";
+        Statement statement = connection.createStatement();
+
+        statement.executeUpdate(sql);
+        System.out.println("Table paczkomat Created");
+    }
+    public void deleteTableALocker() throws SQLException {
+        String sql = "DROP TABLE paczkomat";
+        Statement statement = connection.createStatement();
+
+        statement.executeUpdate(sql);
+        System.out.println("Table paczkomat Delete");
+    }
+    public void insertLocker(int address, String code, String description) throws SQLException {
+        String sql = "INSERT INTO paczkomat(adres, kod, opis) values (?,?,?)";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setInt(1,address);
+        pst.setString(2,code);
+        pst.setString(3,description);
+        pst.execute();
+    }
+    /**Pozyskanie wszystkich paczkomatów*/
+    public ObservableList<Locker> getLockers() throws SQLException {
+        ObservableList<Locker> lockers = FXCollections.observableArrayList();
+        String query = "SELECT * FROM paczkomat";
+
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(query);
+
+        while(rs.next()) {
+            lockers.add(new Locker(rs.getInt("id"),rs.getInt("adres"),rs.getString("kod"),rs.getString("opis")));
+        }
+        return lockers;
+    }
     public int insertPayment(double price, String status) throws SQLException {
         int id = -1;
         String sql = "INSERT INTO platnosc(koszt, status) values (?,?) RETURNING id";
@@ -538,7 +583,22 @@ public class ManageDataBase {
             }
         return salary;
     }
+    /**wyszukanie pracownika o podany numerze pracownika */
+    public Employee searchEmployeeWorkerCode(String workerCode) throws SQLException {
+        Employee myEmployee = new Employee();
+        String query = "select * from employee where workerCode like '"+workerCode+"';";
+        preparedStatement = connection.prepareStatement(query);
+        resultSet = preparedStatement.executeQuery();
+        int i = 0;
+        while(resultSet.next()) {
+            myEmployee = new Employee(resultSet.getInt("id"),resultSet.getInt("pesel"),resultSet.getInt("salary"),
+                    resultSet.getInt("phoneNumber"),workerCode, resultSet.getString("name"), resultSet.getString("surname"),
+                    resultSet.getString("position"), resultSet.getDate("dateOfEmployment"));
 
+            i++;
+        }
+        return myEmployee;
+    }
 /**dodanie pracownika */
     public void insertEmployee(String workerCode, String name, String surname, int phoneNumber,
                        int idAddress, int pesel, String position,int salary, Date dateOfEmployment, int idBranch) throws SQLException {

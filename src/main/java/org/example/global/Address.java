@@ -5,8 +5,9 @@ public class Address {
     private double lat, lon;
     private String  city, street, number, local;
     private String postcode;
+    private String name;
     public Address() {}
-    public Address(int id, String city, String street, String number, String local, String postcode, double lat, double lon) {
+    public Address(int id, String city, String street, String number, String local, String postcode, double lat, double lon, String name) {
         this.id = id;
         this.city = city;
         this.street = street;
@@ -15,6 +16,7 @@ public class Address {
         this.postcode = postcode;
         this.lat = lat;
         this.lon = lon;
+        this.name = name;
     }
 
     public int getId() {return id;}
@@ -61,5 +63,13 @@ public class Address {
 
     public double getLon() {
         return lon;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

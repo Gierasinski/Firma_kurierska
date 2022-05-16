@@ -1,5 +1,8 @@
 package org.example.parcel;
 
+import org.example.client.ShipperInfo;
+import org.example.global.Address;
+
 public class Parcel {
     private long parcelNumber;
     private long waybillNumber = 1;
@@ -9,6 +12,7 @@ public class Parcel {
     private int delivery_address, shipment_address;
     private String status;
     private String localization;
+    private Invoice invoice;
 
     public Parcel(){}
     public Parcel(long parcelNumber, int payment, int delivery_address, String status, String localization) {
@@ -76,6 +80,10 @@ public class Parcel {
         return localization;
     }
 
+    public void createInvoice(ShipperInfo shipper, Payment pay){
+        invoice = new Invoice();
+        invoice.writeInvoice(parcelNumber, shipper, pay);
+    }
 
 
 }

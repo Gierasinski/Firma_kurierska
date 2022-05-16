@@ -8,6 +8,7 @@ module org.example {
     requires json.simple;
     requires java.desktop;
     requires com.dlsc.gmapsfx;
+    requires pdfbox;
 
     exports org.example.gui;
     exports org.example.maps;

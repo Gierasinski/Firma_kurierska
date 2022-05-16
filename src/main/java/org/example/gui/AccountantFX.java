@@ -1,15 +1,24 @@
 package org.example.gui;
 
+import javafx.collections.ObservableList;
+import javafx.collections.transformation.FilteredList;
+import javafx.collections.transformation.SortedList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import org.example.App;
+import org.example.PostgreSQL.ManageDataBase;
 import org.example.worker.Accountant;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URL;
+import java.sql.SQLException;
+import java.util.ResourceBundle;
 
-public class AccountantFX {
+public class AccountantFX implements Initializable {
     Alert alert = new Alert(Alert.AlertType.INFORMATION);
     Accountant accountant = new Accountant();
 
@@ -46,7 +55,7 @@ public class AccountantFX {
     private TextField tfIname;
 
     @FXML
-    private TextField tfIsurname;
+    private TextField tfSearch;
 
     @FXML
     private TextField tfWbranchname;
@@ -80,7 +89,63 @@ public class AccountantFX {
 
     @FXML
     private TextField tfpesel;
+    @FXML
+    private TableView tvParcelList;
+    @FXML private TableColumn<ParcelL, String> parcelID;
+    @FXML private TableColumn<ParcelL, String> clientID;
+    @FXML private TableColumn<ParcelL, String> paymentStatus;
+    @FXML private TableColumn<ParcelL, String> status;
+    @FXML private TableColumn<ParcelL, String> price;
+    private ObservableList<ParcelL> parcelsList;
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        try {
+        //load lockers FROM
+        parcelID.setCellValueFactory(new PropertyValueFactory<>("parcelNumber"));
+        clientID.setCellValueFactory(new PropertyValueFactory<>("client"));
+        paymentStatus.setCellValueFactory(new PropertyValueFactory<>("paymentStatus"));
+        status.setCellValueFactory(new PropertyValueFactory<>("status"));
+        price.setCellValueFactory(new PropertyValueFactory<>("price"));
 
+        getParcelsToTable();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    void getParcelsToTable() throws SQLException {
+        ManageDataBase base = new ManageDataBase();
+        base.connectToDataBase();
+
+        parcelsList = base.getParcels();
+
+        FilteredList<ParcelL> filteredParcels = new FilteredList<>(parcelsList, b ->true);
+        tfSearch.textProperty().addListener((observable, oldValue, newValue)-> {
+            filteredParcels.setPredicate(parcel -> {
+                if(newValue == null || newValue.isEmpty()){
+                    return true;
+                }
+
+                String lowerCaseFilter = newValue.toLowerCase();
+
+                if(String.valueOf(parcel.getParcelNumber()).toLowerCase().indexOf(lowerCaseFilter) != -1) {
+                    return true;
+                } else if (parcel.getPaymentStatus().toLowerCase().indexOf(lowerCaseFilter) != -1){
+                    return true;
+                } else if (String.valueOf(parcel.getPrice()).toLowerCase().indexOf(lowerCaseFilter) != -1){
+                    return true;
+                } else if (String.valueOf(parcel.getClient()).toLowerCase().indexOf(lowerCaseFilter) != -1){
+                    return true;
+                } else if (parcel.getStatus().toLowerCase().indexOf(lowerCaseFilter) != -1){
+                    return true;
+                } else
+                    return false;
+            });
+        });
+        SortedList<ParcelL> sortedParcels = new SortedList<>(filteredParcels);
+        sortedParcels.comparatorProperty().bind(tvParcelList.comparatorProperty());
+        tvParcelList.setItems(sortedParcels);
+    }
     @FXML
     void AddWorker(ActionEvent event) {
         if(!tfWname.getText().isEmpty() && !tfWsurname.getText().isEmpty() && !tfWbranchname.getText().isEmpty()
@@ -109,22 +174,38 @@ public class AccountantFX {
     }
 
     @FXML
-    void Issue(ActionEvent event) throws FileNotFoundException {
-        if(!tfIname.getText().isEmpty() && !tfIsurname.getText().isEmpty() && !tfIamount.getText().isEmpty()
-        && !tfIRoad.getText().isEmpty() && !tfIHousenumber.getText().isEmpty() && !tfICity.getText().isEmpty()){
-                accountant.getFacture(tfIname.getText(),tfIsurname.getText(),tfICity.getText(),tfIRoad.getText(),Integer.parseInt(tfIHousenumber.getText()));
-            alert.setTitle("Issue");
-            alert.setHeaderText("An invoice has been issued");
+    void Issue(ActionEvent event) throws FileNotFoundException, SQLException {
+            if(tvParcelList.getSelectionModel().getSelectedItem() != null) {
+
+
+                ParcelL parcelL = (ParcelL) tvParcelList.getSelectionModel().getSelectedItem();
+                accountant.getFacture(parcelL.getParcel());
+
+                getParcelsToTable();
+
+                alert.setTitle("Issue");
+                alert.setHeaderText("An invoice has been issued");
+                alert.setContentText("Press OK");
+                alert.showAndWait().ifPresent(rs -> {
+                    if (rs == ButtonType.OK) {
+                        System.out.println("Pressed OK.");
+                    }
+                });
+            }
+
+    }
+    @FXML
+    void PayForParcel(ActionEvent event) throws FileNotFoundException, SQLException {
+        if(tvParcelList.getSelectionModel().getSelectedItem() != null) {
+
+            ParcelL parcelL = (ParcelL) tvParcelList.getSelectionModel().getSelectedItem();
+            accountant.bookPayment(parcelL.getParcel());
+
+            getParcelsToTable();
+
+            alert.setTitle("Payment");
+            alert.setHeaderText("Payment status changed");
             alert.setContentText("Press OK");
-            alert.showAndWait().ifPresent(rs -> {
-                if (rs == ButtonType.OK) {
-                    System.out.println("Pressed OK.");
-                }
-            });
-        }else{
-            alert.setTitle("Error");
-            alert.setHeaderText("An invoice has not been issued");
-            alert.setContentText("Check data");
             alert.showAndWait().ifPresent(rs -> {
                 if (rs == ButtonType.OK) {
                     System.out.println("Pressed OK.");
@@ -134,9 +215,23 @@ public class AccountantFX {
 
     }
 
+
     @FXML
     void SwitchToWorkerPanel(ActionEvent event)throws IOException {
         App.setRoot("WorkerPanel");
+    }
+    @FXML
+    void assignCouriers() throws SQLException {
+        accountant.assignCouriers();
+
+        alert.setTitle("Assign Couriers");
+        alert.setHeaderText("Couriers have been assigned");
+        alert.setContentText("Press OK");
+        alert.showAndWait().ifPresent(rs -> {
+            if (rs == ButtonType.OK) {
+                System.out.println("Pressed OK.");
+            }
+        });
     }
 
     @FXML

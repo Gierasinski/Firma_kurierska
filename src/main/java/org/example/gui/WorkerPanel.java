@@ -37,8 +37,6 @@ public class WorkerPanel {
             try {
                 if (employeeHolder.getEmployee().loginEmployee(code) == 1) {
                     App.setRoot("Delivery");
-                } else if (employeeHolder.getEmployee().loginEmployee(code) == 2) {
-                    App.setRoot("Storekeeper");
                 } else if (employeeHolder.getEmployee().loginEmployee(code) == 3) {
                     App.setRoot("Accountant");
                 } else {

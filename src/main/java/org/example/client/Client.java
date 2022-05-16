@@ -188,22 +188,22 @@ public class Client {
        return firstTen + day*100 + month*10 + year + rand.nextInt(999);
    }
 
-    public void setOriginAddress(String city, String street, String number,String local, String postcode, ManageDataBase manage) throws SQLException {
-        originAddress = manage.insertAdres(city, street, number, local, postcode);
+    public void setOriginAddress(String city, String street, String number,String local, String postcode, ManageDataBase manage, String name) throws SQLException {
+        originAddress = manage.insertAdres(city, street, number, local, postcode, name);
         if(originAddress == -1){
             System.out.println("Something went wrong with setting up Origin Address");
         }
     }
 
-    public void setDestinationAddress(String city, String street, String number,String local, String postcode, ManageDataBase manage) throws SQLException {
-        destinationAddress = manage.insertAdres(city, street, number, local, postcode);
+    public void setDestinationAddress(String city, String street, String number,String local, String postcode, ManageDataBase manage, String name) throws SQLException {
+        destinationAddress = manage.insertAdres(city, street, number, local, postcode,name);
         if(destinationAddress == -1){
             System.out.println("Something went wrong with setting up Destination Address");
         }
     }
-    public void setOriginAddress(String city, String street, String number,String local, String postcode) throws SQLException {
+    public void setOriginAddress(String city, String street, String number,String local, String postcode,  String name) throws SQLException {
         manageDataBase.connectToDataBase();
-        originAddress = manageDataBase.insertAdres(city, street, number, local, postcode);
+        originAddress = manageDataBase.insertAdres(city, street, number, local, postcode, name);
         if(originAddress == -1){
             System.out.println("Something went wrong with setting up Origin Address");
         }
@@ -215,9 +215,9 @@ public class Client {
         }
     }
 
-    public void setDestinationAddress(String city, String street, String number,String local, String postcode) throws SQLException {
+    public void setDestinationAddress(String city, String street, String number,String local, String postcode, String name) throws SQLException {
         manageDataBase.connectToDataBase();
-        destinationAddress = manageDataBase.insertAdres(city, street, number, local, postcode);
+        destinationAddress = manageDataBase.insertAdres(city, street, number, local, postcode, name);
         if(destinationAddress == -1){
             System.out.println("Something went wrong with setting up Destination Address");
         }

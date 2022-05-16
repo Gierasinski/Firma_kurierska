@@ -7,24 +7,33 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: grey;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gui.DeliveryFX">
+<AnchorPane prefHeight="400.0" prefWidth="600.0" styleClass="backgroundLogin" stylesheets="@style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gui.DeliveryFX">
    <children>
-      <Label layoutX="261.0" layoutY="14.0" text="Delivery" textFill="WHITE">
+      <Label layoutX="250.0" layoutY="6.0" styleClass="text" stylesheets="@style.css" text="Delivery" textFill="WHITE">
+         <font>
+            <Font size="28.0" />
+         </font>
+      </Label>
+      <TextField fx:id="tfpackagenumberD" layoutX="215.0" layoutY="60.0" prefHeight="27.0" prefWidth="220.0" styleClass="textField" stylesheets="@style.css" />
+      <Label layoutX="452.0" layoutY="59.0" styleClass="text" stylesheets="@style.css" text="package number" textFill="WHITE">
          <font>
             <Font size="18.0" />
          </font>
       </Label>
-      <TextField fx:id="tfpackagenumberD" layoutX="215.0" layoutY="60.0" prefHeight="27.0" prefWidth="220.0" />
-      <Label layoutX="452.0" layoutY="64.0" text="package number" textFill="WHITE">
+      <Button fx:id="btnpickingupthepackagef" layoutX="24.0" layoutY="52.0" mnemonicParsing="false" onAction="#pickupthepackage0" prefHeight="62.0" prefWidth="172.0" styleClass="button2" stylesheets="@style.css" text="Picking up the package">
          <font>
             <Font size="14.0" />
-         </font>
-      </Label>
-      <Button fx:id="btnpickingupthepackagef" layoutX="24.0" layoutY="52.0" mnemonicParsing="false" onAction="#pickupthepackage0" prefHeight="62.0" prefWidth="172.0" text="Picking up the package" />
-      <Button fx:id="btndeliveredtorecipient" layoutX="24.0" layoutY="219.0" mnemonicParsing="false" onAction="#deliveredtotherecipient" prefHeight="62.0" prefWidth="172.0" text="Delivered to the recipient" />
-      <Button fx:id="btndeliveredtoapercellocker" layoutX="24.0" layoutY="137.0" mnemonicParsing="false" onAction="#deliveredtoaparcellocker" prefHeight="62.0" prefWidth="172.0" text="Delivered to a parcel locker" />
-      <Button fx:id="btn6" layoutX="24.0" layoutY="300.0" mnemonicParsing="false" onAction="#bt6" prefHeight="62.0" prefWidth="172.0" text="Check Info" />
-      <TextArea fx:id="taDelivery" layoutX="225.0" layoutY="100.0" onInputMethodTextChanged="#taDeliverymethod" prefHeight="266.0" prefWidth="200.0" />
-      <Button fx:id="btnexit" layoutX="452.0" layoutY="306.0" mnemonicParsing="false" onAction="#exit" prefHeight="50.0" prefWidth="104.0" text="Exit" />
+         </font></Button>
+      <Button fx:id="btndeliveredtorecipient" layoutX="24.0" layoutY="219.0" mnemonicParsing="false" onAction="#deliveredtotherecipient" prefHeight="62.0" prefWidth="172.0" styleClass="button2" stylesheets="@style.css" text="Delivered to the recipient" />
+      <Button fx:id="btndeliveredtoapercellocker" layoutX="24.0" layoutY="137.0" mnemonicParsing="false" onAction="#deliveredtoaparcellocker" prefHeight="62.0" prefWidth="172.0" styleClass="button2" stylesheets="@style.css" text="Delivered to a parcel locker" />
+      <Button fx:id="btn6" layoutX="24.0" layoutY="300.0" mnemonicParsing="false" onAction="#bt6" prefHeight="62.0" prefWidth="172.0" styleClass="button2" stylesheets="@style.css" text="Check Info">
+         <font>
+            <Font size="18.0" />
+         </font></Button>
+      <TextArea fx:id="taDelivery" layoutX="225.0" layoutY="100.0" onInputMethodTextChanged="#taDeliverymethod" prefHeight="266.0" prefWidth="200.0" styleClass="textField" stylesheets="@style.css" />
+      <Button fx:id="btnexit" layoutX="452.0" layoutY="306.0" mnemonicParsing="false" onAction="#exit" prefHeight="50.0" prefWidth="104.0" styleClass="button2" stylesheets="@style.css" text="Exit">
+         <font>
+            <Font size="22.0" />
+         </font></Button>
    </children>
 </AnchorPane>

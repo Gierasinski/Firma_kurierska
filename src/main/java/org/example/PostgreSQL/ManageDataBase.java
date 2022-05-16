@@ -3,14 +3,17 @@ package org.example.PostgreSQL;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import org.example.client.Account;
+import org.example.client.ShipperInfo;
 import org.example.global.Address;
 import org.example.global.Branch;
 import org.example.gui.Locker;
 import org.example.maps.OpenStreetMapUtils;
 import org.example.parcel.Parcel;
+import org.example.gui.ParcelL;
 import org.example.parcel.Payment;
 
 import org.example.parcel.RoutePlan;
+import org.example.worker.Delivery;
 import org.example.worker.Employee;
 
 import java.sql.*;
@@ -98,7 +101,6 @@ public class ManageDataBase {
         statement.executeUpdate(sql);
         System.out.println("Table inserted");
         insertEmployee("2222","kuba","jalek",6666,3,939393,"accountant",3600, null,2);
-        insertEmployee("3333","maciek","gutek",33332,1,435435435,"storekeeper",4300, null,2);
         //oddzialy
         insertAdres("Warszawa","Zlota","1",null,"00-032");
         insertAdres("Lodz","Piotrkowska","3",null,"90-406");
@@ -328,7 +330,8 @@ public class ManageDataBase {
             while (resultSet.next()) {
                 myAccount.setAddress(new Address(resultSet.getInt("id"), resultSet.getString("miasto"),
                         resultSet.getString("ulica"), resultSet.getString("numer"), resultSet.getString("lokal"),
-                        resultSet.getString("kod_pocztowy"), resultSet.getDouble("lat"), resultSet.getDouble("lon")));
+                        resultSet.getString("kod_pocztowy"), resultSet.getDouble("lat"), resultSet.getDouble("lon"),
+                        resultSet.getString("nazwa")));
             }
         }
         return myAccount;
@@ -344,7 +347,7 @@ public class ManageDataBase {
             String sql = "CREATE TABLE przesylki (id BIGINT UNIQUE,list_przewozowy BIGINT UNIQUE, waga INTEGER," +
                     "wysokosc INTEGER, szerokosc INTEGER, dlugosc INTEGER, platnosc INTEGER UNIQUE, " +
                     "adres_dostawy INTEGER, adres_nadania INTEGER, status varchar(30), lokalizacja varchar(30)," +
-                    " kod_nadania INTEGER , kod_odbioru INTEGER, id_klienta INTEGER )";
+                    " kod_nadania INTEGER , kod_odbioru INTEGER, id_klienta INTEGER)";
             Statement statement = connection.createStatement();
 
             statement.executeUpdate(sql);
@@ -371,6 +374,22 @@ public class ManageDataBase {
         }
         return array;
     }
+    /**Pozyskanie wszystkich paczek*/
+    public ObservableList<ParcelL> getParcels() throws SQLException {
+        ObservableList<ParcelL> parcels = FXCollections.observableArrayList();
+        String query = "SELECT * FROM przesylki";
+
+        Statement statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(query);
+
+        while(rs.next()) {
+            parcels.add(new ParcelL(rs.getLong("id"),rs.getString("status"),
+                    rs.getInt("platnosc"),rs.getInt("id_klienta")));
+            System.out.println(rs.getLong("id"));
+        }
+        return parcels;
+    }
+
     public Parcel getParcelInfo(long parcelID) throws SQLException {
         Parcel parcel = new Parcel();
         String query = "select * from przesylki where id = ?;";
@@ -386,6 +405,43 @@ public class ManageDataBase {
         }
         return parcel;
     }
+    public ShipperInfo getShipperInfo(long parcelID) throws SQLException {
+        int clientID = 0;
+        String query = "select * from przesylki where id = ?;";
+        preparedStatement = connection.prepareStatement(query);
+        preparedStatement .setLong(1,parcelID);
+
+        resultSet = preparedStatement.executeQuery();
+
+        while(resultSet.next()) {
+            clientID = resultSet.getInt("id_klienta");
+        }
+        ShipperInfo shipperInfo = new ShipperInfo();
+
+        query = "select * from klienci where id = ?;";
+        preparedStatement = connection.prepareStatement(query);
+        preparedStatement .setInt(1,clientID);
+        resultSet = preparedStatement.executeQuery();
+        int addressID=-1;
+        while(resultSet.next()) {
+            shipperInfo = new ShipperInfo(resultSet.getLong("id"),resultSet.getString("email"), resultSet.getString("kontakt"),
+                    resultSet.getString("imie"), resultSet.getString("nazwisko"));
+            addressID = resultSet.getInt("adres");
+        }
+        if(addressID>0) {
+            query = "select * from adres where id = ?;";
+            preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1, addressID);
+            resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                shipperInfo.setAddress(new Address(resultSet.getInt("id"), resultSet.getString("miasto"),
+                        resultSet.getString("ulica"), resultSet.getString("numer"), resultSet.getString("lokal"),
+                        resultSet.getString("kod_pocztowy"), resultSet.getDouble("lat"), resultSet.getDouble("lon"),
+                        resultSet.getString("nazwa")));
+            }
+        }
+        return shipperInfo;
+    }
     public Address getAddressInfo(int addressID) throws SQLException {
         Address address = new Address();
         String query = "select * from adres where id = ?;";
@@ -396,7 +452,8 @@ public class ManageDataBase {
         while(resultSet.next()) {
             address= new Address(resultSet.getInt("id"),resultSet.getString("miasto"),
                     resultSet.getString("ulica"),resultSet.getString("numer"), resultSet.getString("lokal"),
-                    resultSet.getString("kod_pocztowy"), resultSet.getDouble("lat"), resultSet.getDouble("lon"));
+                    resultSet.getString("kod_pocztowy"), resultSet.getDouble("lat"), resultSet.getDouble("lon"),
+                    resultSet.getString("nazwa"));
         }
         return address;
     }
@@ -442,7 +499,7 @@ public class ManageDataBase {
 
     }
     public void createTableAdres() throws SQLException {
-            String sql = "CREATE TABLE adres (id SERIAL, miasto varchar(20),ulica varchar(20),numer varchar(20),lokal varchar(20), kod_pocztowy varchar(7), lat Decimal(8,6), lon Decimal(9,6))";
+            String sql = "CREATE TABLE adres (id SERIAL, miasto varchar(20),ulica varchar(20),numer varchar(20),lokal varchar(20), kod_pocztowy varchar(7), lat Decimal(8,6), lon Decimal(9,6),nazwa varchar(30))";
             Statement statement = connection.createStatement();
 
             statement.executeUpdate(sql);
@@ -550,6 +607,35 @@ public class ManageDataBase {
         }
         return id;
     }
+    public int insertAdres(String miasto, String ulica,String numer,String lokal, String kod_pocztowy, String nazwa) throws SQLException {
+        int id = -1;
+        Map<String, Double> coords;
+        coords = OpenStreetMapUtils.getInstance().getCoordinates(kod_pocztowy +" "+ miasto +" "+ ulica +" "+ numer);
+        if(coords.get("lat") == null){
+            coords = OpenStreetMapUtils.getInstance().getCoordinates(miasto +" "+ ulica +" "+ numer);
+        }
+        String sql = "INSERT INTO adres(miasto, ulica, numer, lokal, kod_pocztowy, lat, lon, nazwa) values (?,?,?,?,?,?,?,?) RETURNING id";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setString(1,miasto);
+        pst.setString(2,ulica);
+        pst.setString(3,numer);
+        pst.setString(4,lokal);
+        pst.setString(5,kod_pocztowy);
+        if(coords.get("lat") != null && coords != null) {
+            pst.setDouble(6, coords.get("lat"));
+            pst.setDouble(7, coords.get("lon"));
+        }else {
+            pst.setDouble(6, 0);
+            pst.setDouble(7, 0);
+            System.out.println("Address was not found");
+        }
+        pst.setString(8,nazwa);
+        resultSet = pst.executeQuery();
+        while(resultSet.next()) {
+            id = resultSet.getInt("id");
+        }
+        return id;
+    }
     public int insertEmptyAddress() throws SQLException {
         int id = -1;
         String sql = "INSERT INTO adres(miasto) values (?) RETURNING id";
@@ -599,6 +685,38 @@ public class ManageDataBase {
         }
         return myEmployee;
     }
+    /**pobieranie dostawców */
+    public ArrayList<Delivery> getCouriers() throws SQLException {
+        ArrayList<Delivery> couriers = new ArrayList<Delivery>();
+        String query = "select * from employee where position like 'delivery';";
+        preparedStatement = connection.prepareStatement(query);
+        resultSet = preparedStatement.executeQuery();
+        int i = 0;
+        while(resultSet.next()) {
+            couriers.add (new Delivery(resultSet.getInt("id"),resultSet.getInt("pesel"),resultSet.getInt("salary"),
+                    resultSet.getInt("phoneNumber"),resultSet.getString("workerCode"), resultSet.getString("name"), resultSet.getString("surname"),
+                    resultSet.getString("position"), resultSet.getDate("dateOfEmployment")));
+
+            i++;
+        }
+        return couriers;
+    }
+    /**pobieranie tras dostawców */
+    public ArrayList<Delivery> getCourierRoutes(String courier) throws SQLException {
+        ArrayList<Delivery> couriers = new ArrayList<Delivery>();
+        String query = "select * from route_plan where deliveryman like ? AND state LIKE 'current';";
+        preparedStatement = connection.prepareStatement(query);
+        resultSet = preparedStatement.executeQuery();
+        int i = 0;
+        while(resultSet.next()) {
+            couriers.add (new Delivery(resultSet.getInt("id"),resultSet.getInt("pesel"),resultSet.getInt("salary"),
+                    resultSet.getInt("phoneNumber"),resultSet.getString("workerCode"), resultSet.getString("name"), resultSet.getString("surname"),
+                    resultSet.getString("position"), resultSet.getDate("dateOfEmployment")));
+
+            i++;
+        }
+        return couriers;
+    }
 /**dodanie pracownika */
     public void insertEmployee(String workerCode, String name, String surname, int phoneNumber,
                        int idAddress, int pesel, String position,int salary, Date dateOfEmployment, int idBranch) throws SQLException {
@@ -631,7 +749,6 @@ public class ManageDataBase {
         PreparedStatement pst = connection.prepareStatement(sql);
         pst.setInt(1, id);
         pst.execute();
-
     }
     /**aktualizacja pensji pracownika*/
     public void updateSalary(int salary,String workerCode) throws SQLException {
@@ -707,7 +824,8 @@ public class ManageDataBase {
 
     /**stworzenie tabeli zapisujace trase */
     public void createTableRoutePlan() throws SQLException {
-        String sql = "CREATE TABLE route_plan (id SERIAL,parcelNumber BIGINT, idPointA INTEGER, idPointB INTEGER, stage INTEGER)";
+        String sql = "CREATE TABLE route_plan (id SERIAL,parcelNumber BIGINT, idPointA INTEGER, " +
+                "idPointB INTEGER, stage INTEGER, state varchar(30), deliveryMan varchar(30))";
         Statement statement = connection.createStatement();
 
         statement.executeUpdate(sql);
@@ -716,13 +834,32 @@ public class ManageDataBase {
 
     /**dodanie dystancu */
     public void insertRoutePlan(long parcelNumber,int A, int B, int stage) throws SQLException {
-        String sql = "INSERT INTO route_plan(parcelNumber,idPointA, idPointB, stage) values (?,?,?,?)";
+        String sql = "INSERT INTO route_plan(parcelNumber,idPointA, idPointB, stage, state, deliveryMan) values (?,?,?,?,?,?)";
         PreparedStatement pst = connection.prepareStatement(sql);
         pst.setLong(1,parcelNumber);
         pst.setInt(2,A);
         pst.setInt(3,B);
         pst.setInt(4,stage);
+        if(stage == 0){
+            pst.setString(5,"current");
+        }else {
+            pst.setString(5,"future");
+        }
+
+        pst.setString(6,"NULL");
         pst.execute();
+    }
+    /**dodanie dystancu */
+    public void updateRoutePlan(long parcelNumber,int A, int B, String courier, int stage) throws SQLException {
+        String sql = "UPDATE route_plan SET idpointa = ?, idpointb = ?,deliveryMan = ? WHERE parcelnumber = ? AND stage = ?";
+        PreparedStatement pst = null;
+        pst = connection.prepareStatement(sql);
+        pst.setInt(1,A);
+        pst.setInt(2,B);
+        pst.setString(3,courier);
+        pst.setLong(4,parcelNumber);
+        pst.setInt(5,stage);
+        pst.executeUpdate();
     }
 
 
@@ -735,7 +872,22 @@ public class ManageDataBase {
         resultSet = preparedStatement.executeQuery();
         int i = 0;
         while(resultSet.next()) {
-            plan.add(new RoutePlan(resultSet.getLong("parcelnumber"),resultSet.getInt("idPointA"),resultSet.getInt("idPointB")));
+            plan.add(new RoutePlan(resultSet.getLong("parcelnumber"),resultSet.getInt("idPointA"),
+                    resultSet.getInt("idPointB"),resultSet.getInt("stage"),resultSet.getString("state")));
+            i++;
+        }
+        return plan;
+    }
+    public ArrayList<RoutePlan> getNotAssignedRoutes() throws SQLException {
+        ArrayList<RoutePlan> plan = new ArrayList<RoutePlan>();
+        String query = "select * from route_plan where deliveryMan LIKE 'NULL' AND state LIKE 'current';";
+        preparedStatement = connection.prepareStatement(query);
+        ResultSet rs = preparedStatement.executeQuery();
+        int i = 0;
+        while(rs.next()) {
+            System.out.println("Hello");
+            plan.add(new RoutePlan(rs.getLong("parcelnumber"),rs.getInt("idPointA"),rs.getInt("idPointB"),
+                    rs.getInt("stage"),rs.getString("state")));
             i++;
         }
         return plan;

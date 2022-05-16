@@ -1,5 +1,8 @@
 package org.example.worker;
 
+import org.example.client.ShipperInfo;
+import org.example.global.Address;
+import org.example.parcel.Parcel;
 import org.example.parcel.Payment;
 import org.example.PostgreSQL.ManageDataBase;
 
@@ -7,9 +10,16 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Random;
+
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.example.parcel.RoutePlan;
 
 public class Accountant extends Employee{
     ManageDataBase base =  new  ManageDataBase();
@@ -21,26 +31,35 @@ public class Accountant extends Employee{
     public Accountant() {}
 
 
-    public void getFacture(String name, String surname, String city, String road, int numberHause) throws FileNotFoundException {
-        Calendar calendar = Calendar.getInstance();
-        Date date = calendar.getTime();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss");
-
-        PrintWriter write = new PrintWriter("facture.txt");
-        write.println("Faktura");
-        write.println("Nazwa firmy: Firma Kurierska PSP Spolka Zoo");
-        write.println("data wystawienia faktury: "+simpleDateFormat.format(date));
-        write.println("Dane odbiorcy: ");
-        write.println("Imie: "+ name);
-        write.println("Nazwisko: "+ surname);
-        write.println("Miasto: "+ city);
-        write.println("Ulica: "+ road);
-        write.println("Numer Domu: "+ numberHause);
-        write.println("Metoda platnosc: "+payment.getMethod());
-        write.println("Kwota: "+payment.getPrice());
-
-        write.close();
+    public void getFacture(long p) throws FileNotFoundException, SQLException {
+        base.connectToDataBase();
+        Parcel parcel = base.getParcelInfo(p);
+        ShipperInfo shipper = base.getShipperInfo(p);
+        Payment payment = base.getPaymentInfo(parcel.getPayment());
+        payment.setStatus("Invoice issued");
+        base.updatePayment(payment.getId(), payment.getStatus());
+        parcel.createInvoice(shipper, payment);
     }
+    public void bookPayment(long p) throws SQLException {
+        base.connectToDataBase();
+        Parcel parcel = base.getParcelInfo(p);
+        ShipperInfo shipper = base.getShipperInfo(p);
+        Payment payment = base.getPaymentInfo(parcel.getPayment());
+        payment.setStatus("Paid");
+        base.updatePayment(payment.getId(), payment.getStatus());
+    }
+
+    public void assignCouriers() throws SQLException {
+        base.connectToDataBase();
+        ArrayList<RoutePlan> routes =  base.getNotAssignedRoutes();
+        ArrayList<Delivery> couriers = base.getCouriers();
+
+        for (int i = 0; i < routes.size(); i++){
+            routes.get(i).setCourier(couriers.get((int)Math.random() * couriers.size()).getWorkerCode());
+            base.updateRoutePlan(routes.get(i).getParcelNumber(), routes.get(i).getIdAddressA(),routes.get(i).getIdAddressB(),routes.get(i).getCourier(), routes.get(i).getStage());
+        }
+    }
+
 
     public void givePremium(String workerCode, int premium){
         try {
@@ -81,5 +100,6 @@ public class Accountant extends Employee{
         Random rand = new Random();
         return rand.nextInt(10)+rand.nextInt(10)*10+rand.nextInt(10)*100+rand.nextInt(10)*1000;
     }
+
 
 }

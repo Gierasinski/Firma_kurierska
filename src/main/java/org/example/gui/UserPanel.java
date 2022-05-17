@@ -364,6 +364,7 @@ public class UserPanel implements Initializable {
             lPayment.setText(clientHolder.getClient().getPaymentInfo(parcel.getPayment()).getStatus());
 
             Address address = clientHolder.getClient().getAddressInfo(parcel.getDelivery_address());
+
             lAddress.setText(String.valueOf(address.getPostcode() +" " + address.getCity() +" "+address.getStreet() + " "+ address.getNumber()+"/"+address.getLocal()));
 
             if(clientHolder.getClient().getPaymentInfo(parcel.getPayment()).getStatus().equals("Not Paid")){

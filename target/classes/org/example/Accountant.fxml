@@ -10,9 +10,9 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="550.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gui.AccountantFX">
+<AnchorPane prefHeight="559.0" prefWidth="624.0" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gui.AccountantFX">
    <children>
-      <TabPane prefHeight="550.0" prefWidth="600.0" styleClass="tab" stylesheets="@style.css" tabClosingPolicy="UNAVAILABLE">
+      <TabPane prefHeight="559.0" prefWidth="624.0" styleClass="tab" stylesheets="@style.css" tabClosingPolicy="UNAVAILABLE">
         <tabs>
           <Tab text="Accountant">
             <content>

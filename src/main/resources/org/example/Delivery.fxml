@@ -2,38 +2,86 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" styleClass="backgroundLogin" stylesheets="@style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gui.DeliveryFX">
+<AnchorPane prefHeight="559.0" prefWidth="624.0" styleClass="backgroundLogin" stylesheets="@style.css" xmlns="http://javafx.com/javafx/18" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.gui.DeliveryFX">
    <children>
-      <Label layoutX="250.0" layoutY="6.0" styleClass="text" stylesheets="@style.css" text="Delivery" textFill="WHITE">
-         <font>
-            <Font size="28.0" />
-         </font>
-      </Label>
-      <TextField fx:id="tfpackagenumberD" layoutX="215.0" layoutY="60.0" prefHeight="27.0" prefWidth="220.0" styleClass="textField" stylesheets="@style.css" />
-      <Label layoutX="452.0" layoutY="59.0" styleClass="text" stylesheets="@style.css" text="package number" textFill="WHITE">
-         <font>
-            <Font size="18.0" />
-         </font>
-      </Label>
-      <Button fx:id="btnpickingupthepackagef" layoutX="24.0" layoutY="52.0" mnemonicParsing="false" onAction="#pickupthepackage0" prefHeight="62.0" prefWidth="172.0" styleClass="button2" stylesheets="@style.css" text="Picking up the package">
-         <font>
-            <Font size="14.0" />
-         </font></Button>
-      <Button fx:id="btndeliveredtorecipient" layoutX="24.0" layoutY="219.0" mnemonicParsing="false" onAction="#deliveredtotherecipient" prefHeight="62.0" prefWidth="172.0" styleClass="button2" stylesheets="@style.css" text="Delivered to the recipient" />
-      <Button fx:id="btndeliveredtoapercellocker" layoutX="24.0" layoutY="137.0" mnemonicParsing="false" onAction="#deliveredtoaparcellocker" prefHeight="62.0" prefWidth="172.0" styleClass="button2" stylesheets="@style.css" text="Delivered to a parcel locker" />
-      <Button fx:id="btn6" layoutX="24.0" layoutY="300.0" mnemonicParsing="false" onAction="#bt6" prefHeight="62.0" prefWidth="172.0" styleClass="button2" stylesheets="@style.css" text="Check Info">
-         <font>
-            <Font size="18.0" />
-         </font></Button>
-      <TextArea fx:id="taDelivery" layoutX="225.0" layoutY="100.0" onInputMethodTextChanged="#taDeliverymethod" prefHeight="266.0" prefWidth="200.0" styleClass="textField" stylesheets="@style.css" />
-      <Button fx:id="btnexit" layoutX="452.0" layoutY="306.0" mnemonicParsing="false" onAction="#exit" prefHeight="50.0" prefWidth="104.0" styleClass="button2" stylesheets="@style.css" text="Exit">
-         <font>
-            <Font size="22.0" />
-         </font></Button>
+      <TabPane prefHeight="559.0" prefWidth="624.0" styleClass="tab" stylesheets="@style.css" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="Pick up">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="264.0" styleClass="text" stylesheets="@style.css" text="Pick up" textFill="WHITE">
+                           <font>
+                              <Font size="28.0" />
+                           </font>
+                        </Label>
+                        <TableView fx:id="tvPickUpList" layoutX="6.0" layoutY="40.0" prefHeight="334.0" prefWidth="605.0">
+                           <columns>
+                              <TableColumn fx:id="parcelIDP" prefWidth="163.99996376037598" text="Parcel ID" />
+                              <TableColumn fx:id="clientIDP" prefWidth="96.0" text="Client" />
+                              <TableColumn fx:id="phoneP" minWidth="0.0" prefWidth="126.0" text="Phone" />
+                              <TableColumn fx:id="addressP" minWidth="9.0" prefWidth="218.0" text="Address" />
+                           </columns>
+                        </TableView>
+                        <TextField fx:id="tfSearchPickUp" layoutX="6.0" layoutY="420.0" prefHeight="46.0" prefWidth="229.0" promptText="Search for parcels" styleClass="textField" stylesheets="@style.css">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </TextField>
+                        <Button fx:id="btnpickingupthepackagef" layoutX="249.0" layoutY="419.0" mnemonicParsing="false" onAction="#pickUpPackage" prefHeight="47.0" prefWidth="246.0" styleClass="button2" stylesheets="@style.css" text="Picking up the package">
+                           <font>
+                              <Font size="19.0" />
+                           </font>
+                        </Button>
+                        <Button fx:id="btnexit" layoutX="506.0" layoutY="418.0" mnemonicParsing="false" onAction="#exit" prefHeight="50.0" prefWidth="104.0" styleClass="button2" stylesheets="@style.css" text="Exit">
+                           <font>
+                              <Font size="22.0" />
+                           </font>
+                        </Button>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+          <Tab text="Deliver">
+            <content>
+              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Button layoutX="421.0" layoutY="454.0" mnemonicParsing="false" onAction="#deliverPackage" prefHeight="62.0" prefWidth="172.0" styleClass="button2" stylesheets="@style.css" text="Deliver">
+                           <font>
+                              <Font size="28.0" />
+                           </font></Button>
+                        <TableView fx:id="tvDeliverList" layoutX="10.0" layoutY="46.0" prefHeight="334.0" prefWidth="605.0">
+                           <columns>
+                              <TableColumn fx:id="parcelIDD" prefWidth="143.0" text="Parcel ID" />
+                              <TableColumn fx:id="clientIDD" prefWidth="102.0" text="Client" />
+                              <TableColumn fx:id="addressD" minWidth="9.0" prefWidth="194.0" text="Address" />
+                              <TableColumn fx:id="phoneD" minWidth="0.0" prefWidth="123.0" text="Phone" />
+                              <TableColumn fx:id="codeD" minWidth="0.0" prefWidth="42.0" text="Code" />
+                           </columns>
+                        </TableView>
+                        <Label layoutX="265.0" prefHeight="40.0" prefWidth="95.0" styleClass="text" stylesheets="@style.css" text="Deliver" textFill="WHITE">
+                           <font>
+                              <Font size="28.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="tfSearchDeliver" layoutX="22.0" layoutY="454.0" prefHeight="46.0" prefWidth="229.0" promptText="Search for parcels" styleClass="textField" stylesheets="@style.css">
+                           <font>
+                              <Font size="16.0" />
+                           </font>
+                        </TextField>
+                     </children>
+                  </AnchorPane>
+            </content>
+          </Tab>
+        </tabs>
+      </TabPane>
    </children>
 </AnchorPane>

@@ -7,6 +7,7 @@ import org.example.client.ShipperInfo;
 import org.example.global.Address;
 import org.example.global.Branch;
 import org.example.gui.Locker;
+import org.example.gui.RouteL;
 import org.example.maps.OpenStreetMapUtils;
 import org.example.parcel.Parcel;
 import org.example.gui.ParcelL;
@@ -384,7 +385,8 @@ public class ManageDataBase {
 
         while(rs.next()) {
             parcels.add(new ParcelL(rs.getLong("id"),rs.getString("status"),
-                    rs.getInt("platnosc"),rs.getInt("id_klienta")));
+                    rs.getInt("platnosc"),rs.getInt("id_klienta"), "null",
+                    "null", "null", "null", "null", "null"));
             System.out.println(rs.getLong("id"));
         }
         return parcels;
@@ -702,6 +704,51 @@ public class ManageDataBase {
         return couriers;
     }
     /**pobieranie tras dostawców */
+    public ObservableList<RouteL> getCourierPickUpRoutes(String courier) throws SQLException {
+        ObservableList<RouteL> routes = FXCollections.observableArrayList();
+        String query = "select przesylki.id idprzesylki, klienci.imie, klienci.nazwisko, klienci.kontakt, przesylki.kod_odbioru,\n" +
+                "route_plan.stage, adres.miasto, adres.kod_pocztowy, adres.ulica, adres.numer, adres.lokal\n" +
+                "FROM route_plan, przesylki, klienci, adres\n" +
+                "WHERE route_plan.parcelnumber = przesylki.id\n" +
+                "AND klienci.id = przesylki.id_klienta\n" +
+                "AND route_plan.idpointa = adres.id\n" +
+                "AND route_plan.deliveryman LIKE ? \n"+
+                "AND route_plan.state LIKE 'current';";
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setString(1,courier);
+        resultSet = ps.executeQuery();
+        while(resultSet.next()) {
+            routes.add ( new RouteL(resultSet.getLong("idprzesylki"), resultSet.getString("imie"),
+                    resultSet.getString("nazwisko"), resultSet.getInt("kontakt"), resultSet.getInt("stage"),
+                    resultSet.getInt("kod_odbioru"), resultSet.getString("miasto"), resultSet.getString("kod_pocztowy"),
+                    resultSet.getString("ulica"), resultSet.getString("numer"), resultSet.getString("lokal")));
+
+        }
+        return routes;
+    }
+    public ObservableList<RouteL> getCourierDeliverRoutes(String courier) throws SQLException {
+        ObservableList<RouteL> routes = FXCollections.observableArrayList();
+        String query = "select przesylki.id idprzesylki, klienci.imie, klienci.nazwisko, klienci.kontakt, przesylki.kod_odbioru,\n" +
+                "route_plan.stage, adres.miasto, adres.kod_pocztowy, adres.ulica, adres.numer, adres.lokal\n" +
+                "FROM route_plan, przesylki, klienci, adres\n" +
+                "WHERE route_plan.parcelnumber = przesylki.id\n" +
+                "AND klienci.id = przesylki.id_klienta\n" +
+                "AND route_plan.idpointa = adres.id\n" +
+                "AND route_plan.deliveryman LIKE ? \n"+
+                "AND route_plan.state LIKE 'picked up';";
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps.setString(1,courier);
+        resultSet = ps.executeQuery();
+        while(resultSet.next()) {
+            routes.add ( new RouteL(resultSet.getLong("idprzesylki"), resultSet.getString("imie"),
+                    resultSet.getString("nazwisko"), resultSet.getInt("kontakt"), resultSet.getInt("stage"),
+                    resultSet.getInt("kod_odbioru"), resultSet.getString("miasto"), resultSet.getString("kod_pocztowy"),
+                    resultSet.getString("ulica"), resultSet.getString("numer"), resultSet.getString("lokal")));
+
+        }
+        return routes;
+    }
+    /**pobieranie tras dostawców */
     public ArrayList<Delivery> getCourierRoutes(String courier) throws SQLException {
         ArrayList<Delivery> couriers = new ArrayList<Delivery>();
         String query = "select * from route_plan where deliveryman like ? AND state LIKE 'current';";
@@ -861,6 +908,41 @@ public class ManageDataBase {
         pst.setInt(5,stage);
         pst.executeUpdate();
     }
+    /**odebranie paczki */
+    public void pickUpParcel(long parcelNumber, int stage) throws SQLException {
+        String sql = "UPDATE route_plan SET state = 'picked up' WHERE parcelnumber = ? AND stage = ?";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setLong(1,parcelNumber);
+        pst.setInt(2,stage);
+        pst.executeUpdate();
+    }
+    /**dostarczenie paczki*/
+    public void deliverParcel(long parcelNumber, int stage) throws SQLException {
+        String sql = "UPDATE route_plan SET state = 'delivered' WHERE parcelnumber = ? AND stage = ?";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setLong(1,parcelNumber);
+        pst.setInt(2,stage);
+        pst.executeUpdate();
+
+        sql = "SELECT * FROM route_plan WHERE state = 'future' AND parcelnumber = ? AND stage = ?";
+        pst = connection.prepareStatement(sql);
+        pst.setLong(1,parcelNumber);
+        pst.setInt(2,stage+1);
+        ResultSet rs = pst.executeQuery();
+        if(rs.next()){
+            sql = "UPDATE route_plan SET state = 'current' WHERE parcelnumber = ? AND stage = ?";
+            pst = connection.prepareStatement(sql);
+            pst.setLong(1,parcelNumber);
+            pst.setInt(2,stage+1);
+            pst.executeUpdate();
+        }else{
+            sql = "UPDATE przesylki SET status = 'Delivered' WHERE id = ?";
+            pst = connection.prepareStatement(sql);
+            pst.setLong(1,parcelNumber);
+            pst.executeUpdate();
+        }
+    }
+
 
 
     /**wyszukanie trasy o podany numerze paczki*/

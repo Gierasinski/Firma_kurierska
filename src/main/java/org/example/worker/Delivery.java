@@ -17,18 +17,18 @@ public class Delivery extends Employee{
     }
     public Delivery() {}
 
-    public void pickUpTheParcel(long parcelNumber){
+    public void pickUpTheParcel(long parcelNumber, int stage){
         try {
             base.connectToDataBase();
-            base.updateParcelStatus(status.getSa1(),parcelNumber);
+            base.pickUpParcel(parcelNumber, stage);
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
-    public void deliveredToTheRecipient(long parcelNumber){
+    public void deliverParcel(long parcelNumber, int stage){
         try {
             base.connectToDataBase();
-            base.updateParcelStatus(status.getSa7(),parcelNumber);
+            base.deliverParcel(parcelNumber, stage);
         } catch (SQLException e) {
             e.printStackTrace();
         }

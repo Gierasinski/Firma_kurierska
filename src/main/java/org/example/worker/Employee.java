@@ -15,6 +15,7 @@ public class Employee {
     private Branch branch;
     private Address address;
     private Date dateOfEmployment;
+    Employee employeeWorker;
 
     ManageDataBase base =  new  ManageDataBase();
 
@@ -62,7 +63,6 @@ public class Employee {
 
     public int loginEmployee(String workerCode) throws SQLException {
         base.connectToDataBase();
-        Employee employeeWorker = new Employee();
         employeeWorker = base.searchEmployeeWorkerCode(workerCode);
         if(employeeWorker.id > 0){
             if(employeeWorker.position.startsWith("del")){
@@ -77,12 +77,7 @@ public class Employee {
         return -1;
     }
 
-
-
-
-
-
-
-
-
+    public Employee getEmployeeWorker() {
+        return employeeWorker;
+    }
 }

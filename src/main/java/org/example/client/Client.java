@@ -252,4 +252,9 @@ public class Client {
     public Account getAccount() {
         return account;
     }
+
+    public void insertComplaint(String declarant, String name, int phone, String email, long parcelNumber, String reason, String details) throws SQLException {
+        manageDataBase.connectToDataBase();
+        manageDataBase.insertComplaint(declarant,name,phone,email,parcelNumber,reason,details);
+    }
 }

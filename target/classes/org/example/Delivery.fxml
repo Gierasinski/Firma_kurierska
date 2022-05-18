@@ -54,11 +54,11 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Button layoutX="421.0" layoutY="454.0" mnemonicParsing="false" onAction="#deliverPackage" prefHeight="62.0" prefWidth="172.0" styleClass="button2" stylesheets="@style.css" text="Deliver">
+                        <Button layoutX="251.0" layoutY="423.0" mnemonicParsing="false" onAction="#deliverPackage" prefHeight="40.0" prefWidth="122.0" styleClass="button2" stylesheets="@style.css" text="Deliver">
                            <font>
-                              <Font size="28.0" />
+                              <Font size="19.0" />
                            </font></Button>
-                        <TableView fx:id="tvDeliverList" layoutX="10.0" layoutY="46.0" prefHeight="334.0" prefWidth="605.0">
+                        <TableView fx:id="tvDeliverList" layoutX="10.0" layoutY="40.0" prefHeight="334.0" prefWidth="605.0">
                            <columns>
                               <TableColumn fx:id="parcelIDD" prefWidth="143.0" text="Parcel ID" />
                               <TableColumn fx:id="clientIDD" prefWidth="102.0" text="Client" />
@@ -72,11 +72,16 @@
                               <Font size="28.0" />
                            </font>
                         </Label>
-                        <TextField fx:id="tfSearchDeliver" layoutX="22.0" layoutY="454.0" prefHeight="46.0" prefWidth="229.0" promptText="Search for parcels" styleClass="textField" stylesheets="@style.css">
+                        <TextField fx:id="tfSearchDeliver" layoutX="6.0" layoutY="420.0" prefHeight="46.0" prefWidth="229.0" promptText="Search for parcels" styleClass="textField" stylesheets="@style.css">
                            <font>
                               <Font size="16.0" />
                            </font>
                         </TextField>
+                        <Button layoutX="388.0" layoutY="423.0" mnemonicParsing="false" onAction="#returnPackage" prefHeight="40.0" prefWidth="200.0" styleClass="button2" stylesheets="@style.css" text="Return to shipper">
+                           <font>
+                              <Font size="19.0" />
+                           </font>
+                        </Button>
                      </children>
                   </AnchorPane>
             </content>

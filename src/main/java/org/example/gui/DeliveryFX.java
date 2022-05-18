@@ -149,23 +149,32 @@ public class DeliveryFX implements Initializable {
         tvDeliverList.setItems(sortedParcels);
     }
 
-   @FXML
-    void deliverPackage(ActionEvent event) throws SQLException {
+    @FXML
+    void returnPackage(ActionEvent event) throws SQLException {
 
-       RouteL routeL = (RouteL) tvDeliverList.getSelectionModel().getSelectedItem();
-       delivery.deliverParcel(routeL.getParcelNumber(), routeL.getStage());
-       getParcelsToDeliverList();
-       getParcelsToPickUpList();
+        RouteL routeL = (RouteL) tvDeliverList.getSelectionModel().getSelectedItem();
+        delivery.returnParcel(routeL.getParcelNumber(), routeL.getStage());
+        getParcelsToDeliverList();
+        getParcelsToPickUpList();
     }
-
-
+    @FXML
+    void deliverPackage(ActionEvent event) throws SQLException {
+        if(tvDeliverList.getSelectionModel().getSelectedItem() != null) {
+            RouteL routeL = (RouteL) tvDeliverList.getSelectionModel().getSelectedItem();
+            delivery.deliverParcel(routeL.getParcelNumber(), routeL.getStage());
+            getParcelsToDeliverList();
+            getParcelsToPickUpList();
+        }
+    }
 
     @FXML
     void pickUpPackage(ActionEvent event) throws SQLException {
-        RouteL routeL = (RouteL) tvPickUpList.getSelectionModel().getSelectedItem();
-        delivery.pickUpTheParcel(routeL.getParcelNumber(), routeL.getStage());
-        getParcelsToPickUpList();
-        getParcelsToDeliverList();
+        if(tvPickUpList.getSelectionModel().getSelectedItem() != null) {
+            RouteL routeL = (RouteL) tvPickUpList.getSelectionModel().getSelectedItem();
+            delivery.pickUpTheParcel(routeL.getParcelNumber(), routeL.getStage());
+            getParcelsToPickUpList();
+            getParcelsToDeliverList();
+        }
     }
 
 

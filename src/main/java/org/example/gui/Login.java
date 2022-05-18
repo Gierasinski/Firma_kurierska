@@ -65,6 +65,10 @@ public class Login {
         App.setRoot("WorkerPanel");
     }
     @FXML
+    void switchToComplaint(ActionEvent event) throws IOException {
+        App.setRoot("Complaint");
+    }
+    @FXML
     void pushReInitDataBase(ActionEvent event) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Warning");

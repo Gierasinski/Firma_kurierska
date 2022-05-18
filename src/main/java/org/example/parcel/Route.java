@@ -62,7 +62,7 @@ public class Route {
         closestToRecipient = null;
 
         Address shipmentAddress = base.getAddressInfo(parcel.getShipment_address());
-        Address recipientAddress = base.getAddressInfo(parcel.getShipment_address());
+        Address recipientAddress = base.getAddressInfo(parcel.getDelivery_address());
         for (Branch br : branches) {
             double temp = calculateDistance(shipmentAddress.getLat(),shipmentAddress.getLon(),
                     br.getAddress().getLat(), br.getAddress().getLon(), "K");
@@ -77,6 +77,7 @@ public class Route {
                 closestToRecipient = br;
             }
         }
+
         base.insertRoutePlan(parcel.getParcelNumber(), parcel.getShipment_address(), closestToShipper.getAddress().getId(),stage);
         stage++;
         if(!closestToShipper.getCode().equals("S01")){
@@ -85,7 +86,7 @@ public class Route {
         }
 
         if(!closestToRecipient.getCode().equals("S01")){
-            base.insertRoutePlan(parcel.getParcelNumber(), 1, closestToShipper.getAddress().getId(),stage);
+            base.insertRoutePlan(parcel.getParcelNumber(), 1, closestToRecipient.getAddress().getId(),stage);
             stage++;
         }
         base.insertRoutePlan(parcel.getParcelNumber(),closestToRecipient.getAddress().getId(), parcel.getDelivery_address(),stage);

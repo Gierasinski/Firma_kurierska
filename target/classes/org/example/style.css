@@ -67,6 +67,14 @@
     -fx-background-color : #343436 ;
     -fx-background-radius :  20;
 }
+.text-area
+{
+    -fx-background-radius :  20;
+    -fx-text-fill : #4270ff;
+}
+.text-area .content{
+    -fx-background-color: #343436;
+}
 .text
 {
     -fx-text-fill : #343436;

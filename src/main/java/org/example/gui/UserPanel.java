@@ -1,5 +1,6 @@
 package org.example.gui;
 
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.collections.transformation.SortedList;
@@ -10,6 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
 import org.example.App;
 import org.example.PostgreSQL.ManageDataBase;
 import org.example.client.Account;
@@ -337,6 +339,7 @@ public class UserPanel implements Initializable {
                     e.printStackTrace();
                 }
             }
+
     }
     public void shippedWarning(long parcel_number, double price){
         alert.setTitle("Shipped");
@@ -751,6 +754,5 @@ public class UserPanel implements Initializable {
             }
         });
     }
-
 
 }

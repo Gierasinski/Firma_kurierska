@@ -33,37 +33,13 @@ public class Delivery extends Employee{
             e.printStackTrace();
         }
     }
-
-    public void deliveredToParcelLocker(long parcelNumber){
+    public void returnParcel(long parcelNumber, int stage){
         try {
             base.connectToDataBase();
-            base.updateParcelStatus(status.getSa6(),parcelNumber);
+            base.returnParcel(parcelNumber, stage);
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public String getInfoParcel(long parcelNumber) {
-        try {
-            base.connectToDataBase();
-            Parcel parcel;
-            Address addressDelivery;
-            Address addressShipment;
-            parcel = base.getParcelInfoNumberCode(parcelNumber);
-            addressDelivery = base.getAddressInfo(parcel.getDelivery_address());
-            addressShipment = base.getAddressInfo(parcel.getShipment_address());
-            if(parcel.getParcelNumber() != 0){
-                return "NUMBER\n" + parcel.getParcelNumber() +"\nSTATUS\n"
-                        + parcel.getStatus() +"\nDELIVERY ADDRESS\n" + addressDelivery.getCity() +"\n"
-                        + addressDelivery.getPostcode() +"\n" + addressDelivery.getStreet() +"\nSHIPMENT ADDRESS\n" + addressShipment.getCity() +"\n"
-                        + addressShipment.getPostcode() +"\n" + addressShipment.getStreet() +"\n" ;
-            }
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
-
-        return "";
     }
 
 }

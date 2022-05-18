@@ -69,6 +69,14 @@
             </Label>
             <FontIcon iconColor="#343436" iconLiteral="eva-person" iconSize="40" layoutX="134.0" layoutY="177.0" selectionFill="BLACK" styleClass="icon" text="" wrappingWidth="41.0" />
             <FontIcon iconColor="#343436" iconLiteral="eva-unlock" iconSize="40" layoutX="134.0" layoutY="288.0" styleClass="icon" wrappingWidth="41.0" />
+            <Button fx:id="btnLogin1" layoutX="95.0" layoutY="430.0" mnemonicParsing="false" onAction="#switchToComplaint" prefHeight="44.0" prefWidth="149.0" styleClass="button2" stylesheets="@style.css" text="Complaint" textFill="#4270ff">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <font>
+                  <Font size="24.0" />
+               </font>
+            </Button>
       
          </children>
       </AnchorPane>

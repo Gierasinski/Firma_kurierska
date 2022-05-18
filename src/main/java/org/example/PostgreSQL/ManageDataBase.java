@@ -85,6 +85,7 @@ public class ManageDataBase {
             createTableBranch();
             createTableRoutePlan();
             createTableLocker();
+            createTableComplaints();
             insertToTable();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -348,7 +349,7 @@ public class ManageDataBase {
             String sql = "CREATE TABLE przesylki (id BIGINT UNIQUE,list_przewozowy BIGINT UNIQUE, waga INTEGER," +
                     "wysokosc INTEGER, szerokosc INTEGER, dlugosc INTEGER, platnosc INTEGER UNIQUE, " +
                     "adres_dostawy INTEGER, adres_nadania INTEGER, status varchar(30), lokalizacja varchar(30)," +
-                    " kod_nadania INTEGER , kod_odbioru INTEGER, id_klienta INTEGER)";
+                    " kod_nadania INTEGER , kod_odbioru INTEGER, id_klienta INTEGER, data DATE)";
             Statement statement = connection.createStatement();
 
             statement.executeUpdate(sql);
@@ -462,7 +463,7 @@ public class ManageDataBase {
     public void insertParcel(long  id, long  list_przewozowy, float waga, int wysokosc,
                                int szerokosc, int dlugosc, int platnosc,int adres_dostawy,
                              int adres_nadania, String status, String lokalizacja, int kod_nadania, int kod_odbioru, long id_klienta) throws SQLException {
-        String sql = "INSERT INTO przesylki(id, list_przewozowy, waga, wysokosc, szerokosc, dlugosc, platnosc, adres_dostawy, adres_nadania, status, lokalizacja, kod_odbioru, kod_nadania, id_klienta) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+        String sql = "INSERT INTO przesylki(id, list_przewozowy, waga, wysokosc, szerokosc, dlugosc, platnosc, adres_dostawy, adres_nadania, status, lokalizacja, kod_odbioru, kod_nadania, id_klienta, data) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
         PreparedStatement pst = connection.prepareStatement(sql);
         pst.setLong (1,id);
         pst.setLong (2,list_przewozowy);
@@ -478,6 +479,7 @@ public class ManageDataBase {
         pst.setInt(12,kod_odbioru);
         pst.setInt(13,kod_nadania);
         pst.setLong(14,id_klienta);
+        pst.setDate(15,java.sql.Date.valueOf(java.time.LocalDate.now()));
         pst.execute();
 
     }
@@ -703,7 +705,7 @@ public class ManageDataBase {
         }
         return couriers;
     }
-    /**pobieranie tras dostawców */
+    /**pobieranie przesylek do odebrania rzez kurier*/
     public ObservableList<RouteL> getCourierPickUpRoutes(String courier) throws SQLException {
         ObservableList<RouteL> routes = FXCollections.observableArrayList();
         String query = "select przesylki.id idprzesylki, klienci.imie, klienci.nazwisko, klienci.kontakt, przesylki.kod_odbioru,\n" +
@@ -726,6 +728,7 @@ public class ManageDataBase {
         }
         return routes;
     }
+    /**pobieranie przesylek do dostarczenia przez kuriera*/
     public ObservableList<RouteL> getCourierDeliverRoutes(String courier) throws SQLException {
         ObservableList<RouteL> routes = FXCollections.observableArrayList();
         String query = "select przesylki.id idprzesylki, klienci.imie, klienci.nazwisko, klienci.kontakt, przesylki.kod_odbioru,\n" +
@@ -936,13 +939,73 @@ public class ManageDataBase {
             pst.setInt(2,stage+1);
             pst.executeUpdate();
         }else{
-            sql = "UPDATE przesylki SET status = 'Delivered' WHERE id = ?";
+            sql = "SELECT * FROM przesylki WHERE id parcelnumber = ?";
             pst = connection.prepareStatement(sql);
             pst.setLong(1,parcelNumber);
-            pst.executeUpdate();
+            rs = pst.executeQuery();
+            if(rs.next()) {
+                if(rs.getString("status").equals("cancelled")){
+                    sql = "UPDATE przesylki SET status = 'Returned' WHERE id = ?";
+                    pst = connection.prepareStatement(sql);
+                    pst.setLong(1,parcelNumber);
+                    pst.executeUpdate();
+            }else {
+                    sql = "UPDATE przesylki SET status = 'Delivered' WHERE id = ?";
+                    pst = connection.prepareStatement(sql);
+                    pst.setLong(1,parcelNumber);
+                    pst.executeUpdate();
+                }
+            }
+
         }
     }
+    /**zwrot paczki*/
+    public void returnParcel(long parcelNumber, int stage) throws SQLException {
+        String sql = "UPDATE route_plan SET state = 'cancelled' WHERE parcelnumber = ? AND state LIKE 'future'";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setLong(1,parcelNumber);
+        pst.executeUpdate();
 
+        sql = "UPDATE route_plan SET state = 'future' WHERE parcelnumber = ? AND state LIKE 'delivered'";
+        pst = connection.prepareStatement(sql);
+        pst.setLong(1,parcelNumber);
+        pst.executeUpdate();
+
+        sql = "UPDATE route_plan SET idpointa=idpointb, idpointb=idpointa WHERE parcelnumber = ?";
+        pst = connection.prepareStatement(sql);
+        pst.setLong(1,parcelNumber);
+        pst.executeUpdate();
+
+        sql = "UPDATE route_plan SET deliveryman='NULL' WHERE parcelnumber = ? AND state like 'future' ";
+        pst = connection.prepareStatement(sql);
+        pst.setLong(1,parcelNumber);
+        pst.executeUpdate();
+
+        sql = "UPDATE route_plan SET stage = stage + 10 WHERE parcelnumber = ?";
+        pst = connection.prepareStatement(sql);
+        pst.setLong(1,parcelNumber);
+        pst.executeUpdate();
+
+        sql = "SELECT COUNT(*) as amount FROM route_plan WHERE parcelnumber = ? ";
+        pst = connection.prepareStatement(sql);
+        pst.setLong(1,parcelNumber);
+        ResultSet rs = pst.executeQuery();
+        if(rs.next()){
+            if(rs.getInt("amount") == 4) {
+                int j = 3;
+                for(int i =0; i<4; i++) {
+                    sql = "UPDATE route_plan SET stage = ?  WHERE parcelnumber = ? AND stage = ?";
+                    pst = connection.prepareStatement(sql);
+                    pst.setInt(1, i);
+                    pst.setLong(2, parcelNumber);
+                    pst.setInt(3, j+10);
+                    pst.executeUpdate();
+                    j--;
+                }
+            }
+        }
+
+    }
 
 
     /**wyszukanie trasy o podany numerze paczki*/
@@ -973,6 +1036,29 @@ public class ManageDataBase {
             i++;
         }
         return plan;
+    }
+
+    public void createTableComplaints() throws SQLException {
+        String sql = "CREATE TABLE complaints (id SERIAL, declarant varchar(20), name varchar(40), phone INTEGER, email varchar(20), " +
+                "parcelNumber BIGINT, reason varchar(20), details varchar(300), date DATE);";
+        Statement statement = connection.createStatement();
+
+        statement.executeUpdate(sql);
+        System.out.println("Table complaints Created");
+    }
+    public void insertComplaint(String declarant, String name, int phone, String email, long parcelNumber, String reason, String details) throws SQLException {
+        String sql = "INSERT INTO complaints (declarant, name, phone, email, parcelNumber, reason, details, date) values (?,?,?,?,?,?,?,?)";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setString(1,declarant);
+        pst.setString(2,name);
+        pst.setInt(3,phone);
+        pst.setString(4,email);
+        pst.setLong(5,parcelNumber);
+        pst.setString(6,reason);
+        pst.setString(7,details);
+        pst.setDate(8,java.sql.Date.valueOf(java.time.LocalDate.now()));
+        pst.execute();
+
     }
 
 

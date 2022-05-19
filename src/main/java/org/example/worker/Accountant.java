@@ -31,7 +31,7 @@ public class Accountant extends Employee{
     public Accountant() {}
 
 
-    public void getFacture(long p) throws FileNotFoundException, SQLException {
+    public boolean getFacture(long p) throws FileNotFoundException, SQLException {
         base.connectToDataBase();
         Parcel parcel = base.getParcelInfo(p);
         ShipperInfo shipper = base.getShipperInfo(p);
@@ -39,6 +39,18 @@ public class Accountant extends Employee{
         payment.setStatus("Invoice issued");
         base.updatePayment(payment.getId(), payment.getStatus());
         parcel.createInvoice(shipper, payment);
+
+        return true;
+    }
+    public boolean getFacture(long p, ManageDataBase manage) throws FileNotFoundException, SQLException {
+        Parcel parcel = manage.getParcelInfo(p);
+        ShipperInfo shipper = manage.getShipperInfo(p);
+        Payment payment = manage.getPaymentInfo(parcel.getPayment());
+        payment.setStatus("Invoice issued");
+        manage.updatePayment(payment.getId(), payment.getStatus());
+        parcel.createInvoice(shipper, payment);
+
+        return true;
     }
     public void bookPayment(long p) throws SQLException {
         base.connectToDataBase();
@@ -72,15 +84,6 @@ public class Accountant extends Employee{
             e.printStackTrace();
         }
 
-    }
-
-    public void payWages(String id) throws SQLException {
-        base.connectToDataBase();
-        try {
-            int salary = base.searchEmployee(id);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
     }
 
 

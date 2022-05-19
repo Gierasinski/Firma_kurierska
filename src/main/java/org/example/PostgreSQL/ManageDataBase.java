@@ -77,20 +77,23 @@ public class ManageDataBase {
             createDataBase();
             connectToDataBase();
 
-            createTableEmployee();
-            createTableAdres();
-            createTablePayment();
-            createTableParcels();
-            createTableClients();
-            createTableBranch();
-            createTableRoutePlan();
-            createTableLocker();
-            createTableComplaints();
-            insertToTable();
+            createTables();
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
+    }
+    public void createTables() throws SQLException {
+        createTableEmployee();
+        createTableAdres();
+        createTablePayment();
+        createTableParcels();
+        createTableClients();
+        createTableBranch();
+        createTableRoutePlan();
+        createTableLocker();
+        createTableComplaints();
+        insertToTable();
     }
     public void insertToTable() throws SQLException {
         String sql = "INSERT INTO employee(pesel,salary,phoneNumber,workerCode,name,surname,position,dateofemployment)\n" +
@@ -411,10 +414,10 @@ public class ManageDataBase {
     public ShipperInfo getShipperInfo(long parcelID) throws SQLException {
         int clientID = 0;
         String query = "select * from przesylki where id = ?;";
-        preparedStatement = connection.prepareStatement(query);
-        preparedStatement .setLong(1,parcelID);
+        PreparedStatement ps = connection.prepareStatement(query);
+        ps .setLong(1,parcelID);
 
-        resultSet = preparedStatement.executeQuery();
+        resultSet = ps.executeQuery();
 
         while(resultSet.next()) {
             clientID = resultSet.getInt("id_klienta");
@@ -422,9 +425,9 @@ public class ManageDataBase {
         ShipperInfo shipperInfo = new ShipperInfo();
 
         query = "select * from klienci where id = ?;";
-        preparedStatement = connection.prepareStatement(query);
-        preparedStatement .setInt(1,clientID);
-        resultSet = preparedStatement.executeQuery();
+        ps = connection.prepareStatement(query);
+        ps .setInt(1,clientID);
+        resultSet = ps.executeQuery();
         int addressID=-1;
         while(resultSet.next()) {
             shipperInfo = new ShipperInfo(resultSet.getLong("id"),resultSet.getString("email"), resultSet.getString("kontakt"),
@@ -433,9 +436,9 @@ public class ManageDataBase {
         }
         if(addressID>0) {
             query = "select * from adres where id = ?;";
-            preparedStatement = connection.prepareStatement(query);
-            preparedStatement.setInt(1, addressID);
-            resultSet = preparedStatement.executeQuery();
+            ps = connection.prepareStatement(query);
+            ps.setInt(1, addressID);
+            resultSet = ps.executeQuery();
             while (resultSet.next()) {
                 shipperInfo.setAddress(new Address(resultSet.getInt("id"), resultSet.getString("miasto"),
                         resultSet.getString("ulica"), resultSet.getString("numer"), resultSet.getString("lokal"),
@@ -939,7 +942,7 @@ public class ManageDataBase {
             pst.setInt(2,stage+1);
             pst.executeUpdate();
         }else{
-            sql = "SELECT * FROM przesylki WHERE id parcelnumber = ?";
+            sql = "SELECT * FROM przesylki WHERE id = ?";
             pst = connection.prepareStatement(sql);
             pst.setLong(1,parcelNumber);
             rs = pst.executeQuery();
@@ -1030,7 +1033,6 @@ public class ManageDataBase {
         ResultSet rs = preparedStatement.executeQuery();
         int i = 0;
         while(rs.next()) {
-            System.out.println("Hello");
             plan.add(new RoutePlan(rs.getLong("parcelnumber"),rs.getInt("idPointA"),rs.getInt("idPointB"),
                     rs.getInt("stage"),rs.getString("state")));
             i++;

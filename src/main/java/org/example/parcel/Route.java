@@ -92,7 +92,46 @@ public class Route {
         base.insertRoutePlan(parcel.getParcelNumber(),closestToRecipient.getAddress().getId(), parcel.getDelivery_address(),stage);
         stage++;
 
+    }
+    public void calculateRoute(Parcel parcel, ManageDataBase manage) throws SQLException {
+        getBranches();
+        shipperClosestDistance = 0;
+        recipientClosestDistance = 0;
+        int stage = 0;
 
+        closestToShipper = null;
+        closestToRecipient = null;
+
+        Address shipmentAddress = manage.getAddressInfo(parcel.getShipment_address());
+        Address recipientAddress = manage.getAddressInfo(parcel.getDelivery_address());
+        for (Branch br : branches) {
+            double temp = calculateDistance(shipmentAddress.getLat(),shipmentAddress.getLon(),
+                    br.getAddress().getLat(), br.getAddress().getLon(), "K");
+            if(temp<shipperClosestDistance || shipperClosestDistance == 0){
+                shipperClosestDistance = temp;
+                closestToShipper = br;
+            }
+            temp = calculateDistance(recipientAddress.getLat(),recipientAddress.getLon(),
+                    br.getAddress().getLat(), br.getAddress().getLon(), "K");
+            if(temp<recipientClosestDistance || recipientClosestDistance == 0){
+                recipientClosestDistance = temp;
+                closestToRecipient = br;
+            }
+        }
+
+        manage.insertRoutePlan(parcel.getParcelNumber(), parcel.getShipment_address(), closestToShipper.getAddress().getId(),stage);
+        stage++;
+        if(!closestToShipper.getCode().equals("S01")){
+            manage.insertRoutePlan(parcel.getParcelNumber(), closestToShipper.getAddress().getId(), 1, stage);
+            stage++;
+        }
+
+        if(!closestToRecipient.getCode().equals("S01")){
+            manage.insertRoutePlan(parcel.getParcelNumber(), 1, closestToRecipient.getAddress().getId(),stage);
+            stage++;
+        }
+        manage.insertRoutePlan(parcel.getParcelNumber(),closestToRecipient.getAddress().getId(), parcel.getDelivery_address(),stage);
+        stage++;
 
     }
 

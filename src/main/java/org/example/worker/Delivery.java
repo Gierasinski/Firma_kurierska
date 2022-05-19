@@ -25,6 +25,16 @@ public class Delivery extends Employee{
             e.printStackTrace();
         }
     }
+    public boolean pickUpTheParcel(long parcelNumber, int stage, ManageDataBase manage){
+        try {
+            manage.connectToDataBase();
+            manage.pickUpParcel(parcelNumber, stage);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
     public void deliverParcel(long parcelNumber, int stage){
         try {
             base.connectToDataBase();
@@ -33,6 +43,16 @@ public class Delivery extends Employee{
             e.printStackTrace();
         }
     }
+    public boolean deliverParcel(long parcelNumber, int stage, ManageDataBase manage){
+        try {
+            manage.connectToDataBase();
+            manage.deliverParcel(parcelNumber, stage);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
     public void returnParcel(long parcelNumber, int stage){
         try {
             base.connectToDataBase();
@@ -40,6 +60,16 @@ public class Delivery extends Employee{
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    public boolean returnParcel(long parcelNumber, int stage, ManageDataBase manage){
+        try {
+            manage.connectToDataBase();
+            manage.returnParcel(parcelNumber, stage);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
     }
 
 }

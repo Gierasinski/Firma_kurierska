@@ -54,7 +54,7 @@ class DeliveryTest {
         }
 
     }
-    
+
     @Test()
     public void getInfoParcelTest() {
         try {

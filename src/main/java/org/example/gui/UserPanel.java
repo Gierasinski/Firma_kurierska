@@ -285,8 +285,8 @@ public class UserPanel implements Initializable {
 
                 try {
                     payment = clientHolder.getClient().createPayment(price);
-                    clientHolder.getClient().setOriginAddress(tfCityFromF.getText(), tfStreetFromF.getText(), tfNumberFromF.getText(), tfLocalFromF.getText(),tfPostcodeFromF.getText(),tfNameAndSurFromF.getText());
-                    clientHolder.getClient().setDestinationAddress(tfCityToF.getText(), tfStreetToF.getText(),tfNumberToF.getText(), tfLocalToF.getText(), tfPostcodeToF.getText(),tfNameAndSurToF.getText());
+                    clientHolder.getClient().setOriginAddress(tfCityFromF.getText(), tfStreetFromF.getText(), tfNumberFromF.getText(), tfLocalFromF.getText(),tfPostcodeFromF.getText(),tfNameAndSurFromF.getText(), tfEmailFromF.getText(), tfPhoneFromF.getText());
+                    clientHolder.getClient().setDestinationAddress(tfCityToF.getText(), tfStreetToF.getText(),tfNumberToF.getText(), tfLocalToF.getText(), tfPostcodeToF.getText(),tfNameAndSurToF.getText(), tfEmailToF.getText(), tfPhoneToF.getText());
 
                     parcel_number = clientHolder.getClient().shipParcel(weight, height, width, length, payment);
                     //clientHolder.getClient().setRoute(parcel_number);
@@ -300,7 +300,7 @@ public class UserPanel implements Initializable {
                     payment = clientHolder.getClient().createPayment(price);
                     Locker locker = (Locker) tvLockerListF.getSelectionModel().getSelectedItem();
                     clientHolder.getClient().setOriginAddress(locker.getAddress());
-                    clientHolder.getClient().setDestinationAddress(tfCityToF.getText(), tfStreetToF.getText(), tfNumberToF.getText(), tfLocalToF.getText(), tfPostcodeToF.getText(),tfNameAndSurToF.getText());
+                    clientHolder.getClient().setDestinationAddress(tfCityToF.getText(), tfStreetToF.getText(), tfNumberToF.getText(), tfLocalToF.getText(), tfPostcodeToF.getText(),tfNameAndSurToF.getText(), tfEmailToF.getText(), tfPhoneToF.getText());
 
                     parcel_number = clientHolder.getClient().shipParcelFromLocker(weight, height, width, length, payment);
                     //clientHolder.getClient().setRoute(parcel_number);
@@ -312,7 +312,7 @@ public class UserPanel implements Initializable {
             }else  if(fFlat.isSelected() && tLocker.isSelected()){
                 try {
                     payment = clientHolder.getClient().createPayment(price);
-                    clientHolder.getClient().setOriginAddress(tfCityFromF.getText(), tfStreetFromF.getText(), tfNumberFromF.getText(), tfLocalFromF.getText(), tfPostcodeFromF.getText(), tfNameAndSurFromF.getText());
+                    clientHolder.getClient().setOriginAddress(tfCityFromF.getText(), tfStreetFromF.getText(), tfNumberFromF.getText(), tfLocalFromF.getText(), tfPostcodeFromF.getText(), tfNameAndSurFromF.getText(), tfEmailFromF.getText(), tfPhoneFromF.getText());
                     Locker locker = (Locker) tvLockerListT.getSelectionModel().getSelectedItem();
                     clientHolder.getClient().setDestinationAddress(locker.getAddress());
 

@@ -144,9 +144,9 @@ public class ClientTest {
             testBase.createDataBase(databaseName);
             testBase.connectToDataBase(databaseName);
             testBase.createTableAdres();
-            client.setOriginAddress("Kielce", "Nowowiejska","11","115","25-532",testBase,null);
+            client.setOriginAddress("Kielce", "Nowowiejska","11","115","25-532",testBase,null, null, null);
             System.out.println("Client Origin address added, origin:"+client.getOriginAddress());
-            client.setDestinationAddress("Krakow", "Długa","34","1","31-146",testBase,null);
+            client.setDestinationAddress("Krakow", "Długa","34","1","31-146",testBase,null, null, null);
             System.out.println("Client Origin address added, origin:"+client.getDestinationAddress());
 
         } catch (SQLException e) {

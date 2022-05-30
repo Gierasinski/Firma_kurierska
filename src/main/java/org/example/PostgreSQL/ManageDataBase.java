@@ -506,7 +506,7 @@ public class ManageDataBase {
 
     }
     public void createTableAdres() throws SQLException {
-            String sql = "CREATE TABLE adres (id SERIAL, miasto varchar(20),ulica varchar(20),numer varchar(20),lokal varchar(20), kod_pocztowy varchar(7), lat Decimal(8,6), lon Decimal(9,6),nazwa varchar(30))";
+            String sql = "CREATE TABLE adres (id SERIAL, miasto varchar(20),ulica varchar(20),numer varchar(20),lokal varchar(20), kod_pocztowy varchar(7), lat Decimal(8,6), lon Decimal(9,6),nazwa varchar(30), email varchar(40), kontakt varchar(18))";
             Statement statement = connection.createStatement();
 
             statement.executeUpdate(sql);
@@ -614,6 +614,36 @@ public class ManageDataBase {
         }
         return id;
     }
+    public int insertAdres(String miasto, String ulica,String numer,String lokal, String kod_pocztowy, String email, String kontakt) throws SQLException {
+        int id = -1;
+        Map<String, Double> coords;
+        coords = OpenStreetMapUtils.getInstance().getCoordinates(kod_pocztowy +" "+ miasto +" "+ ulica +" "+ numer);
+        if(coords.get("lat") == null){
+            coords = OpenStreetMapUtils.getInstance().getCoordinates(miasto +" "+ ulica +" "+ numer);
+        }
+        String sql = "INSERT INTO adres(miasto, ulica, numer, lokal, kod_pocztowy, lat, lon, email, kontakt) values (?,?,?,?,?,?,?,?,?) RETURNING id";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setString(1,miasto);
+        pst.setString(2,ulica);
+        pst.setString(3,numer);
+        pst.setString(4,lokal);
+        pst.setString(5,kod_pocztowy);
+        pst.setString(6,email);
+        pst.setString(7,kontakt);
+        if(coords.get("lat") != null && coords != null) {
+            pst.setDouble(6, coords.get("lat"));
+            pst.setDouble(7, coords.get("lon"));
+        }else {
+            pst.setDouble(6, 0);
+            pst.setDouble(7, 0);
+            System.out.println("Address was not found");
+        }
+        resultSet = pst.executeQuery();
+        while(resultSet.next()) {
+            id = resultSet.getInt("id");
+        }
+        return id;
+    }
     public int insertAdres(String miasto, String ulica,String numer,String lokal, String kod_pocztowy, String nazwa) throws SQLException {
         int id = -1;
         Map<String, Double> coords;
@@ -637,6 +667,37 @@ public class ManageDataBase {
             System.out.println("Address was not found");
         }
         pst.setString(8,nazwa);
+        resultSet = pst.executeQuery();
+        while(resultSet.next()) {
+            id = resultSet.getInt("id");
+        }
+        return id;
+    }
+    public int insertAdres(String miasto, String ulica,String numer,String lokal, String kod_pocztowy, String nazwa, String email, String kontakt) throws SQLException {
+        int id = -1;
+        Map<String, Double> coords;
+        coords = OpenStreetMapUtils.getInstance().getCoordinates(kod_pocztowy +" "+ miasto +" "+ ulica +" "+ numer);
+        if(coords.get("lat") == null){
+            coords = OpenStreetMapUtils.getInstance().getCoordinates(miasto +" "+ ulica +" "+ numer);
+        }
+        String sql = "INSERT INTO adres(miasto, ulica, numer, lokal, kod_pocztowy, lat, lon, nazwa, email, kontakt) values (?,?,?,?,?,?,?,?,?,?) RETURNING id";
+        PreparedStatement pst = connection.prepareStatement(sql);
+        pst.setString(1,miasto);
+        pst.setString(2,ulica);
+        pst.setString(3,numer);
+        pst.setString(4,lokal);
+        pst.setString(5,kod_pocztowy);
+        if(coords.get("lat") != null && coords != null) {
+            pst.setDouble(6, coords.get("lat"));
+            pst.setDouble(7, coords.get("lon"));
+        }else {
+            pst.setDouble(6, 0);
+            pst.setDouble(7, 0);
+            System.out.println("Address was not found");
+        }
+        pst.setString(8,nazwa);
+        pst.setString(9,email);
+        pst.setString(10,kontakt);
         resultSet = pst.executeQuery();
         while(resultSet.next()) {
             id = resultSet.getInt("id");
@@ -712,7 +773,7 @@ public class ManageDataBase {
     public ObservableList<RouteL> getCourierPickUpRoutes(String courier) throws SQLException {
         ObservableList<RouteL> routes = FXCollections.observableArrayList();
         String query = "select przesylki.id idprzesylki, klienci.imie, klienci.nazwisko, klienci.kontakt, przesylki.kod_odbioru,\n" +
-                "route_plan.stage, adres.miasto, adres.kod_pocztowy, adres.ulica, adres.numer, adres.lokal\n" +
+                "route_plan.stage, adres.miasto, adres.kod_pocztowy, adres.ulica, adres.numer, adres.lokal, adres.email, adres.kontakt\n" +
                 "FROM route_plan, przesylki, klienci, adres\n" +
                 "WHERE route_plan.parcelnumber = przesylki.id\n" +
                 "AND klienci.id = przesylki.id_klienta\n" +
@@ -947,7 +1008,7 @@ public class ManageDataBase {
             pst.setLong(1,parcelNumber);
             rs = pst.executeQuery();
             if(rs.next()) {
-                if(rs.getString("status").equals("cancelled")){
+                if(rs.getString("status").equals("Cancelled")){
                     sql = "UPDATE przesylki SET status = 'Returned' WHERE id = ?";
                     pst = connection.prepareStatement(sql);
                     pst.setLong(1,parcelNumber);
@@ -964,7 +1025,7 @@ public class ManageDataBase {
     }
     /**zwrot paczki*/
     public void returnParcel(long parcelNumber, int stage) throws SQLException {
-        String sql = "UPDATE route_plan SET state = 'cancelled' WHERE parcelnumber = ? AND state LIKE 'future'";
+        String sql = "UPDATE route_plan SET state = 'Cancelled' WHERE parcelnumber = ? AND state LIKE 'future'";
         PreparedStatement pst = connection.prepareStatement(sql);
         pst.setLong(1,parcelNumber);
         pst.executeUpdate();
@@ -997,6 +1058,28 @@ public class ManageDataBase {
             if(rs.getInt("amount") == 4) {
                 int j = 3;
                 for(int i =0; i<4; i++) {
+                    sql = "UPDATE route_plan SET stage = ?  WHERE parcelnumber = ? AND stage = ?";
+                    pst = connection.prepareStatement(sql);
+                    pst.setInt(1, i);
+                    pst.setLong(2, parcelNumber);
+                    pst.setInt(3, j+10);
+                    pst.executeUpdate();
+                    j--;
+                }
+            } else if(rs.getInt("amount") == 3) {
+                int j = 2;
+                for(int i =0; i<3; i++) {
+                    sql = "UPDATE route_plan SET stage = ?  WHERE parcelnumber = ? AND stage = ?";
+                    pst = connection.prepareStatement(sql);
+                    pst.setInt(1, i);
+                    pst.setLong(2, parcelNumber);
+                    pst.setInt(3, j+10);
+                    pst.executeUpdate();
+                    j--;
+                }
+            }else if(rs.getInt("amount") == 2) {
+                int j = 1;
+                for(int i =0; i<2; i++) {
                     sql = "UPDATE route_plan SET stage = ?  WHERE parcelnumber = ? AND stage = ?";
                     pst = connection.prepareStatement(sql);
                     pst.setInt(1, i);
